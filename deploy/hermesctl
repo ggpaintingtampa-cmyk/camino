@@ -1,0 +1,31 @@
+#!/bin/sh
+# Production owner tooling. Invoke through: sudo -u hermes hermesctl ...
+set -eu
+PATH=/usr/bin:/bin
+export PATH
+
+caminos_uid="$(id -u hermes 2>/dev/null)" || {
+  printf '%s\n' 'The Caminos service account is not installed.' >&2
+  exit 1
+}
+if [ "$caminos_uid" -eq 0 ] || [ "$(id -u)" -ne "$caminos_uid" ]; then
+  printf '%s\n' 'Run this command as the private Caminos service account: sudo -u hermes hermesctl ...' >&2
+  exit 1
+fi
+for argument in "$@"; do
+  case "$argument" in
+    --db|--db=*)
+      printf '%s\n' 'The production Caminos database path is fixed; --db overrides are not allowed.' >&2
+      exit 2
+      ;;
+  esac
+done
+
+unset HERMES_ALLOW_HTTP NODE_OPTIONS NODE_PATH TSX_TSCONFIG_PATH ESBUILD_BINARY_PATH
+unset CAMINOS_DB CAMINOS_ORIGIN CAMINOS_ALLOW_HTTP
+HERMES_DB=/var/lib/hermes/hermes.sqlite
+HERMES_ORIGIN=https://hermes.andresinbox.tech
+NODE_ENV=production
+export HERMES_DB HERMES_ORIGIN NODE_ENV
+cd /srv/hermes/current
+exec /opt/hermes/node/bin/node /srv/hermes/current/node_modules/tsx/dist/cli.mjs /srv/hermes/current/server/cli.ts "$@"

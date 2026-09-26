@@ -1,0 +1,21 @@
+[Unit]
+Description=Verified private Caminos backup
+After=hermes.service
+
+[Service]
+Type=oneshot
+User=hermes
+Group=hermes
+WorkingDirectory=/srv/hermes/current
+Environment=HERMES_DB=/var/lib/hermes/hermes.sqlite
+ExecStart=/opt/hermes/node/bin/node /srv/hermes/current/node_modules/tsx/dist/cli.mjs /srv/hermes/current/server/cli.ts backup
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateNetwork=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/hermes /var/backups/hermes
+InaccessiblePaths=-/var/lib/pirata -/var/backups/pirata -/srv/pirata -/var/lib/morgan-research -/var/backups/morgan-research -/srv/research -/var/lib/caddy -/etc/caddy
+CapabilityBoundingSet=

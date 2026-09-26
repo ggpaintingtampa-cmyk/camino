@@ -1,0 +1,125 @@
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.gold{color:var(--gold)}
+.redesign-v2 .brand-bar{border-bottom:0;padding:0 16px}
+.redesign-v2 .brand{font-size:17px;gap:8px;letter-spacing:-.025em}
+.redesign-v2 .brand-mark{width:32px;height:32px;border-radius:50%;background:#201e19;border-color:var(--gold)}
+.redesign-v2 .brand small{font-size:9px;letter-spacing:0;margin-top:1px;color:var(--muted);font-weight:400}
+.redesign-v2 .day-toggle{min-height:34px;border-radius:999px;padding:6px 12px;font-size:12px;color:var(--text);gap:6px}
+.redesign-v2 .day-toggle svg{width:14px;height:14px;color:var(--muted)}
+.redesign-v2 .day-toggle.day-start{color:var(--gold);background:#d8b9781a;border-color:var(--gold)}
+.redesign-v2 .day-toggle.day-start svg{color:inherit}
+.redesign-v2 .more-signature{font-size:10px;letter-spacing:.17em;color:var(--gold)}
+.redesign-v2 .bottom-nav{padding:7px 16px calc(7px + env(safe-area-inset-bottom));background:#111213}
+.redesign-v2 .bottom-nav a{min-height:54px;font-size:10px;gap:4px;background:transparent;border-radius:0}
+.redesign-v2 .bottom-nav a.selected{background:transparent;color:var(--gold)}
+.redesign-v2 .bottom-nav a svg{height:21px;width:21px}
+.redesign-v2 .add-button{right:16px;bottom:calc(90px + env(safe-area-inset-bottom));min-height:43px;padding:10px 18px;gap:7px;font-size:14px}
+.redesign-v2 .add-button svg{width:17px;height:17px}
+.v2-home{font-size:14px}
+.v2-home .home-heading{margin-bottom:14px}
+.v2-home .home-heading .eyebrow{font-size:11px;color:var(--gold);letter-spacing:0;font-weight:650;text-transform:uppercase}
+.v2-home .home-heading h1{font-size:22px;line-height:1.25;max-width:none;letter-spacing:-.025em;margin:2px 0 0;text-wrap:initial;font-weight:750}
+.v2-home .home-heading>p:last-child{font-size:14px;line-height:1.45;margin-top:3px;letter-spacing:.005em}
+.v2-home .weather-card{border:1px solid var(--border);border-radius:18px;background:var(--surface);padding:12px 12px 10px}
+.v2-home .weather-main,.v2-home .weather-detail{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.v2-home .weather-location{display:flex;align-items:center;gap:4px;min-width:0}
+.v2-home .weather-location svg{color:var(--gold)}
+.v2-home .weather-location select{width:auto;max-width:220px;font-size:13px;font-weight:600;min-height:28px;padding:0}
+.v2-home .weather-temp{font-size:29px;line-height:1.2;font-weight:350}
+.v2-home .weather-detail{margin-top:8px;align-items:baseline}
+.v2-home .weather-detail p{font-size:12px;line-height:1.4;color:var(--muted);letter-spacing:.015em}
+.v2-home .weather-detail small{white-space:nowrap;font-size:10px}
+.v2-home .weather-credit{text-align:left;font-size:9px;margin-top:6px;line-height:1.4;color:#92979a}
+.v2-home .morning-card{margin:14px 0;padding:16px;border:1px solid var(--gold);background:var(--surface)}
+.v2-home .morning-intro{display:flex;gap:12px;align-items:center}
+.v2-home .morning-intro>svg{color:var(--gold)}
+.v2-home .morning-intro h2{font-size:19px;margin:0;font-weight:700}
+.v2-home .morning-intro p{font-size:12px;line-height:1.5;color:var(--muted);margin-top:3px}
+.v2-home .morning-card>.primary{margin-top:14px;justify-content:center;min-height:40px;font-size:13px}
+.v2-home .focus-card{margin-top:16px;padding:14px;border:1.5px solid var(--gold);border-radius:18px;background:var(--surface)}
+.v2-home .focus-card .section-title{margin-bottom:12px}
+.v2-home .focus-card .eyebrow{font-size:11px;letter-spacing:0;font-weight:700}
+.v2-home .focus-area{display:table;background:#34373a;padding:3px 8px;border-radius:5px;text-transform:uppercase;font-size:10px;font-weight:600;line-height:1.4;margin-top:0!important}
+.v2-home .focus-card h2{font-size:18px;font-weight:700;letter-spacing:-.015em;margin:5px 0 14px}
+.v2-home .focus-time{gap:8px;margin-bottom:10px;align-items:baseline;flex-wrap:wrap}
+.v2-home .focus-time>strong{font-size:38px;font-weight:750;letter-spacing:-.03em;line-height:1}
+.v2-home .focus-time>strong>span{font-size:16px;color:var(--muted);margin-left:5px;font-weight:600}
+.v2-home .focus-time p{font-size:11px;line-height:1.5}
+.v2-home .focus-actions{margin-top:14px;gap:8px}
+.v2-home .focus-actions>button{flex:1;min-height:38px;padding:7px 10px;font-size:13px;border-radius:12px}
+.v2-home .focus-actions>button:not(.primary){background:transparent}
+.v2-home .focus-card>.muted{margin-bottom:14px}
+.v2-home .home-section{margin-top:16px}
+.v2-home .section-title{margin-bottom:8px;min-height:17px;gap:8px}
+.v2-home .section-title h2{font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:0;font-weight:700}
+.v2-home .section-title .text-button{font-size:12px;min-height:24px;padding:0}
+.v2-home .home-card-list{display:grid;gap:8px}
+.v2-home .appointment-row,.v2-home .attention-row,.v2-home .home-envelope{background:var(--surface);border:1px solid var(--border);border-radius:17px;padding:11px 12px;gap:10px;display:flex;align-items:center;width:100%;text-align:left;min-width:0}
+.v2-home .appointment-row{align-items:flex-start}
+.v2-home .appointment-row>span:first-child,.v2-home .home-envelope>span{flex:1;min-width:0}
+.v2-home .appointment-row strong,.v2-home .attention-row strong,.v2-home .home-envelope strong{font-size:14px;font-weight:650;line-height:1.35;display:block;overflow-wrap:anywhere}
+.v2-home .appointment-row small,.v2-home .attention-row small,.v2-home .home-envelope small{font-size:11px;margin-top:3px;font-weight:400;line-height:1.4}
+.v2-home .home-tag{padding:3px 7px;background:#34373a;border-radius:5px;font-size:9px;text-transform:uppercase;color:var(--muted);flex-shrink:0;font-weight:650}
+.v2-home .home-tag.work{color:#6aabff;background:#1c2438}
+.v2-home .attention-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0}
+.v2-home .attention-dot.overdue{background:#efa423}
+.v2-home .attention-row>span{flex:1}
+.v2-home .attention-row .icon-button{width:32px;min-height:32px;border:0;background:transparent;padding:5px}
+.v2-home .home-envelope b{color:var(--gold);font-size:14px;white-space:nowrap}
+.v2-home .home-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.v2-home .home-metrics button{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:0;padding:10px 9px;border-radius:11px;background:var(--surface);font-weight:400}
+.v2-home .home-metrics button>span{font-size:9px;line-height:1.4;text-transform:uppercase;color:var(--muted);letter-spacing:.03em}
+.v2-home .home-metrics strong{font-size:17px;line-height:1.3;font-weight:750;white-space:nowrap}
+.v2-home .home-metrics small{font-size:9px;line-height:1.5}
+.v2-home .ahead-card{padding:9px 12px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.v2-home .ahead-card button{display:flex;justify-content:space-between;width:100%;min-height:26px;background:transparent;border:0;padding:2px 0;gap:12px;font-size:13px;line-height:1.5;font-weight:400;text-align:left}
+.v2-home .ahead-card b{font-weight:600}
+.v2-home .goal-snapshot{padding:14px;border-radius:14px}
+.v2-home .missing-link{display:flex;margin:20px auto 0;font-size:12px;color:var(--muted);text-decoration:underline;min-height:32px}
+.v2-home .home-footer{padding:5px 0 0;color:var(--muted)}
+.v2-home .home-footer p{font-size:11px;font-style:italic;text-align:center}
+.v2-more .destination-grid{gap:8px}
+.v2-more .destination{min-height:60px;border-radius:14px;padding:12px;gap:12px;background:var(--surface)}
+.v2-more .destination-icon{width:34px;height:34px;border-radius:8px;background:#2a271f}
+.v2-more .destination strong{font-size:15px;font-weight:600}
+.v2-more .destination-badge{font-size:10px;letter-spacing:0;padding:3px 7px;border:0;color:var(--muted);border-radius:6px;background:var(--border);flex:none}
+.redesign-v2[data-view=more] .brand-mark{width:28px;height:28px;border-radius:8px}
+.redesign-v2[data-view=more] .brand-mark svg{width:18px;height:18px}
+.redesign-v2[data-view=more] .brand{font-size:20px}
+.redesign-v2[data-view=more] .brand small{display:none}
+.redesign-v2[data-view=more] .more-signature{font-size:12px;letter-spacing:0}
+.v2-more .account-actions{justify-content:center}
+.v2-more .account-actions button,.v2-more .account-actions>a{font-size:12px}
+.v2-tasks .task-list-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.v2-tasks h1{font-size:24px;letter-spacing:-.025em;line-height:1.25;font-weight:700}
+.v2-tasks .task-list-heading .icon-button{width:38px;min-height:38px;color:var(--gold);background:var(--surface);padding:8px}
+.v2-tasks .task-section-label{font-size:12px;text-transform:uppercase;color:var(--muted);font-weight:700;letter-spacing:0;margin:26px 0 10px}
+.v2-tasks .task-filters{display:grid;gap:9px;margin-bottom:18px}
+.v2-tasks .task-list-cards{display:grid;gap:8px}
+.v2-tasks .task-list-card{display:flex;flex-direction:column;align-items:stretch;gap:10px;background:var(--surface);border-radius:14px;padding:12px;text-align:left}
+.v2-tasks .task-list-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.v2-tasks .task-list-card strong{font-size:14px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.v2-tasks .task-tag{font-size:10px;border-radius:4px;padding:2px 6px;background:#29333a;color:#8abde6;white-space:nowrap}
+.v2-tasks .task-tag.work{background:#342e20;color:var(--gold)}
+.v2-tasks .task-list-card-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;font-weight:400}
+.v2-tasks .task-list-card-meta>span{display:flex;align-items:center;gap:5px}
+.v2-tasks .task-history-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#151617;min-width:0}
+.v2-tasks .task-history-row>span{flex:1;font-size:14px;color:#a6aaae;min-width:120px;overflow-wrap:anywhere}
+.v2-tasks .task-history-row small{display:flex;gap:4px;align-items:center;color:#88b294;font-size:11px}
+.v2-tasks .task-history-row.partial small{color:var(--gold)}
+.v2-tasks .task-history-row>.text-button{font-size:11px;color:var(--muted);min-height:28px;display:none}
+.v2-tasks .older-tasks .task-history-row>.text-button{display:inline-flex}
+.v2-tasks .archive-tasks{display:flex;margin:13px auto 0;text-decoration:underline;font-size:14px}
+.v2-tasks .task-add-inline{display:flex;margin:12px auto}
+.modal.add-menu-sheet{background:#191a1c}
+.modal.add-menu-sheet .modal-head{border-bottom:0;padding:20px 20px 14px;background:#191a1c}
+.modal.add-menu-sheet .modal-head h2{font-size:18px;letter-spacing:-.02em;font-weight:700}
+.modal.add-menu-sheet .modal-head .icon-button{border-radius:50%;background:#282a2d;color:var(--muted);width:32px;min-height:32px;padding:6px}
+.modal.add-menu-sheet .modal-body{padding:0 20px 20px}
+.modal.add-menu-sheet .add-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.modal.add-menu-sheet .add-grid button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px;min-height:96px;padding:16px;border-radius:16px;background:var(--surface);border-color:var(--border);font-size:14px;line-height:1.2;font-weight:600}
+.modal.add-menu-sheet .add-tile-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#d8b9781a;color:var(--gold)}
+@media(max-width:1099px){.redesign-v2.app{grid-template-rows:56px minmax(0,1fr) auto}.redesign-v2 .page{padding:16px 16px 98px;max-width:700px}.redesign-v2.app:has(.brand-bar-secondary){grid-template-rows:minmax(0,1fr) auto}.redesign-v2 .brand-bar-secondary{display:none}.redesign-v2.app:has(.brand-bar-secondary) .page{padding-top:16px}.redesign-v2[data-view=more] .page{padding-top:12px}.v2-more .destination-grid{grid-template-columns:1fr}.redesign-v2 .page-heading h1{font-size:24px}.redesign-v2 .page-heading{margin-bottom:20px}}
+@media(max-width:699px){.modal.add-menu-sheet{width:100%;max-width:none;max-height:94dvh;margin:auto 0 0;position:fixed;inset:auto 0 0;border-radius:24px 24px 0 0;border-bottom:0;padding-bottom:env(safe-area-inset-bottom)}.modal.add-menu-sheet::backdrop{background:#000b;backdrop-filter:none}.redesign-v2 .page-heading h1{font-size:24px}}
+@media(min-width:1100px){.redesign-v2 .brand-bar{padding:0 28px}.redesign-v2 .brand{font-size:20px}.redesign-v2 .brand-mark{width:37px;height:37px}.redesign-v2 .page{padding-top:30px}.v2-home{max-width:760px;margin:0 auto}.v2-home .home-heading h1{font-size:32px}.v2-home .home-section{margin-top:22px}.v2-home .home-metrics strong{font-size:24px}.v2-home .home-metrics button{padding:16px}.redesign-v2 .add-button{bottom:28px;right:32px}.v2-tasks{max-width:760px;margin:0 auto}}
+@media(max-width:359px){.redesign-v2 .page{padding-inline:12px}.v2-home .home-heading h1{font-size:21px}.v2-home .weather-location select{max-width:180px}.v2-home .home-metrics strong{font-size:15px}.v2-home .focus-time p{font-size:10px}.v2-more .destination strong{font-size:15px}}

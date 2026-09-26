@@ -1,0 +1,3 @@
+import /etc/caddy/research.caddy
+import /etc/caddy/pirata.caddy
+import /etc/caddy/hermes.caddy

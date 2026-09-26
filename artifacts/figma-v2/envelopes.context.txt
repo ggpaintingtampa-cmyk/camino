@@ -1,0 +1,222 @@
+const imgCompass = "https://www.figma.com/api/mcp/asset/659c98e7-019d-448a-8691-3f6c81bc6f8c.svg";
+const imgMoon = "https://www.figma.com/api/mcp/asset/a8d2cd27-8f10-409c-81c3-a10dc88d8551.svg";
+const imgPlus = "https://www.figma.com/api/mcp/asset/469cf64a-fb92-401b-81f8-4eac3248a874.svg";
+const imgChevronDown = "https://www.figma.com/api/mcp/asset/755f9b40-f98d-4829-bce7-d5e3f8c2389b.svg";
+const imgHouse = "https://www.figma.com/api/mcp/asset/ccb14ad4-b55b-4209-b1df-bdbc0fe4bec3.svg";
+const imgCalendar = "https://www.figma.com/api/mcp/asset/ca9da414-5860-424a-962a-0425eeaa5617.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/de878628-f30c-4f3b-8019-50e1c646114a.svg";
+const imgMenu = "https://www.figma.com/api/mcp/asset/19d59cb2-2ef2-4748-8067-a4cb67322145.svg";
+
+export default function Envelopes() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[24px] size-full" data-node-id="100:1092" data-name="envelopes">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:1093" data-name="scrollable-content">
+        <div className="content-stretch flex items-center justify-between px-[16px] py-[12px] relative shrink-0 w-full" data-node-id="100:1094" data-name="app-header">
+          <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="100:1095" data-name="logo-group">
+            <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex flex-col items-center justify-center relative rounded-[16px] shrink-0 size-[32px]" data-node-id="100:1096" data-name="logo">
+              <div className="relative shrink-0 size-[18px]" data-node-id="100:1097" data-name="compass">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCompass} />
+              </div>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-px items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-node-id="100:1099" data-name="title-group">
+              <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:1100">
+                Caminos
+              </p>
+              <p className="font-['Inter:Medium'] font-medium relative shrink-0 text-[#a6aaae] text-[10px]" data-node-id="100:1101">
+                by Morgan
+              </p>
+            </div>
+          </div>
+          <div className="border border-[#34373a] border-solid content-stretch flex gap-[6px] items-center px-[12px] py-[8px] relative rounded-[20px] shrink-0" data-node-id="100:1102" data-name="end-day-btn">
+            <div className="relative shrink-0 size-[14px]" data-node-id="100:1103" data-name="moon">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMoon} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[12px] whitespace-nowrap" data-node-id="100:1105">
+              End day
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[16px] items-start p-[16px] relative shrink-0 w-full" data-node-id="100:1106" data-name="content-body">
+          <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full" data-node-id="100:1107" data-name="intro">
+            <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:1108" data-name="Frame">
+              <p className="[word-break:break-word] font-['Inter:Extra_Bold'] font-extrabold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[22px] whitespace-nowrap" data-node-id="100:1109">
+                Your envelopes
+              </p>
+              <div className="bg-[rgba(216,185,120,0.1)] content-stretch flex items-start p-[8px] relative rounded-[16px] shrink-0" data-node-id="100:1110" data-name="icon-add">
+                <div className="content-stretch flex flex-col items-center justify-center overflow-clip relative shrink-0 size-[14px]" data-node-id="100:1111" data-name="plus">
+                  <div className="relative shrink-0 size-[14px]" data-node-id="100:1298" data-name="plus">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlus} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[13px] w-full" data-node-id="100:1113">
+              Reserve cash for a purpose. Decide when it expires.
+            </p>
+          </div>
+          <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full" data-node-id="100:1114" data-name="tab-selector">
+            <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex items-start px-[16px] py-[8px] relative rounded-[20px] shrink-0" data-node-id="100:1115" data-name="Frame">
+              <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[12px] whitespace-nowrap" data-node-id="100:1116">
+                Personal
+              </p>
+            </div>
+            <div className="border border-[#34373a] border-solid content-stretch flex items-start px-[16px] py-[8px] relative rounded-[20px] shrink-0" data-node-id="100:1117" data-name="Frame">
+              <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[12px] whitespace-nowrap" data-node-id="100:1118">
+                Company
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[10px] items-start relative shrink-0 w-full" data-node-id="100:1119" data-name="section-active">
+            <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1120">
+              ACTIVE ENVELOPES
+            </p>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[10px] items-start p-[14px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:1121" data-name="envelope-card">
+              <div className="[word-break:break-word] content-stretch flex items-start justify-between leading-[normal] not-italic relative shrink-0 w-full whitespace-nowrap" data-node-id="100:1122" data-name="Frame">
+                <div className="content-stretch flex flex-col gap-[2px] items-start relative shrink-0" data-node-id="100:1123" data-name="Frame">
+                  <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="100:1124">
+                    Gym membership
+                  </p>
+                  <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="100:1125">
+                    Expires Sep 22, 2026 at 6:00 PM
+                  </p>
+                </div>
+                <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:1126">
+                  $100.00
+                </p>
+              </div>
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:1127" data-name="Frame">
+                <div className="bg-[#34373a] content-stretch flex h-[4px] items-start overflow-clip relative rounded-[2px] shrink-0 w-[180px]" data-node-id="100:1128" data-name="Frame">
+                  <div className="bg-[#d8b978] h-full relative shrink-0 w-[120px]" data-node-id="100:1129" data-name="Rectangle" />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:1130">
+                  3 days left
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[10px] items-start p-[14px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:1131" data-name="envelope-card-2">
+              <div className="[word-break:break-word] content-stretch flex items-start justify-between leading-[normal] not-italic relative shrink-0 w-full whitespace-nowrap" data-node-id="100:1132" data-name="Frame">
+                <div className="content-stretch flex flex-col gap-[2px] items-start relative shrink-0" data-node-id="100:1133" data-name="Frame">
+                  <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="100:1134">
+                    Birthday gift for Alex
+                  </p>
+                  <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="100:1135">
+                    Expires Oct 2, 2026
+                  </p>
+                </div>
+                <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:1136">
+                  $75.00
+                </p>
+              </div>
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:1137" data-name="Frame">
+                <div className="bg-[#34373a] content-stretch flex h-[4px] items-start overflow-clip relative rounded-[2px] shrink-0 w-[180px]" data-node-id="100:1138" data-name="Frame">
+                  <div className="bg-[#d8b978] h-full relative shrink-0 w-[40px]" data-node-id="100:1139" data-name="Rectangle" />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:1140">
+                  13 days left
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[10px] items-start relative shrink-0 w-full" data-node-id="100:1141" data-name="section-expiring">
+            <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1142">
+              ACTION REQUIRED
+            </p>
+            <div className="bg-[#191a1c] border border-[#f59e0b] border-solid content-stretch flex flex-col gap-[12px] items-start p-[14px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:1143" data-name="expired-attention-card">
+              <div className="[word-break:break-word] content-stretch flex items-start justify-between leading-[normal] not-italic relative shrink-0 w-full whitespace-nowrap" data-node-id="100:1144" data-name="Frame">
+                <div className="content-stretch flex flex-col gap-[2px] items-start relative shrink-0" data-node-id="100:1145" data-name="Frame">
+                  <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="100:1146">
+                    Grocery savings
+                  </p>
+                  <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#f59e0b] text-[11px]" data-node-id="100:1147">
+                    Expired yesterday
+                  </p>
+                </div>
+                <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:1148">
+                  $50.00
+                </p>
+              </div>
+              <div className="content-stretch flex gap-[6px] items-start relative shrink-0 w-full" data-node-id="100:1149" data-name="decisions">
+                <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex flex-[1_0_0] items-start justify-center min-w-px px-[12px] py-[8px] relative rounded-[8px]" data-node-id="100:1150" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:1151">
+                    Earned
+                  </p>
+                </div>
+                <div className="border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] items-start justify-center min-w-px px-[12px] py-[8px] relative rounded-[8px]" data-node-id="100:1152" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1153">
+                    Lost
+                  </p>
+                </div>
+                <div className="border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] items-start justify-center min-w-px px-[12px] py-[8px] relative rounded-[8px]" data-node-id="100:1154" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1155">
+                    Extend
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="100:1156" data-name="section-handled">
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[13px] whitespace-nowrap" data-node-id="100:1157">
+              3 handled envelopes
+            </p>
+            <div className="content-stretch flex flex-col items-center justify-center overflow-clip relative shrink-0 size-[14px]" data-node-id="100:1158" data-name="chevron-down">
+              <div className="relative shrink-0 size-[14px]" data-node-id="100:1301" data-name="chevron-down">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgChevronDown} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#191a1c] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:1160" data-name="bottom-nav">
+        <div className="content-stretch flex h-[64px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="100:1161" data-name="nav-tabs">
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1162" data-name="tab-Home">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1163" data-name="house">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHouse} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:1165">
+              Home
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1166" data-name="tab-Schedule">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1167" data-name="calendar">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendar} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1169">
+              Schedule
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1170" data-name="tab-Goals">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1171" data-name="target">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1173">
+              Goals
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1174" data-name="tab-More">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1175" data-name="menu">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMenu} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1177">
+              More
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col h-[12px] items-center justify-center relative shrink-0 w-full" data-node-id="100:1178" data-name="safe-area-spacer">
+          <div className="bg-[#34373a] h-[5px] relative rounded-[100px] shrink-0 w-[134px]" data-node-id="100:1179" data-name="home-indicator" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

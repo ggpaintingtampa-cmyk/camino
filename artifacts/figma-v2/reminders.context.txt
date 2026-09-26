@@ -1,0 +1,241 @@
+const imgIosSignal = "https://www.figma.com/api/mcp/asset/6a304c22-9f96-4507-a871-eb2f5b782000.svg";
+const imgIosWifiSignal = "https://www.figma.com/api/mcp/asset/b7e8b787-6de1-4efa-8ee9-a362edbe1fcf.svg";
+const imgIosBatteryFull = "https://www.figma.com/api/mcp/asset/d62798ff-593b-47cc-b74e-d68369919b4c.svg";
+const imgAlarmPlus = "https://www.figma.com/api/mcp/asset/b1cb0078-89db-4dba-bd86-fcd060a9ad79.svg";
+const imgInfo = "https://www.figma.com/api/mcp/asset/0aca7657-3b4c-4313-8b93-176522fb0b25.svg";
+const imgPin = "https://www.figma.com/api/mcp/asset/d60ddddc-df1d-4d17-9f45-24da8e8da68c.svg";
+const imgCheck = "https://www.figma.com/api/mcp/asset/ae7b71da-13ad-49ae-b5a4-22b143bcb85c.svg";
+const imgPin1 = "https://www.figma.com/api/mcp/asset/195b6f1e-19d5-48b9-8b42-af3bfef23e34.svg";
+const imgChevronDown = "https://www.figma.com/api/mcp/asset/bd94d6d3-4087-4592-9c20-0b462d8a50d5.svg";
+const imgPlusCircle = "https://www.figma.com/api/mcp/asset/91953fb5-8d84-48b8-9174-ff67b3a7ecb8.svg";
+const imgHome = "https://www.figma.com/api/mcp/asset/efafc517-b2ff-4263-af84-4d80a373c7fc.svg";
+const imgCalendarClock = "https://www.figma.com/api/mcp/asset/9ff014ff-fb74-494e-b07f-5b76250e45a7.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/3db86120-afd4-4add-b752-98c50c1447ef.svg";
+const imgGrid2X2 = "https://www.figma.com/api/mcp/asset/ad4cfd8e-dd09-47dd-b380-24b574b9f4c6.svg";
+
+export default function ScreenReminders() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[36px] size-full" data-node-id="101:228" data-name="screen-reminders">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:229" data-name="Frame">
+        <div className="content-stretch flex h-[44px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="101:230" data-name="status-bar">
+          <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:231">
+            9:41
+          </p>
+          <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:232" data-name="status-icons">
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:595" data-name="ios-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosSignal} />
+            </div>
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:598" data-name="ios-wifi-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosWifiSignal} />
+            </div>
+            <div className="h-[17px] relative shrink-0 w-[25px]" data-node-id="101:601" data-name="ios-battery-full">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosBatteryFull} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex items-center justify-between pb-[8px] pt-[12px] px-[16px] relative shrink-0 w-full" data-node-id="101:236" data-name="header-action">
+          <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[22px] whitespace-nowrap" data-node-id="101:237">
+            Reminders
+          </p>
+          <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex items-start p-[8px] relative rounded-[10px] shrink-0" data-node-id="101:238" data-name="Frame">
+            <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:239" data-name="icon-wrapper-plus add alert reminder">
+              <div className="relative shrink-0 size-[16px]" data-node-id="101:691" data-name="alarm-plus">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgAlarmPlus} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex items-start pb-[12px] px-[16px] relative shrink-0 w-full" data-node-id="101:241" data-name="Frame">
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[8px] items-start p-[10px] relative rounded-[8px] shrink-0 w-[302px]" data-node-id="101:242" data-name="Frame">
+            <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[14px]" data-node-id="101:243" data-name="icon-wrapper-info detail status">
+              <div className="relative shrink-0 size-[14px]" data-node-id="101:760" data-name="info">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgInfo} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] flex-[1_0_0] font-['Geist:Regular'] font-normal leading-[normal] min-w-px relative text-[#a6aaae] text-[12px]" data-node-id="101:245">
+              Pinned reminders appear on your Home screen.
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[8px] items-start px-[16px] relative shrink-0 w-full" data-node-id="101:246" data-name="Frame">
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[12px] items-center p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:247" data-name="Frame">
+            <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start leading-[normal] min-w-px relative whitespace-nowrap" data-node-id="101:248" data-name="Frame">
+              <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:249">
+                Take medication
+              </p>
+              <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[12px]" data-node-id="101:250">
+                Daily
+              </p>
+            </div>
+            <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:251" data-name="Frame">
+              <div className="bg-[rgba(216,185,120,0.1)] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:252" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:253" data-name="icon-wrapper-pin nail bookmark fix anchor">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:634" data-name="pin">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPin} />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#34373a] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:255" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:256" data-name="icon-wrapper-checkmark tick done select verify">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:607" data-name="check">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[12px] items-center p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:258" data-name="Frame">
+            <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start leading-[normal] min-w-px relative whitespace-nowrap" data-node-id="101:259" data-name="Frame">
+              <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:260">
+                Submit tax documents
+              </p>
+              <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[12px]" data-node-id="101:261">
+                Starts Sep 25, expires Oct 15
+              </p>
+            </div>
+            <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:262" data-name="Frame">
+              <div className="bg-[rgba(0,0,0,0)] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:263" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:264" data-name="icon-wrapper-pin nail bookmark fix anchor">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:637" data-name="pin">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPin1} />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#34373a] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:266" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:267" data-name="icon-wrapper-checkmark tick done select verify">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:610" data-name="check">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[12px] items-center p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:269" data-name="Frame">
+            <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start leading-[normal] min-w-px relative whitespace-nowrap" data-node-id="101:270" data-name="Frame">
+              <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:271">
+                Call Mom on Sunday
+              </p>
+              <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[12px]" data-node-id="101:272">
+                Weekly, Sunday
+              </p>
+            </div>
+            <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:273" data-name="Frame">
+              <div className="bg-[rgba(216,185,120,0.1)] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:274" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:275" data-name="icon-wrapper-pin nail bookmark fix anchor">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:640" data-name="pin">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPin} />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#34373a] content-stretch flex items-start p-[6px] relative rounded-[6px] shrink-0" data-node-id="101:277" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:278" data-name="icon-wrapper-checkmark tick done select verify">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:613" data-name="check">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCheck} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[8px] items-start pt-[20px] px-[16px] relative shrink-0 w-full" data-node-id="101:280" data-name="Frame">
+          <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="101:281" data-name="Frame">
+            <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[12px] uppercase whitespace-nowrap" data-node-id="101:282">
+              Dismissed Reminders (1)
+            </p>
+            <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[14px]" data-node-id="101:283" data-name="icon-wrapper-chevron down collapse hide">
+              <div className="relative shrink-0 size-[14px]" data-node-id="101:685" data-name="chevron-down">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgChevronDown} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between opacity-60 p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:285" data-name="Frame">
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] relative shrink-0 text-[#a6aaae] whitespace-nowrap" data-node-id="101:286" data-name="Frame">
+              <p className="[text-decoration-skip-ink:none] [text-underline-position:from-font] decoration-from-font decoration-solid font-['Geist:Medium'] font-medium line-through relative shrink-0 text-[13px]" data-node-id="101:287">
+                Buy birthday gift
+              </p>
+              <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[11px]" data-node-id="101:288">
+                Dismissed 2 days ago
+              </p>
+            </div>
+            <div className="bg-[#34373a] content-stretch flex items-start px-[10px] py-[6px] relative rounded-[6px] shrink-0" data-node-id="101:289" data-name="Frame">
+              <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[12px] whitespace-nowrap" data-node-id="101:290">
+                Restore
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:291" data-name="Frame">
+        <div className="absolute bg-[#d8b978] bottom-[96px] content-stretch drop-shadow-[0px_8px_8px_rgba(0,0,0,0.25)] flex gap-[8px] items-center px-[16px] py-[12px] right-[16px] rounded-[24px]" data-node-id="101:292" data-name="floating-add">
+          <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:293" data-name="icon-wrapper-plus bold add create">
+            <div className="relative shrink-0 size-[16px]" data-node-id="101:661" data-name="plus-circle">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlusCircle} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#0b0c0d] text-[14px] whitespace-nowrap" data-node-id="101:295">
+            Add
+          </p>
+        </div>
+        <div className="bg-[#0b0c0d] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:296" data-name="bottom-nav">
+          <div className="content-stretch flex items-center justify-between pb-[12px] pt-[10px] relative shrink-0 w-full" data-node-id="101:297" data-name="tabs">
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:298" data-name="tab-home">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:299" data-name="icon-wrapper-home house clean stroke">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:700" data-name="home">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHome} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:301">
+                Home
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:302" data-name="tab-schedule">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:303" data-name="icon-wrapper-calendar clock appointments schedule list">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:748" data-name="calendar-clock">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendarClock} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:305">
+                Schedule
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:306" data-name="tab-goals">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:307" data-name="icon-wrapper-target bullseye aim goals metric">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:631" data-name="target">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:309">
+                Goals
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:310" data-name="tab-more">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:311" data-name="icon-wrapper-grid four squares dashboard menu">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:805" data-name="grid-2-x-2">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGrid2X2} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="101:313">
+                More
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex items-start justify-center pb-[8px] relative shrink-0 w-full" data-node-id="101:314" data-name="home-indicator">
+            <div className="bg-[#a6aaae] h-[5px] opacity-30 relative rounded-[100px] shrink-0 w-[134px]" data-node-id="101:315" data-name="Rectangle" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

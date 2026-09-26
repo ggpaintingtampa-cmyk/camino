@@ -1,0 +1,437 @@
+const imgCompass = "https://www.figma.com/api/mcp/asset/818128e8-4026-43af-9aec-b86708d5b84c.svg";
+const imgMoon = "https://www.figma.com/api/mcp/asset/32299490-c614-4f85-9a12-f56b83698717.svg";
+const imgSearch = "https://www.figma.com/api/mcp/asset/7cf5fea6-8903-412b-973c-cf55515ff6ba.svg";
+const imgChevronLeft = "https://www.figma.com/api/mcp/asset/1d80eda1-9adf-48c3-8068-2622c536a964.svg";
+const imgChevronRight = "https://www.figma.com/api/mcp/asset/6100b03d-4a8e-42ca-a8e8-5655ea3e41c0.svg";
+const imgEllipse = "https://www.figma.com/api/mcp/asset/2caa3b15-8270-4cd0-87d8-4cbcf76b024b.svg";
+const imgHouse = "https://www.figma.com/api/mcp/asset/edc2323b-2343-4a52-b385-81d490030b0e.svg";
+const imgCalendar = "https://www.figma.com/api/mcp/asset/ad0205cd-8c38-483a-af2c-60cf95bf9d96.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/7b1c302c-c489-4ea4-a1fc-76e2261baecd.svg";
+const imgMenu = "https://www.figma.com/api/mcp/asset/874d4e51-5c7d-417b-9051-747834be7bac.svg";
+
+export default function Journal() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[24px] size-full" data-node-id="100:914" data-name="journal">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:915" data-name="scrollable-content">
+        <div className="content-stretch flex items-center justify-between px-[16px] py-[12px] relative shrink-0 w-full" data-node-id="100:916" data-name="app-header">
+          <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="100:917" data-name="logo-group">
+            <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex flex-col items-center justify-center relative rounded-[16px] shrink-0 size-[32px]" data-node-id="100:918" data-name="logo">
+              <div className="relative shrink-0 size-[18px]" data-node-id="100:919" data-name="compass">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCompass} />
+              </div>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-px items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-node-id="100:921" data-name="title-group">
+              <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:922">
+                Caminos
+              </p>
+              <p className="font-['Inter:Medium'] font-medium relative shrink-0 text-[#a6aaae] text-[10px]" data-node-id="100:923">
+                by Morgan
+              </p>
+            </div>
+          </div>
+          <div className="border border-[#34373a] border-solid content-stretch flex gap-[6px] items-center px-[12px] py-[8px] relative rounded-[20px] shrink-0" data-node-id="100:924" data-name="end-day-btn">
+            <div className="relative shrink-0 size-[14px]" data-node-id="100:925" data-name="moon">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMoon} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[12px] whitespace-nowrap" data-node-id="100:927">
+              End day
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[16px] items-start p-[16px] relative shrink-0 w-full" data-node-id="100:928" data-name="content-body">
+          <div className="[word-break:break-word] content-stretch flex flex-col gap-[4px] items-start leading-[normal] not-italic relative shrink-0 w-full" data-node-id="100:929" data-name="intro">
+            <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#d8b978] text-[11px] uppercase whitespace-nowrap" data-node-id="100:930">
+              THE DAYS BECOME YOUR STORY
+            </p>
+            <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[22px] whitespace-nowrap" data-node-id="100:931">{`Journal & history`}</p>
+            <p className="font-['Inter:Regular'] font-normal min-w-full relative shrink-0 text-[#a6aaae] text-[13px] w-[min-content]" data-node-id="100:932">
+              A factual record, with room for your own words.
+            </p>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[8px] items-center px-[12px] py-[10px] relative rounded-[12px] shrink-0 w-full" data-node-id="100:933" data-name="search-bar">
+            <div className="content-stretch flex flex-col items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-node-id="100:934" data-name="search">
+              <div className="relative shrink-0 size-[16px]" data-node-id="100:1289" data-name="search">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSearch} />
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[13px] whitespace-nowrap" data-node-id="100:936">
+              Search days, notes, tasks, goals...
+            </p>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[12px] items-start p-[14px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:937" data-name="calendar-card">
+            <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:938" data-name="cal-header">
+              <div className="content-stretch flex flex-col items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-node-id="100:939" data-name="chevron-left">
+                <div className="relative shrink-0 size-[16px]" data-node-id="100:1292" data-name="chevron-left">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgChevronLeft} />
+                </div>
+              </div>
+              <div className="[word-break:break-word] content-stretch flex gap-[6px] items-center leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-node-id="100:941" data-name="Frame">
+                <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[13px]" data-node-id="100:942">
+                  September 2026
+                </p>
+                <p className="[text-underline-position:from-font] decoration-from-font decoration-solid font-['Inter:Regular'] font-normal relative shrink-0 text-[#d8b978] text-[11px] underline" data-node-id="100:943">
+                  Back to today
+                </p>
+              </div>
+              <div className="content-stretch flex flex-col items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-node-id="100:944" data-name="chevron-right">
+                <div className="relative shrink-0 size-[16px]" data-node-id="100:1295" data-name="chevron-right">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgChevronRight} />
+                </div>
+              </div>
+            </div>
+            <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="100:946" data-name="grid-container">
+              <div className="content-stretch flex items-start justify-between relative shrink-0 w-full" data-node-id="100:947" data-name="labels-row">
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:948" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:949">
+                    M
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:950" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:951">
+                    T
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:952" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:953">
+                    W
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:954" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:955">
+                    T
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:956" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:957">
+                    F
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:958" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:959">
+                    S
+                  </p>
+                </div>
+                <div className="content-stretch flex items-start justify-center relative shrink-0 w-[28px]" data-node-id="100:960" data-name="Frame">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:961">
+                    S
+                  </p>
+                </div>
+              </div>
+              <div className="content-start flex flex-wrap gap-y-[8px] items-start justify-between relative shrink-0 w-full" data-node-id="100:962" data-name="days-grid">
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:963" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:964" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:965">
+                      ​
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:966" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:967" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:968">
+                      1
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 size-[28px]" data-node-id="100:969" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:970" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:971">
+                      2
+                    </p>
+                  </div>
+                  <div className="relative shrink-0 size-[3px]" data-node-id="100:972" data-name="Ellipse">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:973" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:974" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:975">
+                      3
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:976" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:977" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:978">
+                      4
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:979" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:980" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:981">
+                      5
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:982" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:983" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:984">
+                      6
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:985" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:986" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:987">
+                      7
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 size-[28px]" data-node-id="100:988" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:989" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:990">
+                      8
+                    </p>
+                  </div>
+                  <div className="relative shrink-0 size-[3px]" data-node-id="100:991" data-name="Ellipse">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:992" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:993" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:994">
+                      9
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:995" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:996" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:997">
+                      10
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:998" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:999" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1000">
+                      11
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1001" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1002" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1003">
+                      12
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1004" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1005" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1006">
+                      13
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1007" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1008" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1009">
+                      14
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1010" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1011" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1012">
+                      15
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 size-[28px]" data-node-id="100:1013" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1014" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1015">
+                      16
+                    </p>
+                  </div>
+                  <div className="relative shrink-0 size-[3px]" data-node-id="100:1016" data-name="Ellipse">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1017" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1018" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1019">
+                      17
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 size-[28px]" data-node-id="100:1020" data-name="Frame">
+                  <div className="border border-[#34373a] border-solid content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1021" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1022">
+                      18
+                    </p>
+                  </div>
+                  <div className="relative shrink-0 size-[3px]" data-node-id="100:1023" data-name="Ellipse">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1024" data-name="Frame">
+                  <div className="bg-[#d8b978] content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1025" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#0b0c0d] text-[11px] whitespace-nowrap" data-node-id="100:1026">
+                      19
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1027" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1028" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1029">
+                      20
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1030" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1031" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1032">
+                      21
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1033" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1034" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1035">
+                      22
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1036" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1037" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1038">
+                      23
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1039" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1040" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1041">
+                      24
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1042" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1043" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1044">
+                      25
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1045" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1046" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1047">
+                      26
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1048" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1049" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1050">
+                      27
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1051" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1052" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1053">
+                      28
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1054" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1055" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1056">
+                      29
+                    </p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col items-center relative shrink-0 size-[28px]" data-node-id="100:1057" data-name="Frame">
+                  <div className="content-stretch flex items-center justify-center relative rounded-[12px] shrink-0 size-[24px]" data-node-id="100:1058" data-name="day-num-box">
+                    <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[11px] whitespace-nowrap" data-node-id="100:1059">
+                      30
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="[word-break:break-word] content-stretch flex flex-col gap-[10px] items-start leading-[normal] relative shrink-0 w-full" data-node-id="100:1060" data-name="selected-day-container">
+            <p className="font-['Inter:Bold'] font-bold not-italic relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="100:1061">
+              Sep 19, 2026
+            </p>
+            <div className="bg-[#131416] border border-[#34373a] border-solid content-stretch flex flex-col gap-[8px] items-start not-italic p-[12px] relative rounded-[12px] shrink-0 w-full whitespace-nowrap" data-node-id="100:1062" data-name="daily-record-card">
+              <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#d8b978] text-[10px]" data-node-id="100:1063">
+                DAILY RECORD
+              </p>
+              <div className="content-stretch flex flex-col font-['Inter:Regular'] font-normal gap-[6px] items-start relative shrink-0 text-[#f4f2ed] text-[13px] w-full" data-node-id="100:1064" data-name="Frame">
+                <p className="relative shrink-0" data-node-id="100:1065">
+                  Woke at 7:15 AM · Mood: Good · Energy: 3/5
+                </p>
+                <p className="relative shrink-0" data-node-id="100:1066">
+                  4/6 tasks completed · 2 blocks on time
+                </p>
+                <p className="relative shrink-0" data-node-id="100:1067">
+                  2,840 steps · 7h 30m sleep
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[8px] items-start p-[12px] relative rounded-[12px] shrink-0 text-[#a6aaae] w-full" data-node-id="100:1068" data-name="journal-note-card">
+              <p className="font-['Inter:Bold'] font-bold not-italic relative shrink-0 text-[10px] whitespace-nowrap" data-node-id="100:1069">
+                YOUR JOURNAL
+              </p>
+              <p className="font-['Inter:Italic'] font-normal italic min-w-full relative shrink-0 text-[13px] w-[min-content]" data-node-id="100:1070">
+                Write something about today...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#191a1c] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:1071" data-name="bottom-nav">
+        <div className="content-stretch flex h-[64px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="100:1072" data-name="nav-tabs">
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1073" data-name="tab-Home">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1074" data-name="house">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHouse} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1076">
+              Home
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1077" data-name="tab-Schedule">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1078" data-name="calendar">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendar} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1080">
+              Schedule
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1081" data-name="tab-Goals">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1082" data-name="target">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:1084">
+              Goals
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:1085" data-name="tab-More">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:1086" data-name="menu">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMenu} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:1088">
+              More
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col h-[12px] items-center justify-center relative shrink-0 w-full" data-node-id="100:1089" data-name="safe-area-spacer">
+          <div className="bg-[#34373a] h-[5px] relative rounded-[100px] shrink-0 w-[134px]" data-node-id="100:1090" data-name="home-indicator" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

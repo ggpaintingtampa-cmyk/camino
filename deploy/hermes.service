@@ -1,0 +1,40 @@
+[Unit]
+Description=Caminos private personal dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hermes
+Group=hermes
+WorkingDirectory=/srv/hermes/current
+Environment=NODE_ENV=production
+Environment=HERMES_DB=/var/lib/hermes/hermes.sqlite
+Environment=HERMES_ORIGIN=https://hermes.andresinbox.tech
+Environment=HERMES_PORT=3003
+Environment=HERMES_STATIC_DIR=/srv/hermes/current/dist
+ExecStart=/opt/hermes/node/bin/node /srv/hermes/current/node_modules/tsx/dist/cli.mjs /srv/hermes/current/server/main.ts
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectProc=invisible
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/hermes
+InaccessiblePaths=-/var/lib/pirata -/var/backups/pirata -/srv/pirata -/var/lib/morgan-research -/var/backups/morgan-research -/srv/research -/var/lib/caddy -/etc/caddy
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

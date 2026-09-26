@@ -1,0 +1,253 @@
+const imgCompass = "https://www.figma.com/api/mcp/asset/3386568d-f208-4613-95ca-f4cfbc168407.svg";
+const imgSun = "https://www.figma.com/api/mcp/asset/d8ccf330-0b95-423c-b7dc-f862713ef356.svg";
+const imgSun1 = "https://www.figma.com/api/mcp/asset/120ab5eb-0e23-4782-9101-093a77a96e5e.svg";
+const imgMapPin = "https://www.figma.com/api/mcp/asset/54e22e64-fcf3-4dee-80b4-616ec054cf78.svg";
+const imgChevronDown = "https://www.figma.com/api/mcp/asset/6597c866-9d3f-4323-9c27-65d427c152d5.svg";
+const imgHouse = "https://www.figma.com/api/mcp/asset/937c75dd-1913-4965-990e-2751d71aae9a.svg";
+const imgCalendar = "https://www.figma.com/api/mcp/asset/4e3939ef-6145-4558-bc0c-dd83a0118b3e.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/f0d9fc84-cd8a-47b4-9704-7607eb43328f.svg";
+const imgMenu = "https://www.figma.com/api/mcp/asset/197becca-59f6-4092-8e97-ebebacec1cc7.svg";
+const imgPlus = "https://www.figma.com/api/mcp/asset/cc541034-b2f5-478b-b4a5-d19dc566f37d.svg";
+
+export default function Screen2HomePrecheckin() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[24px] size-full" data-node-id="100:142" data-name="screen-2-home-precheckin">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:143" data-name="scrollable-content">
+        <div className="content-stretch flex items-center justify-between px-[16px] py-[12px] relative shrink-0 w-full" data-node-id="100:144" data-name="app-header">
+          <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="100:145" data-name="logo-group">
+            <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex flex-col items-center justify-center relative rounded-[16px] shrink-0 size-[32px]" data-node-id="100:146" data-name="logo">
+              <div className="relative shrink-0 size-[18px]" data-node-id="100:645" data-name="compass">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCompass} />
+              </div>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-px items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-node-id="100:148" data-name="title-group">
+              <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:149">
+                Caminos
+              </p>
+              <p className="font-['Inter:Medium'] font-medium relative shrink-0 text-[#a6aaae] text-[10px]" data-node-id="100:150">
+                by Morgan
+              </p>
+            </div>
+          </div>
+          <div className="bg-[rgba(216,185,120,0.1)] border border-[#d8b978] border-solid content-stretch flex gap-[6px] items-center px-[12px] py-[8px] relative rounded-[20px] shrink-0" data-node-id="100:151" data-name="start-day-btn">
+            <div className="relative shrink-0 size-[14px]" data-node-id="100:531" data-name="sun">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSun} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[12px] whitespace-nowrap" data-node-id="100:153">
+              Start day
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[16px] items-start p-[16px] relative shrink-0 w-full" data-node-id="100:154" data-name="content-body">
+          <div className="[word-break:break-word] content-stretch flex flex-col gap-[4px] items-start leading-[normal] not-italic relative shrink-0 w-full" data-node-id="100:155" data-name="intro">
+            <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#d8b978] text-[11px] uppercase whitespace-nowrap" data-node-id="100:156">
+              Friday, Sep 19
+            </p>
+            <p className="font-['Inter:Extra_Bold'] font-extrabold min-w-full relative shrink-0 text-[#f4f2ed] text-[22px] w-[min-content]" data-node-id="100:157">
+              One moment at a time.
+            </p>
+            <p className="font-['Inter:Regular'] font-normal min-w-full relative shrink-0 text-[#a6aaae] text-[14px] w-[min-content]" data-node-id="100:158">
+              A clear view of what matters today.
+            </p>
+          </div>
+          <div className="bg-[#191a1c] border-[#d8b978] border-[1.5px] border-solid content-stretch flex flex-col gap-[16px] items-start p-[20px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:159" data-name="start-day-hero">
+            <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-node-id="100:160" data-name="Frame">
+              <div className="relative shrink-0 size-[24px]" data-node-id="100:534" data-name="sun">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSun1} />
+              </div>
+              <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-node-id="100:162" data-name="Frame">
+                <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:163">
+                  Good morning
+                </p>
+                <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[12px]" data-node-id="100:164">
+                  Tap to check in and begin your day
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#d8b978] content-stretch flex items-start justify-center px-[16px] py-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="100:165" data-name="Frame">
+              <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#0b0c0d] text-[14px] whitespace-nowrap" data-node-id="100:166">
+                Start My Day
+              </p>
+            </div>
+          </div>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[8px] items-start p-[12px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:167" data-name="weather-card">
+            <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:168" data-name="weather-loc">
+              <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-node-id="100:169" data-name="Frame">
+                <div className="relative shrink-0 size-[14px]" data-node-id="100:537" data-name="map-pin">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMapPin} />
+                </div>
+                <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[13px] whitespace-nowrap" data-node-id="100:171">{`Land O' Lakes, FL`}</p>
+                <div className="relative shrink-0 size-[12px]" data-node-id="100:540" data-name="chevron-down">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgChevronDown} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Inter:Light'] font-light leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[28px] whitespace-nowrap" data-node-id="100:173">
+                82°
+              </p>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex font-['Inter:Regular'] font-normal items-center justify-between leading-[normal] not-italic relative shrink-0 text-[#a6aaae] w-full whitespace-nowrap" data-node-id="100:174" data-name="weather-forecast">
+              <p className="relative shrink-0 text-[13px]" data-node-id="100:175">
+                Partly cloudy. A gentle start.
+              </p>
+              <p className="relative shrink-0 text-[11px]" data-node-id="100:176">
+                H: 89° L: 74°
+              </p>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic opacity-60 relative shrink-0 text-[#a6aaae] text-[9px] whitespace-nowrap" data-node-id="100:177">
+              Synthetic weather · last future · 10:10 AM
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="100:178" data-name="section-calendar">
+            <div className="[word-break:break-word] content-stretch flex items-center justify-between leading-[normal] not-italic relative shrink-0 w-full whitespace-nowrap" data-node-id="100:179" data-name="Frame">
+              <p className="font-['Inter:Bold'] font-bold relative shrink-0 text-[#a6aaae] text-[13px] uppercase" data-node-id="100:180">
+                On the calendar
+              </p>
+              <p className="font-['Inter:Semi_Bold'] font-semibold relative shrink-0 text-[#d8b978] text-[12px]" data-node-id="100:181">
+                View day
+              </p>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[4px] items-start p-[12px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:182" data-name="cal-item-1">
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:183" data-name="Frame">
+                <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="100:184">
+                  11:00 AM — Project check-in
+                </p>
+                <div className="bg-[rgba(29,78,216,0.12)] content-stretch flex items-start px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-node-id="100:185" data-name="badge">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#60a5fa] text-[10px] uppercase whitespace-nowrap" data-node-id="100:186">
+                    Work
+                  </p>
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[12px] whitespace-nowrap" data-node-id="100:187">
+                60 min
+              </p>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col items-start p-[12px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:188" data-name="cal-item-2">
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="100:189" data-name="Frame">
+                <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="100:190">
+                  2:00 PM — Annual check-up
+                </p>
+                <div className="bg-[#34373a] content-stretch flex items-start px-[8px] py-[4px] relative rounded-[6px] shrink-0" data-node-id="100:191" data-name="badge">
+                  <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[10px] uppercase whitespace-nowrap" data-node-id="100:192">
+                    Personal
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="100:193" data-name="section-attention">
+            <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[13px] uppercase whitespace-nowrap" data-node-id="100:194">
+              Needs attention
+            </p>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col items-start p-[12px] relative rounded-[16px] shrink-0 w-full" data-node-id="100:195" data-name="attention-1">
+              <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full" data-node-id="100:196" data-name="Frame">
+                <div className="bg-[#f59e0b] relative rounded-[4px] shrink-0 size-[8px]" data-node-id="100:197" data-name="Frame" />
+                <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[2px] items-start leading-[normal] min-w-px not-italic relative" data-node-id="100:198" data-name="Frame">
+                  <p className="font-['Inter:Bold'] font-bold min-w-full relative shrink-0 text-[#f4f2ed] text-[14px] w-[min-content]" data-node-id="100:199">
+                    Call dentist
+                  </p>
+                  <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:200">
+                    Snoozed twice
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="[word-break:break-word] content-stretch flex gap-[8px] items-start leading-[normal] not-italic relative shrink-0 w-full whitespace-nowrap" data-node-id="100:201" data-name="summaries-row">
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[2px] items-start min-w-px p-[10px] relative rounded-[12px]" data-node-id="100:202" data-name="Frame">
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[10px] uppercase" data-node-id="100:203">
+                Steps
+              </p>
+              <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:204">
+                —
+              </p>
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[9px]" data-node-id="100:205">
+                No entry
+              </p>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[2px] items-start min-w-px p-[10px] relative rounded-[12px]" data-node-id="100:206" data-name="Frame">
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[10px] uppercase" data-node-id="100:207">
+                Sleep
+              </p>
+              <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:208">
+                —
+              </p>
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[9px]" data-node-id="100:209">
+                No entry
+              </p>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[2px] items-start min-w-px p-[10px] relative rounded-[12px]" data-node-id="100:210" data-name="Frame">
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[10px] uppercase" data-node-id="100:211">
+                Blocks
+              </p>
+              <p className="font-['Inter:Extra_Bold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[16px]" data-node-id="100:212">
+                —
+              </p>
+              <p className="font-['Inter:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[9px]" data-node-id="100:213">
+                No entry
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#191a1c] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="100:214" data-name="bottom-nav">
+        <div className="content-stretch flex h-[64px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="100:215" data-name="nav-tabs">
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:216" data-name="tab-Home">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:543" data-name="house">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHouse} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Semi_Bold'] font-semibold leading-[normal] not-italic relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="100:218">
+              Home
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:219" data-name="tab-Schedule">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:546" data-name="calendar">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendar} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:221">
+              Schedule
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:222" data-name="tab-Goals">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:549" data-name="target">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:224">
+              Goals
+            </p>
+          </div>
+          <div className="content-stretch flex flex-col gap-[4px] items-center relative shrink-0 w-[64px]" data-node-id="100:225" data-name="tab-More">
+            <div className="relative shrink-0 size-[20px]" data-node-id="100:552" data-name="menu">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMenu} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="100:227">
+              More
+            </p>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col h-[12px] items-center justify-center relative shrink-0 w-full" data-node-id="100:228" data-name="safe-area-spacer">
+          <div className="bg-[#34373a] h-[5px] relative rounded-[100px] shrink-0 w-[134px]" data-node-id="100:229" data-name="home-indicator" />
+        </div>
+      </div>
+      <div className="absolute bg-[#d8b978] bottom-[92px] content-stretch drop-shadow-[0px_4px_6px_rgba(0,0,0,0.5)] flex gap-[6px] items-center px-[16px] py-[12px] right-[16px] rounded-[30px]" data-node-id="100:230" data-name="floating-add-button">
+        <div className="relative shrink-0 size-[16px]" data-node-id="100:555" data-name="plus">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlus} />
+        </div>
+        <p className="[word-break:break-word] font-['Inter:Bold'] font-bold leading-[normal] not-italic relative shrink-0 text-[#0b0c0d] text-[14px] whitespace-nowrap" data-node-id="100:232">
+          Add
+        </p>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

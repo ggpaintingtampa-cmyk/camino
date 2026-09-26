@@ -1,0 +1,18 @@
+import {useState} from 'react';
+import {AlarmClock,CheckCircle2,Clock3,Plus,SlidersHorizontal,Target} from 'lucide-react';
+import type {Task} from '../shared/types';
+import {dateKey} from '../shared/dates';
+import {unscheduledTasks} from '../shared/selectors';
+import {Empty,type PageProps} from './ui';
+
+export function TaskListPage({state,now,run,onEdit}:PageProps&{onEdit:(value:{task?:Task})=>void}) {
+  const [filters,setFilters]=useState(false),[tag,setTag]=useState('All');
+  const matches=(task:Task)=>tag==='All'||task.tag===tag;
+  const waiting=unscheduledTasks(state).filter(matches);
+  const finished=state.tasks.filter(t=>!t.archived&&t.status!=='open'&&matches(t));
+  const today=finished.filter(t=>dateKey(t.updatedAt,state.settings.timezone)===dateKey(now,state.settings.timezone));
+  const older=finished.filter(t=>dateKey(t.updatedAt,state.settings.timezone)!==dateKey(now,state.settings.timezone));
+  const archive=async()=>{for(const task of finished.filter(t=>t.status==='complete'))if(!await run({type:'record.archive',collection:'tasks',id:task.id,archived:true}))break;};
+  const historyRow=(task:Task)=>{const remaining=state.tasks.find(t=>t.id===task.remainingTaskId);return <div className={`task-history-row ${task.status}`} key={task.id}><span>{task.title}</span><small>{task.status==='complete'?<><CheckCircle2 size={15}/>Complete</>:<><Clock3 size={15}/>{remaining?.archived?'Follow-up archived':remaining?.status==='complete'?'Follow-up complete':remaining?.status==='open'?`${remaining.duration}m remaining`:'Partially done'}</>}</small><button className="text-button" aria-label={`Archive ${task.title}`} onClick={()=>run({type:'record.archive',collection:'tasks',id:task.id,archived:true})}>Archive</button></div>;};
+  return <section className="v2-tasks"><header className="task-list-heading"><h1>Your tasks</h1><button className="icon-button" aria-label="Filter tasks" aria-expanded={filters} onClick={()=>setFilters(!filters)}><SlidersHorizontal size={20}/></button></header>{filters&&<div className="task-filters"><span className="eyebrow">Show tasks</span><div className="chips">{['All','Personal','Work'].map(value=><button aria-pressed={tag===value} className={tag===value?'selected':''} key={value} onClick={()=>setTag(value)}>{value}</button>)}</div></div>}<h2 className="task-section-label">Unscheduled open tasks</h2><div className="task-list-cards">{waiting.length?waiting.map(task=>{const goal=state.goals.find(g=>g.id===task.goalId);return <button className="task-list-card" key={task.id} onClick={()=>onEdit({task})}><span className="task-list-card-top"><strong>{task.title}</strong><span className={`task-tag ${task.tag.toLowerCase()}`}>{task.tag}</span></span><span className="task-list-card-meta"><span><AlarmClock size={15}/>{task.duration>=60?`${Math.floor(task.duration/60)}h${task.duration%60?` ${task.duration%60}m`:''}`:`${task.duration} min`}</span>{goal&&<span className="gold"><Target size={15}/>{goal.title}</span>}</span></button>;}):<Empty>Nothing waiting. Enjoy a little breathing room.</Empty>}</div><h2 className="task-section-label">Completed today</h2><div className="task-list-cards">{today.length?today.map(historyRow):<Empty>Completed and partially done tasks will appear here.</Empty>}</div>{older.length>0&&<details className="older-tasks"><summary>Earlier completed & partial tasks ({older.length})</summary><div className="task-list-cards">{older.map(historyRow)}</div></details>}{finished.some(t=>t.status==='complete')&&<button className="text-button archive-tasks" onClick={archive}>Archive completed tasks</button>}<button className="text-button task-add-inline" onClick={()=>onEdit({})}><Plus size={16}/>Add task</button></section>;
+}

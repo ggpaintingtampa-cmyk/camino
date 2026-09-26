@@ -1,0 +1,214 @@
+const imgIosSignal = "https://www.figma.com/api/mcp/asset/9417638c-8811-4d88-98f5-cf6950eae933.svg";
+const imgIosWifiSignal = "https://www.figma.com/api/mcp/asset/42aa1efd-1d79-4033-b8fb-6cf2416e38c9.svg";
+const imgIosBatteryFull = "https://www.figma.com/api/mcp/asset/22e19886-8757-4870-86bc-da09c78983fa.svg";
+const imgGripVertical = "https://www.figma.com/api/mcp/asset/23ad895c-17b0-4c87-ba7e-292351857011.svg";
+const imgLine = "https://www.figma.com/api/mcp/asset/caa628fa-d6f6-475a-b880-af97216d35bf.svg";
+const imgSave = "https://www.figma.com/api/mcp/asset/b3db6087-83ed-4618-b253-c2082ece39fc.svg";
+const imgPlusCircle = "https://www.figma.com/api/mcp/asset/e226c0d1-707d-497f-948b-17cc59850f01.svg";
+const imgHome = "https://www.figma.com/api/mcp/asset/5c9072c6-a097-49ad-84d7-f2bdfebddaf5.svg";
+const imgCalendarClock = "https://www.figma.com/api/mcp/asset/3d19a42d-5c91-44b9-a284-7e8b2e085749.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/ac5110b6-5ccb-48a6-8095-9cd036dcc016.svg";
+const imgGrid2X2 = "https://www.figma.com/api/mcp/asset/115271af-d0d6-49b0-b707-668a4744c7cc.svg";
+
+export default function ScreenSettings() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[36px] size-full" data-node-id="101:317" data-name="screen-settings">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:318" data-name="Frame">
+        <div className="content-stretch flex h-[44px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="101:319" data-name="status-bar">
+          <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:320">
+            9:41
+          </p>
+          <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:321" data-name="status-icons">
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:616" data-name="ios-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosSignal} />
+            </div>
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:619" data-name="ios-wifi-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosWifiSignal} />
+            </div>
+            <div className="h-[17px] relative shrink-0 w-[25px]" data-node-id="101:622" data-name="ios-battery-full">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosBatteryFull} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col items-start pb-[8px] pt-[12px] px-[20px] relative shrink-0 w-full" data-node-id="101:325" data-name="app-header">
+          <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="101:326" data-name="Frame">
+            <div className="content-stretch flex items-center relative shrink-0" data-node-id="101:327" data-name="Frame">
+              <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[20px] whitespace-nowrap" data-node-id="101:328">
+                Settings
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[16px] items-start pt-[12px] px-[16px] relative shrink-0 w-full" data-node-id="101:329" data-name="Frame">
+          <div className="[word-break:break-word] content-stretch flex flex-col gap-[6px] items-start leading-[normal] relative shrink-0 w-full whitespace-nowrap" data-node-id="101:330" data-name="Frame">
+            <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#a6aaae] text-[11px] uppercase" data-node-id="101:331">
+              Profile
+            </p>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:332" data-name="Frame">
+              <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:333">
+                Morgan
+              </p>
+              <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#d8b978] text-[13px]" data-node-id="101:334">
+                Edit name
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-node-id="101:335" data-name="Frame">
+            <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] uppercase whitespace-nowrap" data-node-id="101:336">
+              Navigation
+            </p>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[4px] items-start p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:337" data-name="Frame">
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="101:338" data-name="Frame">
+                <p className="[word-break:break-word] font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:339">
+                  Tab bar order
+                </p>
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:340" data-name="icon-wrapper-reorder drag lines grid handle list menu">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:832" data-name="grip-vertical">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGripVertical} />
+                  </div>
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#a6aaae] text-[12px] whitespace-nowrap" data-node-id="101:342">
+                Drag to reorder your bottom tabs
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-node-id="101:343" data-name="Frame">
+            <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] uppercase whitespace-nowrap" data-node-id="101:344">{`Time & Units`}</p>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-col gap-[10px] items-start p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:345" data-name="Frame">
+              <div className="[word-break:break-word] content-stretch flex font-['Geist:Regular'] font-normal items-center justify-between leading-[normal] relative shrink-0 w-full whitespace-nowrap" data-node-id="101:346" data-name="Frame">
+                <p className="relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:347">
+                  Time zone
+                </p>
+                <p className="relative shrink-0 text-[#a6aaae] text-[13px]" data-node-id="101:348">
+                  America/New_York (EDT)
+                </p>
+              </div>
+              <div className="h-0 relative shrink-0 w-full" data-node-id="101:349" data-name="Line">
+                <div className="absolute inset-[-1px_0_0_0]">
+                  <img alt="" className="block max-w-none size-full" src={imgLine} />
+                </div>
+              </div>
+              <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="101:350" data-name="Frame">
+                <p className="[word-break:break-word] font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:351">
+                  Weight unit
+                </p>
+                <div className="bg-[#34373a] content-stretch flex items-start p-[2px] relative rounded-[8px] shrink-0" data-node-id="101:352" data-name="Frame">
+                  <div className="bg-[#191a1c] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[6px] shrink-0" data-node-id="101:353" data-name="Frame">
+                    <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="101:354">
+                      LBS
+                    </p>
+                  </div>
+                  <div className="content-stretch flex items-start px-[10px] py-[4px] relative shrink-0" data-node-id="101:355" data-name="Frame">
+                    <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:356">
+                      KG
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full" data-node-id="101:357" data-name="Frame">
+            <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] uppercase whitespace-nowrap" data-node-id="101:358">
+              Data
+            </p>
+            <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="101:359" data-name="Frame">
+              <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex gap-[8px] items-center justify-center p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:360" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:361" data-name="icon-wrapper-download share save file export">
+                  <div className="relative shrink-0 size-[16px]" data-node-id="101:829" data-name="save">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSave} />
+                  </div>
+                </div>
+                <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#d8b978] text-[14px] whitespace-nowrap" data-node-id="101:363">
+                  Export my data (JSON)
+                </p>
+              </div>
+              <p className="[text-underline-position:from-font] [word-break:break-word] decoration-from-font decoration-solid font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#d8b978] text-[12px] text-center underline whitespace-nowrap" data-node-id="101:364">
+                Privacy info
+              </p>
+            </div>
+          </div>
+          <div className="[word-break:break-word] content-stretch flex flex-col gap-[4px] items-center leading-[normal] pt-[8px] relative shrink-0 w-full whitespace-nowrap" data-node-id="101:365" data-name="Frame">
+            <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[13px]" data-node-id="101:366">
+              Caminos v1.2.0
+            </p>
+            <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="101:367">
+              Made with focus in mind
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:368" data-name="Frame">
+        <div className="absolute bg-[#d8b978] bottom-[96px] content-stretch drop-shadow-[0px_8px_8px_rgba(0,0,0,0.25)] flex gap-[8px] items-center px-[16px] py-[12px] right-[16px] rounded-[24px]" data-node-id="101:369" data-name="floating-add">
+          <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:370" data-name="icon-wrapper-plus bold add create">
+            <div className="relative shrink-0 size-[16px]" data-node-id="101:664" data-name="plus-circle">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlusCircle} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#0b0c0d] text-[14px] whitespace-nowrap" data-node-id="101:372">
+            Add
+          </p>
+        </div>
+        <div className="bg-[#0b0c0d] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:373" data-name="bottom-nav">
+          <div className="content-stretch flex items-center justify-between pb-[12px] pt-[10px] relative shrink-0 w-full" data-node-id="101:374" data-name="tabs">
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:375" data-name="tab-home">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:376" data-name="icon-wrapper-home house clean stroke">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:703" data-name="home">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHome} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:378">
+                Home
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:379" data-name="tab-schedule">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:380" data-name="icon-wrapper-calendar clock appointments schedule list">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:751" data-name="calendar-clock">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendarClock} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:382">
+                Schedule
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:383" data-name="tab-goals">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:384" data-name="icon-wrapper-target bullseye aim goals metric">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:643" data-name="target">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:386">
+                Goals
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:387" data-name="tab-more">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:388" data-name="icon-wrapper-grid four squares dashboard menu">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:808" data-name="grid-2-x-2">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGrid2X2} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="101:390">
+                More
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex items-start justify-center pb-[8px] relative shrink-0 w-full" data-node-id="101:391" data-name="home-indicator">
+            <div className="bg-[#a6aaae] h-[5px] opacity-30 relative rounded-[100px] shrink-0 w-[134px]" data-node-id="101:392" data-name="Rectangle" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

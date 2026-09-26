@@ -1,0 +1,162 @@
+/* Figma v2 life screens. Scoped to avoid changing shared forms and other pages. */
+.feature-page.life-v2{gap:16px;min-width:0}
+.feature-page.life-v2.life-rocket{gap:12px}
+.life-v2 .feature-heading{gap:12px;margin:0;align-items:center}
+.life-v2 .feature-eyebrow{color:var(--gold,#d8b978);font-size:11px;line-height:1.25;font-weight:700;letter-spacing:0;text-transform:uppercase}
+.life-v2 .feature-heading h1{margin:4px 0;font-size:22px;font-weight:800;letter-spacing:-.45px;line-height:1.2;text-wrap:initial}
+.life-v2 .feature-heading p{font-size:13px;line-height:1.4;max-width:none;color:var(--muted,#a6aaae)}
+.life-v2 .life-heading-add{width:32px;min-width:32px;min-height:32px;height:32px;border:0;border-radius:50%;padding:0;background:#d8b9781a;color:var(--gold,#d8b978)}
+.life-v2.life-goals .life-heading-add{background:transparent;width:24px;min-width:24px;height:32px}
+.life-v2 .feature-card{padding:14px;border-radius:16px;background:var(--surface,#191a1c);border-color:var(--border,#34373a)}
+.life-v2 .feature-card>h2,.life-v2 .feature-section-label h2{font-size:14px;letter-spacing:0;font-weight:700}
+.life-v2 .feature-link-button{color:var(--gold,#d8b978);min-height:28px;line-height:1.35;padding:3px 0;font-size:12px;font-weight:500}
+.life-v2 .feature-stack{gap:12px}
+.life-v2 .feature-horizons{gap:20px;padding:0;scrollbar-width:none;border:0;min-height:34px}
+.life-v2 .feature-horizons::-webkit-scrollbar{display:none}
+.life-v2 .feature-horizons button{position:relative;flex:none;min-height:34px;padding:0 0 10px;background:transparent;border:0;border-radius:0;font-size:13px;font-weight:400;color:var(--muted,#a6aaae)}
+.life-v2 .feature-horizons button.selected{color:var(--gold,#d8b978);font-weight:700;background:transparent}
+.life-v2 .feature-horizons button.selected::after{position:absolute;content:'';bottom:0;left:0;width:20px;height:2px;border-radius:2px;background:var(--gold,#d8b978)}
+.life-v2 .life-goal-count{font-size:13px;color:var(--muted,#a6aaae);min-height:20px;margin-top:-2px}
+.life-v2 .life-goal-count .feature-inline-check{font-size:12px;gap:7px;min-height:20px}
+.life-v2 .life-goal-count input{width:12px;height:12px;min-height:12px;margin:0}
+.life-v2 .life-goal-card{display:grid;grid-template-columns:36px 1fr;column-gap:12px;row-gap:12px;padding:16px;border-radius:16px;background:var(--surface,#191a1c);border-color:var(--border,#34373a)}
+.life-v2 .life-goal-top{grid-column:1/-1;display:flex;align-items:flex-start;gap:8px;min-width:0}
+.life-v2 .feature-goal-title{gap:4px;min-height:0;padding:0;line-height:1.2}
+.life-v2 .feature-goal-title>span{font-size:15px;line-height:1.3;font-weight:800;letter-spacing:0}
+.life-v2 .feature-goal-title>small{color:var(--muted,#a6aaae);font-size:11px;line-height:1.25}
+.life-v2 .life-goal-state{color:var(--gold,#d8b978);width:24px;min-width:24px;min-height:24px;height:24px;border:0;background:transparent;padding:0;margin:-3px -3px 0 0}
+.life-v2 .life-goal-progress{grid-column:1;grid-row:2}
+.life-v2 .feature-percent{width:36px;height:36px;min-height:36px;min-width:36px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;padding:0;background:#34373a;color:var(--text,#f4f2ed);font-size:11px;font-weight:700;line-height:1}
+.life-v2 .feature-step-count{grid-column:2;grid-row:2;align-self:center;font-size:13px;line-height:1.3;margin:0;color:var(--muted,#a6aaae)}
+.life-v2 .life-goal-card>.feature-goal-children,.life-v2 .life-goal-card>.feature-goal-notes,.life-v2 .life-goal-card>.feature-link-button{grid-column:1/-1}
+.life-v2 .feature-goal-notes{font-size:12px;line-height:1.5;margin:0}
+.life-v2 .feature-goal-children{display:flex;flex-direction:column;gap:12px;padding:0}
+.life-v2 .feature-goal-child{border:0;border-left:2px solid var(--border,#34373a);background:transparent;border-radius:0;padding:0 0 0 12px;margin:0;min-width:0}
+.life-v2 .feature-goal-child .feature-goal-child{padding-left:10px}
+.life-v2 .life-goal-child-line{display:flex;gap:6px;align-items:center}
+.life-v2 .feature-goal-child .feature-goal-title>span{font-size:13px;font-weight:700}
+.life-v2 .life-leaf-check{border:0;background:transparent;min-height:28px;padding:0;color:var(--muted,#a6aaae);font-size:11px;font-weight:400;white-space:nowrap}
+.life-v2 .life-leaf-check.checked{color:var(--gold,#d8b978)}
+.life-v2 .life-leaf-check:disabled{opacity:1;cursor:default}
+.life-v2 .life-child-add{border:0;background:transparent;padding:0;min-width:20px;min-height:28px;width:20px;color:var(--muted,#a6aaae)}
+.life-v2 .feature-goal-child>.feature-goal-children{margin-top:12px}
+.life-v2 .life-goal-card>.feature-link-button{justify-self:start;min-height:20px;padding:0;gap:4px}
+.life-v2 .life-paused .feature-goal-title>span,.life-v2 .life-paused .feature-percent{color:var(--muted,#a6aaae)}
+.life-v2 .life-paused .life-goal-state{color:var(--muted,#a6aaae)}
+.life-v2 .life-paused .feature-percent{background:#232527}
+.life-v2.life-health .feature-choice-strip{padding:0;border:0;border-radius:0;gap:8px;background:transparent}
+.life-v2.life-health .feature-choice-strip button{flex:0 1 auto;border:1px solid var(--border,#34373a);background:transparent;min-height:31px;line-height:1.3;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:400}
+.life-v2.life-health .feature-choice-strip button.selected{background:#d8b9781a;border-color:#d8b978;color:var(--gold,#d8b978);font-weight:700}
+.life-v2 .life-health-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.life-v2 .life-health-metric{padding:14px;text-align:left;align-items:stretch;gap:8px;min-height:102px;border-radius:16px;font-weight:400;background:var(--surface,#191a1c);border-color:var(--border,#34373a)}
+.life-v2 .life-health-metric .life-metric-label{display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:11px;text-transform:uppercase;line-height:1.3;color:var(--muted,#a6aaae)}
+.life-v2 .life-health-metric.has-value .life-metric-label svg{color:var(--gold,#d8b978)}
+.life-v2 .life-health-metric>strong{font-size:24px;line-height:1.15;letter-spacing:-.3px;font-weight:700}
+.life-v2 .life-health-metric>small{font-size:10px;line-height:1.3;color:var(--muted,#a6aaae)}
+.life-v2 .life-health-metric.is-empty>strong{color:var(--muted,#a6aaae)}
+.life-v2 .life-quick-record{padding:12px;border:1px solid var(--border,#34373a);border-radius:16px;background:var(--surface,#191a1c);display:flex;flex-direction:column;gap:10px}
+.life-v2 .life-quick-record>h2{font-size:11px;text-transform:uppercase;color:var(--muted,#a6aaae);font-weight:700;line-height:1.3;letter-spacing:0}
+.life-v2 .feature-log-shortcuts{display:flex;flex-wrap:wrap;gap:6px}
+.life-v2 .feature-log-shortcuts>button{display:inline-flex;flex-direction:row;align-items:center;gap:4px;min-height:27px;border-radius:12px;padding:5px 10px;font-size:12px;line-height:1.25;font-weight:400;background:#d8b9780d;border:1px solid var(--gold,#d8b978);color:var(--gold,#d8b978)}
+.life-v2 .feature-log-shortcuts>button>svg{display:block;color:inherit}
+.life-v2 .life-health-history>summary,.life-v2 .life-recorded-activities>summary{display:flex;align-items:center;gap:7px;list-style:none;color:var(--muted,#a6aaae);font-size:12px;cursor:pointer;min-height:28px}
+.life-v2 .life-health-history>summary::-webkit-details-marker,.life-v2 .life-recorded-activities>summary::-webkit-details-marker{display:none}
+.life-v2 .life-health-history>summary>svg,.life-v2 .life-recorded-activities>summary>svg{margin-left:auto;transition:transform .15s ease}
+.life-v2 .life-health-history[open]>summary>svg,.life-v2 .life-recorded-activities[open]>summary>svg{transform:rotate(180deg)}
+.life-v2 .life-health-history-content{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.life-v2 .life-health-history-content>.field{margin:0}
+.life-v2 .feature-entry-list{padding:0 14px}
+.life-v2 .life-rocket-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.life-v2 .life-rocket-heading h1{font-size:20px;font-weight:700;line-height:1.2;letter-spacing:-.3px}
+.life-v2 .life-rocket-heading>button{background:transparent;border:0;border-radius:0;padding:0;min-height:28px;font-size:12px;line-height:1.3;text-transform:uppercase;letter-spacing:.5px;color:var(--gold,#d8b978);font-weight:600}
+.life-v2.life-rocket .feature-choice-strip{padding:2px;border-radius:10px;gap:0;background:var(--surface,#191a1c);border-color:var(--border,#34373a)}
+.life-v2.life-rocket .feature-choice-strip button{min-height:33px;padding:8px 4px;font-size:13px;border-radius:8px;font-weight:500;line-height:1.3}
+.life-v2.life-rocket .feature-choice-strip button.selected{background:#d8b9781a;color:var(--gold,#d8b978)}
+.life-v2 .life-rocket-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.life-v2 .life-rocket-stats .feature-stat{padding:12px;border-radius:12px;gap:4px;background:var(--surface,#191a1c);border-color:var(--border,#34373a)}
+.life-v2 .life-rocket-stats .feature-stat>span{font-size:11px;line-height:1.3;text-transform:uppercase;font-weight:500;letter-spacing:.5px}
+.life-v2 .life-rocket-stats .feature-stat>strong{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:0}
+.life-v2 .life-rocket-stats .feature-stat:first-child>strong{color:var(--gold,#d8b978)}
+.life-v2 .life-log-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:4px}
+.life-v2 .life-log-label h2{font-size:12px;text-transform:uppercase;letter-spacing:.5px;line-height:1.3;font-weight:700;color:var(--muted,#a6aaae)}
+.life-v2 .life-log-label small{font-size:11px}
+.life-v2 .life-practice-list{display:flex;flex-direction:column;gap:12px;margin-top:-6px}
+.life-v2 .life-practice-card{display:flex;flex-direction:column;align-items:stretch;gap:10px;text-align:left;padding:14px;border-radius:14px;border-color:var(--border,#34373a);background:var(--surface,#191a1c);font-weight:400}
+.life-v2 .life-practice-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.life-v2 .life-practice-title>span{display:flex;align-items:center;gap:6px;min-width:0}
+.life-v2 .life-practice-title svg{color:var(--gold,#d8b978)}
+.life-v2 .life-practice-title strong{font-size:14px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.life-v2 .life-practice-title>b{font-size:13px;color:var(--gold,#d8b978);font-weight:700;white-space:nowrap}
+.life-v2 .life-practice-detail{display:flex;flex-direction:column;gap:4px;min-width:0}
+.life-v2 .life-practice-detail>small{font-size:11px;font-weight:500;line-height:1.3;text-transform:uppercase;letter-spacing:.5px;color:var(--muted,#a6aaae)}
+.life-v2 .life-practice-detail>span{font-size:13px;line-height:1.4;overflow-wrap:anywhere;white-space:pre-wrap}
+.life-v2 .life-practice-notes>span{color:var(--muted,#a6aaae)}
+.life-v2 .feature-search{border-radius:10px;min-height:36px;padding-left:10px;gap:8px;background:#111315;border-color:var(--border,#34373a)}
+.life-v2 .feature-search input{min-height:34px;font-size:13px;line-height:1.3;padding:8px 10px 8px 0;border-radius:10px}
+.life-v2 .feature-calendar{padding:14px;max-width:none;border-radius:16px}
+.life-v2 .feature-calendar-heading{gap:6px}
+.life-v2 .feature-calendar-heading>.icon-button{min-width:24px;width:24px;min-height:24px;height:24px;padding:0;border:0;background:transparent;color:var(--muted,#a6aaae)}
+.life-v2 .life-calendar-month{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;min-width:0}
+.life-v2 .life-calendar-month>label{position:relative;display:block;font-size:13px;font-weight:700;line-height:1.3;max-width:none}
+.life-v2 .life-calendar-month input{position:absolute;inset:0;opacity:0;width:100%;height:100%;min-height:0;padding:0;cursor:pointer}
+.life-v2 .life-calendar-month>label:focus-within{outline:2px solid var(--gold,#d8b978);outline-offset:3px;border-radius:3px}
+.life-v2 .life-calendar-month .feature-link-button{font-size:11px;font-weight:400;text-decoration:underline;min-height:24px;padding:0}
+.life-v2 .feature-calendar-grid{margin-top:12px;gap:4px 0;align-items:center}
+.life-v2 .feature-calendar-weekdays{padding-bottom:4px;font-size:11px;font-weight:700;line-height:1.3}
+.life-v2 .feature-calendar-grid>button{justify-content:flex-start;align-items:center;gap:0;min-height:28px;height:28px;padding:0;background:transparent;border:0;border-radius:0;font-size:11px;font-weight:600;color:var(--text,#f4f2ed)}
+.life-v2 .feature-calendar-grid>button>span{display:flex;justify-content:center;align-items:center;width:24px;height:24px;border-radius:50%;border:1px solid transparent}
+.life-v2 .feature-calendar-grid>button.today{border:0}
+.life-v2 .feature-calendar-grid>button.today>span{border-color:var(--gold,#d8b978)}
+.life-v2 .feature-calendar-grid>button.selected{color:#0b0c0d;background:transparent}
+.life-v2 .feature-calendar-grid>button.selected>span{background:var(--gold,#d8b978);font-weight:700}
+.life-v2 .feature-calendar-grid i{bottom:0;background:var(--gold,#d8b978)}
+.life-v2 .life-selected-day{display:flex;flex-direction:column;gap:10px}
+.life-v2 .life-journal-date h2{font-size:14px;font-weight:700}
+.life-v2 .life-journal-date .feature-link-button{font-size:11px;gap:4px;min-height:24px}
+.life-v2 .life-daily-record{background:#131416;padding:12px;border-radius:12px;display:flex;flex-direction:column;gap:8px}
+.life-v2 .life-daily-record .feature-section-label h2,.life-v2 .life-card-label{font-size:10px;font-weight:700;text-transform:uppercase;line-height:1.3;letter-spacing:0;color:var(--gold,#d8b978)}
+.life-v2 .life-daily-record .feature-section-label{min-height:13px}
+.life-v2 .life-daily-record .icon-button{padding:0;min-width:20px;width:20px;min-height:16px;height:16px;background:transparent;border:0;color:var(--muted,#a6aaae)}
+.life-v2 .life-day-facts{display:flex;flex-direction:column;gap:6px}
+.life-v2 .life-day-facts>p,.life-v2 .feature-journal-text{font-size:13px;line-height:1.4;font-weight:400;margin:0}
+.life-v2 .life-journal-card{display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:left;padding:12px;border-radius:12px}
+.life-v2 .life-journal-card .life-card-label{color:var(--muted,#a6aaae)}
+.life-v2 .life-journal-placeholder{font-style:italic;color:var(--muted,#a6aaae)}
+.life-v2 .feature-journal-note{margin:0;font-size:12px;line-height:1.45}
+.life-v2 .life-search-results .feature-section-label h2{font-size:14px}
+@media(min-width:700px){
+ .feature-page.life-v2{gap:20px;max-width:1040px}
+ .life-v2 .feature-heading h1{font-size:28px}
+ .life-v2 .feature-heading p{font-size:14px}
+ .life-v2 .feature-horizons{gap:24px}
+ .life-v2.life-goals>.feature-stack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:16px}
+ .life-v2 .life-goal-card{padding:20px;row-gap:16px}
+ .life-v2 .life-health-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .life-v2 .life-health-metric{padding:18px;min-height:118px}
+ .life-v2 .life-health-metric>strong{font-size:27px}
+ .life-v2 .life-quick-record{padding:16px}
+ .life-v2 .feature-log-shortcuts>button{min-height:34px;padding:7px 14px}
+ .life-v2 .feature-calendar{max-width:520px}
+ .life-v2 .feature-calendar-grid{gap:8px 0}
+ .life-v2 .feature-calendar-grid>button{min-height:36px;height:36px;font-size:12px}
+ .life-v2 .feature-calendar-grid>button>span{width:30px;height:30px}
+ .life-v2 .life-selected-day{max-width:760px}
+ .life-v2 .life-rocket-heading h1{font-size:26px}
+ .life-v2 .life-rocket-stats{max-width:620px}
+ .life-v2.life-rocket>.feature-choice-strip{max-width:620px}
+ .life-v2 .life-practice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:16px}
+ .life-v2 .life-practice-card{padding:18px}
+}
+@media(max-width:360px){
+ .life-v2 .feature-heading h1{font-size:21px}
+ .life-v2 .feature-heading p{font-size:12px}
+ .life-v2 .feature-eyebrow{font-size:10px}
+ .life-v2 .life-health-metric{padding:12px}
+ .life-v2 .life-health-metric>strong{font-size:22px}
+ .life-v2 .feature-calendar{padding:12px 8px}
+ .life-v2 .life-calendar-month>label{font-size:12px}
+ .life-v2 .life-calendar-month .feature-link-button{font-size:10px}
+ .life-v2 .life-goal-card{padding:14px}
+ .life-v2 .life-goal-child-line{gap:4px}
+}
+@media(prefers-reduced-motion:reduce){.life-v2 .life-health-history>summary>svg,.life-v2 .life-recorded-activities>summary>svg{transition:none}}

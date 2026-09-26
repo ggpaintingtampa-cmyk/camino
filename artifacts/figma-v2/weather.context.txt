@@ -1,0 +1,277 @@
+const imgIosSignal = "https://www.figma.com/api/mcp/asset/c3073c1c-83c3-4bdc-8cbd-f8dcffb3a3a0.svg";
+const imgIosWifiSignal = "https://www.figma.com/api/mcp/asset/5d8154e4-e555-4ed6-8da1-d49317976a09.svg";
+const imgIosBatteryFull = "https://www.figma.com/api/mcp/asset/7dd168bf-340c-419a-b5c6-de95583b963e.svg";
+const imgMapPin = "https://www.figma.com/api/mcp/asset/9ce5f9e8-0efb-449a-b05e-a0f85345d95e.svg";
+const imgCloudMoonRain = "https://www.figma.com/api/mcp/asset/59723a0e-fc10-4c17-be5c-e8e9ebe4ebd5.svg";
+const imgLine = "https://www.figma.com/api/mcp/asset/f0ab32a8-9d0d-41a1-9c3d-42232a078d45.svg";
+const imgCloudRainWind = "https://www.figma.com/api/mcp/asset/dae44252-737d-4ca1-90be-37bfe13017cf.svg";
+const imgSun = "https://www.figma.com/api/mcp/asset/26be6615-c6f4-4871-abcf-c6a07d742235.svg";
+const imgCloudLightning = "https://www.figma.com/api/mcp/asset/469ab303-0911-4a53-a8ff-4c742b25cbbf.svg";
+const imgPlusCircle = "https://www.figma.com/api/mcp/asset/c966c4bf-dfc0-46bc-97d9-48fc6979cb72.svg";
+const imgHome = "https://www.figma.com/api/mcp/asset/72f97b75-21f5-455a-a5fa-a3436141ca61.svg";
+const imgCalendarClock = "https://www.figma.com/api/mcp/asset/f3c35681-a7bd-480d-975b-6ff98a94980f.svg";
+const imgTarget = "https://www.figma.com/api/mcp/asset/13a362ea-b4b1-4a1a-bcf6-70c4ca62d0c6.svg";
+const imgGrid2X2 = "https://www.figma.com/api/mcp/asset/f2678804-64fd-4601-a52c-89481655196b.svg";
+
+export default function ScreenWeather() {
+  return (
+    <div className="bg-[#0b0c0d] content-stretch flex flex-col items-start justify-between overflow-clip relative rounded-[36px] size-full" data-node-id="101:476" data-name="screen-weather">
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:477" data-name="Frame">
+        <div className="content-stretch flex h-[44px] items-center justify-between px-[24px] relative shrink-0 w-full" data-node-id="101:478" data-name="status-bar">
+          <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:479">
+            9:41
+          </p>
+          <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-node-id="101:480" data-name="status-icons">
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:673" data-name="ios-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosSignal} />
+            </div>
+            <div className="relative shrink-0 size-[17px]" data-node-id="101:676" data-name="ios-wifi-signal">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosWifiSignal} />
+            </div>
+            <div className="h-[17px] relative shrink-0 w-[25px]" data-node-id="101:679" data-name="ios-battery-full">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIosBatteryFull} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col items-start pb-[8px] pt-[12px] px-[20px] relative shrink-0 w-full" data-node-id="101:484" data-name="app-header">
+          <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-node-id="101:485" data-name="Frame">
+            <div className="content-stretch flex items-center relative shrink-0" data-node-id="101:486" data-name="Frame">
+              <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[20px] whitespace-nowrap" data-node-id="101:487">
+                Weather
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[6px] items-center pb-[12px] px-[16px] relative shrink-0 w-full" data-node-id="101:488" data-name="Frame">
+          <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:489" data-name="icon-wrapper-map pin marker location target">
+            <div className="relative shrink-0 size-[16px]" data-node-id="101:841" data-name="map-pin">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMapPin} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] font-['Geist:SemiBold'] font-semibold leading-[normal] relative shrink-0 text-[#f4f2ed] text-[14px] whitespace-nowrap" data-node-id="101:491">
+            Palm Harbor, FL 34638
+          </p>
+          <p className="[text-underline-position:from-font] [word-break:break-word] decoration-from-font decoration-solid font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#d8b978] text-[12px] underline whitespace-nowrap" data-node-id="101:492">
+            Change
+          </p>
+        </div>
+        <div className="content-stretch flex items-start pb-[16px] px-[16px] relative shrink-0 w-full" data-node-id="101:493" data-name="Frame">
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[12px] items-center min-w-px p-[20px] relative rounded-[16px]" data-node-id="101:494" data-name="Frame">
+            <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-node-id="101:495" data-name="Frame">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[48px]" data-node-id="101:496" data-name="icon-wrapper-cloud sun lightning moon rain weather sky">
+                <div className="relative shrink-0 size-[48px]" data-node-id="101:856" data-name="cloud-moon-rain">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCloudMoonRain} />
+                </div>
+              </div>
+              <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-node-id="101:498" data-name="Frame">
+                <p className="font-['Geist:ExtraBold'] font-extrabold relative shrink-0 text-[#f4f2ed] text-[40px]" data-node-id="101:499">
+                  82°F
+                </p>
+                <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#a6aaae] text-[15px]" data-node-id="101:500">
+                  Partly Cloudy
+                </p>
+              </div>
+            </div>
+            <div className="h-0 relative shrink-0 w-full" data-node-id="101:501" data-name="Line">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine} />
+              </div>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex items-start justify-between leading-[normal] relative shrink-0 w-full whitespace-nowrap" data-node-id="101:502" data-name="Frame">
+              <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 w-[140px]" data-node-id="101:503" data-name="Frame">
+                <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#a6aaae] text-[11px] uppercase" data-node-id="101:504">
+                  Humidity
+                </p>
+                <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:505">
+                  68%
+                </p>
+              </div>
+              <div className="content-stretch flex flex-col gap-[2px] items-center relative shrink-0 w-[140px]" data-node-id="101:506" data-name="Frame">
+                <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#a6aaae] text-[11px] uppercase" data-node-id="101:507">
+                  Wind
+                </p>
+                <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[14px]" data-node-id="101:508">
+                  8 mph SW
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start leading-[normal] pb-[16px] px-[16px] relative shrink-0 w-full" data-node-id="101:509" data-name="Frame">
+          <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#a6aaae] text-[12px] uppercase whitespace-nowrap" data-node-id="101:510">{`Today's Forecast`}</p>
+          <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:511" data-name="Frame">
+            <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#f4f2ed] text-[13px] w-[220px]" data-node-id="101:512">
+              Highs near 86° with light afternoon clouds. Lows around 74°.
+            </p>
+            <div className="content-stretch flex gap-[4px] items-start relative shrink-0 text-[14px] whitespace-nowrap" data-node-id="101:513" data-name="Frame">
+              <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#d8b978]" data-node-id="101:514">
+                86°
+              </p>
+              <p className="font-['Geist:Medium'] font-medium relative shrink-0 text-[#a6aaae]" data-node-id="101:515">
+                74°
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[8px] items-start px-[16px] relative shrink-0 w-full" data-node-id="101:516" data-name="Frame">
+          <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#a6aaae] text-[12px] uppercase whitespace-nowrap" data-node-id="101:517">
+            3-Day Outlook
+          </p>
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="101:518" data-name="Frame">
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:519" data-name="Frame">
+              <div className="content-stretch flex gap-[10px] items-center relative shrink-0" data-node-id="101:520" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[18px]" data-node-id="101:521" data-name="icon-wrapper-cloud rain storm showers weather">
+                  <div className="relative shrink-0 size-[18px]" data-node-id="101:847" data-name="cloud-rain-wind">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCloudRainWind} />
+                  </div>
+                </div>
+                <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-node-id="101:523" data-name="Frame">
+                  <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[13px]" data-node-id="101:524">
+                    Tomorrow
+                  </p>
+                  <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="101:525">
+                    Scattered Showers
+                  </p>
+                </div>
+              </div>
+              <div className="[word-break:break-word] content-stretch flex gap-[8px] items-start leading-[normal] relative shrink-0 text-[13px] whitespace-nowrap" data-node-id="101:526" data-name="Frame">
+                <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#f4f2ed]" data-node-id="101:527">
+                  85°
+                </p>
+                <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae]" data-node-id="101:528">
+                  73°
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:529" data-name="Frame">
+              <div className="content-stretch flex gap-[10px] items-center relative shrink-0" data-node-id="101:530" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[18px]" data-node-id="101:531" data-name="icon-wrapper-sun clear skies brightness weather">
+                  <div className="relative shrink-0 size-[18px]" data-node-id="101:850" data-name="sun">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSun} />
+                  </div>
+                </div>
+                <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-node-id="101:533" data-name="Frame">
+                  <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[13px]" data-node-id="101:534">
+                    Thu, Sep 28
+                  </p>
+                  <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="101:535">
+                    Mostly Sunny
+                  </p>
+                </div>
+              </div>
+              <div className="[word-break:break-word] content-stretch flex gap-[8px] items-start leading-[normal] relative shrink-0 text-[13px] whitespace-nowrap" data-node-id="101:536" data-name="Frame">
+                <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#f4f2ed]" data-node-id="101:537">
+                  87°
+                </p>
+                <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae]" data-node-id="101:538">
+                  75°
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#191a1c] border border-[#34373a] border-solid content-stretch flex items-center justify-between p-[12px] relative rounded-[12px] shrink-0 w-full" data-node-id="101:539" data-name="Frame">
+              <div className="content-stretch flex gap-[10px] items-center relative shrink-0" data-node-id="101:540" data-name="Frame">
+                <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[18px]" data-node-id="101:541" data-name="icon-wrapper-lightning storm thunder rain weather">
+                  <div className="relative shrink-0 size-[18px]" data-node-id="101:853" data-name="cloud-lightning">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCloudLightning} />
+                  </div>
+                </div>
+                <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-node-id="101:543" data-name="Frame">
+                  <p className="font-['Geist:SemiBold'] font-semibold relative shrink-0 text-[#f4f2ed] text-[13px]" data-node-id="101:544">
+                    Fri, Sep 29
+                  </p>
+                  <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae] text-[11px]" data-node-id="101:545">
+                    Thunderstorms
+                  </p>
+                </div>
+              </div>
+              <div className="[word-break:break-word] content-stretch flex gap-[8px] items-start leading-[normal] relative shrink-0 text-[13px] whitespace-nowrap" data-node-id="101:546" data-name="Frame">
+                <p className="font-['Geist:Bold'] font-bold relative shrink-0 text-[#f4f2ed]" data-node-id="101:547">
+                  84°
+                </p>
+                <p className="font-['Geist:Regular'] font-normal relative shrink-0 text-[#a6aaae]" data-node-id="101:548">
+                  72°
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col items-center pt-[12px] relative shrink-0 w-full" data-node-id="101:549" data-name="Frame">
+          <p className="[word-break:break-word] font-['Geist:Regular'] font-normal leading-[normal] relative shrink-0 text-[#a6aaae] text-[10px] whitespace-nowrap" data-node-id="101:550">
+            Weather data by Open-Meteo
+          </p>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:551" data-name="Frame">
+        <div className="absolute bg-[#d8b978] bottom-[96px] content-stretch drop-shadow-[0px_8px_8px_rgba(0,0,0,0.25)] flex gap-[8px] items-center px-[16px] py-[12px] right-[16px] rounded-[24px]" data-node-id="101:552" data-name="floating-add">
+          <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[16px]" data-node-id="101:553" data-name="icon-wrapper-plus bold add create">
+            <div className="relative shrink-0 size-[16px]" data-node-id="101:709" data-name="plus-circle">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlusCircle} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#0b0c0d] text-[14px] whitespace-nowrap" data-node-id="101:555">
+            Add
+          </p>
+        </div>
+        <div className="bg-[#0b0c0d] border-[#34373a] border-solid border-t content-stretch flex flex-col items-start relative shrink-0 w-full" data-node-id="101:556" data-name="bottom-nav">
+          <div className="content-stretch flex items-center justify-between pb-[12px] pt-[10px] relative shrink-0 w-full" data-node-id="101:557" data-name="tabs">
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:558" data-name="tab-home">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:559" data-name="icon-wrapper-home house clean stroke">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:712" data-name="home">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHome} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:561">
+                Home
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:562" data-name="tab-schedule">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:563" data-name="icon-wrapper-calendar clock appointments schedule list">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:757" data-name="calendar-clock">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCalendarClock} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:565">
+                Schedule
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:566" data-name="tab-goals">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:567" data-name="icon-wrapper-target bullseye aim goals metric">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:715" data-name="target">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTarget} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Medium'] font-medium leading-[normal] relative shrink-0 text-[#a6aaae] text-[11px] whitespace-nowrap" data-node-id="101:569">
+                Goals
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-[80px]" data-node-id="101:570" data-name="tab-more">
+              <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 size-[20px]" data-node-id="101:571" data-name="icon-wrapper-grid four squares dashboard menu">
+                <div className="relative shrink-0 size-[20px]" data-node-id="101:814" data-name="grid-2-x-2">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGrid2X2} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Geist:Bold'] font-bold leading-[normal] relative shrink-0 text-[#d8b978] text-[11px] whitespace-nowrap" data-node-id="101:573">
+                More
+              </p>
+            </div>
+          </div>
+          <div className="content-stretch flex items-start justify-center pb-[8px] relative shrink-0 w-full" data-node-id="101:574" data-name="home-indicator">
+            <div className="bg-[#a6aaae] h-[5px] opacity-30 relative rounded-[100px] shrink-0 w-[134px]" data-node-id="101:575" data-name="Rectangle" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.
