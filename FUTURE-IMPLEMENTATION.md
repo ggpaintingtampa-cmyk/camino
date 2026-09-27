@@ -243,6 +243,6 @@ The A–E table is the broad work order, not a requirement to finish every advan
 
 ## Prompt 4 setup and final review follow-up
 
-The initial authorized batch is shared documentation, GitHub coordination, and isolated browser-test infrastructure. App redesign feature boxes above remain pending. See [setup evidence](docs/redesign-v3/review-handoff.md) and [coordination](docs/redesign-v3/coordination.md).
+The initial authorized batch delivers shared documentation, GitHub coordination, and isolated browser-test infrastructure: separate test ports, no stale-server reuse, daily/empty fixture factories, a test-code clock callback, and cleanup after closing SQLite. App redesign feature boxes above remain pending. See [setup evidence](docs/redesign-v3/review-handoff.md) and [coordination](docs/redesign-v3/coordination.md).
 
 The implementation contract now requires Phase 3 compatibility for legacy `day.end`, booking/date context on each interval, and explicit repository creation intent. AI 2 temporarily handles early planning fixes and Phase 6 Settings navigation before returning ownership. Use the R1/R2 markers on every acceptance case/checklist item in `skill.md` sections 13 and 16.1 to determine release readiness.
