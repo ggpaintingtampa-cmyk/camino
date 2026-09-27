@@ -1,0 +1,6 @@
+.planning-fixture{max-width:64rem;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem;overflow-wrap:anywhere}
+.planning-fixture-header h1{font-size:2rem;line-height:1.2;margin:0 0 .5rem}
+.planning-fixture-header p{color:var(--muted);margin:0}
+.planning-fixture nav{display:flex;flex-wrap:wrap;gap:.5rem}
+.planning-fixture output{overflow-wrap:anywhere;font-size:.875rem;color:var(--muted)}
+.planning-fixture>label{display:flex;align-items:center;gap:.75rem}
