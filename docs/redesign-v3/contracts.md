@@ -41,7 +41,7 @@ The visual name "v3" is unrelated to storage format 2.
 
 **Draft rule.** While `CURRENT_SCHEMA_DRAFT` is defined, a database in that format is disposable by definition. Every change to a stored shape during Phases 2–5 increments the draft number. A build refuses a database whose draft number differs from its own with `DRAFT_FORMAT_MISMATCH`; the fixture is recreated, not migrated. Creating or migrating into a draft format needs an explicit draft opt-in (section 6.1), and a draft-state export is not a supported export format. The format is frozen (the draft constant and member are removed) when it first touches non-disposable owner data or is published as a supported release or export format, whichever comes first. After that, stored meaning changes only through a new numbered migration.
 
-Constants in `shared/state-format.ts`: `CURRENT_SCHEMA_VERSION = 2`, `CURRENT_SCHEMA_DRAFT = 1`, `CURRENT_SQL_VERSION = 2`, `LEGACY_SQL_VERSION = 1`.
+Constants in `shared/state-format.ts`: `CURRENT_SCHEMA_VERSION = 2`, `CURRENT_SCHEMA_DRAFT = 2` (draft 2 added the optional `settings.navOrderV3`), `CURRENT_SQL_VERSION = 2`, `LEGACY_SQL_VERSION = 1`.
 
 **Old-build hazard.** The baseline build stamps `user_version = 1` on every open and keeps writing. If it ever opens a migrated database, the next new-build open sees disagreeing versions and refuses with `STATE_INVALID`. Rolling back code after a migration therefore needs the pre-migration backup; it is not repaired in place.
 
@@ -146,7 +146,7 @@ Append-only. Created only by domain transitions, with trusted command time, and 
 
 `Day.reflection?: { changedPlan?; easierTomorrow? }` is optional and separate from `journal`. `summary`, `summaryEdited` and `journal` keep their meaning.
 
-`Settings.navOrder` stays `NavId[]` (four tabs) through Phases 2–5. Section 7.3 describes Phase 6.
+`Settings.navOrder` stays `NavId[]` (four tabs). `Settings.navOrderV3` is the five-tab order. At most one of the two is stored. Section 7.3 describes both.
 
 ## 3. Commands
 
@@ -551,15 +551,18 @@ Not breaking, because the server tolerates it: the existing editors spread a sto
 5. The same request ID with a different payload stays `REQUEST_ID_REUSED`.
 6. Receipts are never pruned by this redesign.
 
-### 7.3 Navigation (Phase 6, not started)
+### 7.3 Navigation (Phase 6)
 
-Stored `navOrder` stays four-tab through Phases 2–5 and `settings.save` keeps accepting exactly the original four-tab shape forever. The planned Phase 6 slice, delivered together with AI 2:
+Coded by AI 2 together with the five-tab shell and the settings editor, because AI 1 was parked. It differs from the earlier proposal in one point: the five-tab order is a second, optional stored member instead of a changed type of `navOrder`. That keeps the change additive, needs no data conversion, and never hands five-tab values to a reader of the four-tab field.
 
-- New command `settings.saveV3 { name, timezone, navOrder?: NavIdV3[] }` with exactly five distinct IDs. The legacy branch is not edited.
-- Stored `Settings.navOrder` becomes `NavIdV3[]` through an explicit format step. Conversion removes `goals`, inserts `tasks` after `schedule` and `history` after `tasks`, keeps the relative order of the rest, and defaults to `home, schedule, tasks, history, more`.
-- After activation a fresh four-tab `settings.save` is normalized to five tabs inside the domain, after fingerprint, receipt and revision handling. A replayed accepted request returns through its receipt first.
+- `settings.save` keeps accepting exactly the original four-tab shape, forever. Its schema branch is not edited, so an accepted request still parses to the same JSON and reaches its receipt.
+- New command `settings.saveV3 { name, timezone, navOrder?: NavIdV3[] }` with exactly five distinct IDs. A supplied order is stored in `settings.navOrderV3` and removes `settings.navOrder`. An omitted order changes neither.
+- Stored invariant: `navOrder` and `navOrderV3` are never both present (`two-navigation-orders`).
+- A fresh four-tab `settings.save` on a state that already has `navOrderV3` is normalized inside the domain, after fingerprint, receipt and revision handling: the order is converted and stored as `navOrderV3`. A replayed accepted request returns through its receipt first and applies nothing.
+- Conversion, `convertLegacyNavOrder` in `shared/navigation.ts`: `goals` leaves the bar, `tasks` follows `schedule`, `history` follows `tasks`, the rest keep their relative order. Default `home, schedule, tasks, history, more`.
+- The shell reads `effectiveNavOrder(settings)`: the stored five-tab order, else the four-tab preference through the conversion. Opening the new build therefore rewrites nothing, and `migrateLegacyState` keeps the four-tab preference unchanged.
 
-Nothing in this section is implemented.
+Coded, not yet run through tests. Matrix rows M21 and M22 still need their tests.
 
 ### 7.4 Requests to other roles
 
@@ -619,6 +622,6 @@ Matrix rows this workstream answers: M01–M13, M15–M25 (M21, M22 with Phase 6
 | `dayPlan.save`, `task.defer`, `task.plan`, `plan.apply`, reviewed `template.apply`, all previews | Coded, not yet run | `shared/planning.ts` |
 | `factsForDay`, `factsForWeek` | Coded, not yet run | `shared/review.ts` |
 | Stored-state validation, open intent, read-only mode, migration, CLI `migrate`, typed CLI failures, MCP bridge safety | Coded, not yet run | `shared/state-schema.ts`, `server/**`, `deploy/caminos-mcp.mjs` |
-| Five-tab navigation (section 7.3) | **Not started** | Phase 6, together with AI 2 |
+| Five-tab navigation (section 7.3): `settings.saveV3`, `navOrderV3`, conversion | Coded by AI 2, not yet run | `shared/navigation.ts`, `shared/domain.ts`, `shared/schema.ts`, `shared/state-schema.ts` |
 
 Known limits: no browser check was run by this role. WebKit cannot launch on this workstation (`libevent-2.1.so.7` missing), as recorded in `review-handoff.md`. The production wrapper `deploy/hermesctl` rejects `--db`, so the migration command cannot run through it; a production migration needs its own separately authorized operations path. `src/TaskListPage.tsx:17` does not typecheck until AI 2's unknown-estimate patch lands.

@@ -44,6 +44,10 @@ Migration and open-intent rows M01–M13, M15–M20, M23–M25; task rows T01, T
 - AI 4: pass `databaseIntent` and `allowDraftFormat` explicitly in the browser harness. Requested on #5. Until then `createApp` keeps a permissive default.
 - Phase 6 five-tab activation with AI 2.
 
+## Change made by AI 2 on this branch's successor
+
+On `redesign/v3-daily-ui` AI 2 added the Phase 6 server slice while AI 1 was parked: `shared/navigation.ts`, `settings.saveV3`, optional stored `settings.navOrderV3`, and draft number 2. See `contracts.md` section 7.3. No other domain file was changed.
+
 ## Limits
 
 Synthetic data only. No production database, secret or service was touched. No browser check was run. WebKit cannot launch on this workstation (`libevent-2.1.so.7` missing).

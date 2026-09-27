@@ -2,7 +2,7 @@ export type Area = 'personal' | 'company';
 export type Tag = 'Personal' | 'Work';
 /** Stored main-tab identity. Four tabs stay authoritative through redesign Phases 2–5. */
 export type NavId = 'home' | 'schedule' | 'goals' | 'more';
-/** Phase 6 stored identity. Declared for planning only: no command or stored state accepts it yet. */
+/** Five-tab identity. Stored in `Settings.navOrderV3` and accepted only by `settings.saveV3`. */
 export type NavIdV3 = 'home' | 'schedule' | 'tasks' | 'history' | 'more';
 export interface Base { id:string; createdAt:string; updatedAt:string; archived?:boolean }
 
@@ -37,7 +37,12 @@ export interface Adjustment extends Base {area:Area; reason:string; before:Ledge
 export interface TemplateBlock {title:string; kind:'task'|'appointment'|'routine'; tag:Tag; startMinute:number; duration:number; notes:string}
 export interface DayTemplate extends Base {title:string; blocks:TemplateBlock[]}
 export interface WeatherLocation extends Base {name:string; latitude:number; longitude:number; primary:boolean; postcode?:string}
-export interface Settings {timezone:string; name:string; currency:'USD'; navOrder?:NavId[]}
+/**
+ * `navOrder` is the four-tab preference and keeps its shape for old clients and receipts.
+ * `navOrderV3` is the five-tab preference. At most one of the two is stored: saving a five-tab
+ * order removes the four-tab one. With neither, the shell uses the default order.
+ */
+export interface Settings {timezone:string; name:string; currency:'USD'; navOrder?:NavId[]; navOrderV3?:NavIdV3[]}
 
 /** R1 draft collection: one plan per owner-local date. Selected tasks are references, never copies. */
 export interface PlanWindow {start:string; end:string}
@@ -149,7 +154,8 @@ export type V3Command =
  | {type:'session.stop'; id:string}
  | {type:'plan.apply'; date:string; source:'reset'|'plan'; operations:PlanOperation[]}
  | {type:'day.startWithCheckin'; date:string; wakeAt?:string; mood?:number; energy?:number; note?:string; logs:CheckinLogDraft[]}
- | {type:'day.close'; id:string; summary?:string; journal?:string; reflection?:DayReflection; expectedSessions:ExpectedSession[]};
+ | {type:'day.close'; id:string; summary?:string; journal?:string; reflection?:DayReflection; expectedSessions:ExpectedSession[]}
+ | {type:'settings.saveV3'; name:string; timezone:string; navOrder?:NavIdV3[]};
 
 export type Command = LegacyCommand | V3Command;
 export interface CommandEnvelope {requestId:string; baseRevision:number; command:Command}

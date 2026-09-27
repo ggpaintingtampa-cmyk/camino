@@ -7,6 +7,7 @@ import { bump, createBase, DomainError, fail, find, isInDay, live, pendingBookin
 import { applyTaskCommand, applyTaskOutcome } from './tasks';
 import { applySessionCommand, dayCloseEntries, endSession, endSessionForTarget, endSessionUnderBooking, hasRecordedWork, isSessionBacked, recordedMinutesForBlock, sessionRef, sessionState, sessionsAssociatedWithDay, sessionViolations, settleBlock, splitRunningIntervalForDay, startSession, type DayCloseEntrySet } from './sessions';
 import { applyPlanningCommand, applyTemplate } from './planning';
+import { convertLegacyNavOrder } from './navigation';
 
 export { DomainError };
 
@@ -423,7 +424,17 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     }
     case 'settings.save': {
       state.settings.name = command.name; state.settings.timezone = command.timezone;
-      if (command.navOrder !== undefined) state.settings.navOrder = [...command.navOrder];
+      // Runs after fingerprint, receipt and revision handling. Once a five-tab order is
+      // stored, a fresh four-tab request is normalized instead of storing a second order.
+      if (command.navOrder !== undefined) {
+        if (state.settings.navOrderV3) state.settings.navOrderV3 = convertLegacyNavOrder(command.navOrder);
+        else state.settings.navOrder = [...command.navOrder];
+      }
+      break;
+    }
+    case 'settings.saveV3': {
+      state.settings.name = command.name; state.settings.timezone = command.timezone;
+      if (command.navOrder !== undefined) { state.settings.navOrderV3 = [...command.navOrder]; delete state.settings.navOrder; }
       break;
     }
     case 'task.capture': case 'task.update': case 'task.resolve': case 'task.reopen':

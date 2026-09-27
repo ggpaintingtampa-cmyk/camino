@@ -74,6 +74,11 @@ const settings = z.strictObject({
   timezone: zone, name: title, currency: z.literal('USD'),
   navOrder: z.array(z.enum(['home', 'schedule', 'goals', 'more'])).length(4).refine(unique, 'duplicate-tab').optional(),
 });
+/** Format 2 may hold the five-tab preference instead of the four-tab one, never both. */
+const currentSettings = z.strictObject({
+  ...settings.shape,
+  navOrderV3: z.array(z.enum(['home', 'schedule', 'tasks', 'history', 'more'])).length(5).refine(unique, 'duplicate-tab').optional(),
+}).refine(value => !(value.navOrder && value.navOrderV3), 'two-navigation-orders');
 const legacyTask = { ...base, title, duration, tag, labels: z.array(z.string().min(1).max(60)).max(30), goalId: id.optional(), notes: text, status: z.enum(['open', 'complete', 'partial']), remainingTaskId: id.optional() };
 const deadline = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('date'), date }),
@@ -129,7 +134,7 @@ const legacyStateSchema = z.strictObject({
 });
 const currentStateSchema = z.strictObject({
   schemaVersion: z.literal(CURRENT_SCHEMA_VERSION), schemaDraft: z.number().int().min(1).optional(),
-  revision, settings, tasks: z.array(z.strictObject(currentTask)), blocks: z.array(block(currentBlock)), days: z.array(z.strictObject(currentDay)), ...sharedCollections,
+  revision, settings: currentSettings, tasks: z.array(z.strictObject(currentTask)), blocks: z.array(block(currentBlock)), days: z.array(z.strictObject(currentDay)), ...sharedCollections,
   dayPlans: z.array(dayPlan), workSessions: z.array(workSession), taskOutcomes: z.array(taskOutcome),
 });
 

@@ -144,6 +144,8 @@ export const commandSchema = z.discriminatedUnion('type', [
   z.strictObject({ type: z.literal('plan.apply'), date, source: z.enum(['reset', 'plan']), operations: z.array(planOperation).min(1).max(100) }),
   z.strictObject({ type: z.literal('day.startWithCheckin'), date, wakeAt: iso.optional(), mood: rating.optional(), energy: rating.optional(), note: text.optional(), logs: z.array(checkinLog).max(4) }),
   z.strictObject({ type: z.literal('day.close'), id, summary: text.optional(), journal: text.optional(), reflection: reflection.optional(), expectedSessions }),
+  // The legacy `settings.save` branch above is never edited: an accepted four-tab request must still parse to reach its receipt.
+  z.strictObject({ type: z.literal('settings.saveV3'), name: title, timezone: zone, navOrder: z.array(z.enum(['home', 'schedule', 'tasks', 'history', 'more'])).length(5).refine(unique, 'Include each main tab once').optional() }),
 ]);
 
 export const commandEnvelopeSchema = z.strictObject({ requestId: id, baseRevision: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1), command: commandSchema });
