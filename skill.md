@@ -646,8 +646,8 @@ After a successful start, offer Plan today with Skip. Canceling or skipping plan
 Close day rules:
 
 1. Show the explicitly open day, including its original date if now past midnight.
-2. If a session is running, require a concrete choice to stop recording and close, or return to work. Include the chosen session ID in the close command.
-3. If the expected running session changed after preview, reject with a stale/conflict response.
+2. List every unfinished session whose latest interval belongs to this day, including all paused sessions and any running session. Require an explicit stop-recording-and-close choice or return to work. Include the reviewed set of session IDs/states in the close command; do not assume only one paused session exists.
+3. If the expected associated-session set/state or reviewed revision changed after preview, reject with a stale/conflict response. Unassociated running work is disclosed as continuing and is not silently attached to or stopped with this day.
 4. If a paused session's latest interval is associated with this day, disclose that closing ends its recording session while leaving the task open. Do not end an unrelated session using session creation date or historical task selection. A later start of that task creates a new session/current interval context; it never resumes into the closed day.
 5. Close the selected day at the server time. Do not invent a task completion or appointment attendance outcome.
 6. Keep unresolved task intentions available. An ended pending task booking may be marked not completed under existing historical rules, but that must not complete/archive its task or mark appointments missed automatically.
@@ -1582,7 +1582,7 @@ pnpm exec playwright test tests/e2e/planning.spec.ts --project=chromium
 
 Run affected new browser suites and both configured Chromium/WebKit projects during integration when the environment supports them. If a browser dependency is unavailable, record the limitation and the checks that did run; do not report the absent project as passing.
 
-The supplied reviewer reported WebKit cannot launch on this machine because `libevent-2.1.so.7` is missing. This is a reported baseline limitation, not a check rerun during this documentation revision. Reproduce it safely during implementation validation, record the launch failure separately from application failures, and run WebKit on a compatible authorized host/CI or mark that coverage pending. Do not suppress the project, install system packages, or label the baseline fully green without appropriate authorization and evidence.
+Prompt 4 reproduced the reported WebKit launch failure on this machine: `libevent-2.1.so.7` is missing. The browser failed before application assertions; coverage remains pending. See `docs/redesign-v3/review-handoff.md` for the exact command and passing Chromium checks. Run WebKit on a compatible authorized host/CI; do not suppress its project, install system packages, or label the whole browser matrix green without appropriate authorization and evidence.
 
 ### 14.3 Synthetic harness improvements
 
@@ -1590,7 +1590,7 @@ The current harness creates a fresh temporary SQLite database and seeds syntheti
 
 The harness currently has a fixed command clock while the browser display extrapolates server time. Timer tests need deliberate server-clock advancement; waiting in the browser alone is not a valid assertion about persisted interval duration.
 
-Keep any scenario/reset/clock-control endpoints restricted to the test harness process. Do not add unauthenticated test reset routes to production `server/app.ts`.
+Prompt 4 provides `tests/support/browser-harness.ts`: `createBrowserHarness(config, staticDir?)` returns an isolated app, `advanceClock(milliseconds)`, and async `close()`. Control the clock from test code, then fetch a fresh snapshot; the callback accepts positive whole milliseconds up to 31 days per advance. No HTTP clock/reset endpoint is registered, even in the test server. Use `close()` in test cleanup so SQLite closes before its temporary directory is removed. Fresh `daily` and `empty` scenarios are available; a custom initial ISO clock requires `empty` to avoid misleading fixed daily seed dates. Do not add test reset routes to production `server/app.ts`.
 
 The Prompt 4 setup batch makes Playwright start a fresh harness with reuse disabled. `CAMINOS_TEST_PORT` selects an isolated loopback port (default 5197); each active worker chooses a distinct free port. An occupied port must fail without stopping or reusing the other process. Each harness creates and removes its own temporary synthetic database; no database-path override is accepted. Harness-only clock control permits deliberate forward advancement; it is absent from production routes.
 
