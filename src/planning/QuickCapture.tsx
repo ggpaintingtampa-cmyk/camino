@@ -8,13 +8,14 @@ export interface QuickCaptureProps {
   onAddDetails?: (taskId: string) => void;
   onPlan?: (taskId: string) => void;
   autoFocus?: boolean;
+  onSaved?: (taskId: string) => void;
 }
 
 /**
  * Title and an optional note. No estimate, time, goal or started day is needed. A blank
  * estimate stays unknown in the saved task.
  */
-export function QuickCapture({ run, onAddDetails, onPlan, autoFocus = false }: QuickCaptureProps) {
+export function QuickCapture({ run, onAddDetails, onPlan, onSaved, autoFocus = false }: QuickCaptureProps) {
   const id = useId();
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
@@ -33,6 +34,7 @@ export function QuickCapture({ run, onAddDetails, onPlan, autoFocus = false }: Q
       const ok = await run({ type: 'task.capture', task: { id: taskId, title: name, ...(note.trim() ? { notes: note.trim() } : {}) } });
       if (!ok) return;
       setSaved({ id: taskId, title: name });
+      onSaved?.(taskId);
       setTitle(''); setNote(''); setWithNote(false); setTaskId(crypto.randomUUID());
       input.current?.focus();
     } finally { setBusy(false); }

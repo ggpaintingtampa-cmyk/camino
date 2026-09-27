@@ -14,20 +14,23 @@ export interface TaskDetailsProps {
   state: Snapshot;
   now: string;
   run: PageProps['run'];
+  runReviewed: PageProps['runReviewed'];
   onClose: () => void;
   /** Opens the placement editor. Saving details never books or moves a time. */
-  onPlan: (task: Task) => void;
-  onOutcome: (task: Task, mode?: 'choices' | 'partial') => void;
-  onStart: (task: Task) => void;
-  onPause: (sessionId: string) => void;
+  onPlan?: (task: Task) => void;
+  onOutcome?: (task: Task, mode?: 'choices' | 'partial') => void;
+  onStart?: (task: Task) => void;
+  onPause?: (sessionId: string) => void;
 }
 
 type DeadlineMode = 'none' | 'date' | 'instant';
 const pad = (value: number) => String(value).padStart(2, '0');
 
 /** Intent and guidance of one task. Estimate, preferred day, deadline and booking stay separate facts. */
-export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcome, onStart, onPause }: TaskDetailsProps) {
+export function TaskDetails({ taskId, state, now, run, runReviewed, onClose, onPlan, onOutcome, onStart, onPause }: TaskDetailsProps) {
   const task = state.tasks.find(candidate => candidate.id === taskId);
+  const [reviewedRevision, setReviewedRevision] = useState(state.revision);
+  const stale = reviewedRevision !== state.revision;
   const zone = state.settings.timezone;
   const today = dateKey(now, zone);
   const [title, setTitle] = useState(task?.title ?? '');
@@ -102,13 +105,15 @@ export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcom
     setProblem('');
     if (!Object.keys(result.patch).length) { onClose(); return; }
     setBusy(true);
-    try { if (await run({ type: 'task.update', id: task!.id, patch: result.patch })) onClose(); } finally { setBusy(false); }
+    try { if (!stale && await reviewed({ type: 'task.update', id: task!.id, patch: result.patch })) onClose(); } finally { setBusy(false); }
   }
-  async function act(command: Parameters<PageProps['run']>[0]) { setBusy(true); try { if (await run(command)) onClose(); } finally { setBusy(false); } }
+  async function reviewed(command: Parameters<PageProps['run']>[0]) { return runReviewed ? (await runReviewed(command, reviewedRevision)).ok : run(command); }
+  async function act(command: Parameters<PageProps['run']>[0]) { if (stale) return; setBusy(true); try { if (await reviewed(command)) onClose(); } finally { setBusy(false); } }
   const guard = (action: () => void) => { if (dirty && !window.confirm('Leave without saving your changes to this task?')) return; action(); };
   const deferDate = deferring === 'tomorrow' ? addDays(today, 1) : null;
 
   return <Modal className="v3-sheet v3-task-details" title={open ? 'Task details' : task.status === 'complete' ? 'Completed task' : 'Partly done task'} onClose={onClose} dirty={dirty}>
+    {stale && <div className="v3-stack" role="alert"><p>The app changed while this task was open. Your draft is kept. Review the current booking and task state before saving.</p><button type="button" onClick={() => { setReviewedRevision(state.revision); setDeferring(null); }}>Review latest task</button></div>}
     <form className="v3-stack" onSubmit={save}>
       {problem && <p className="v3-field-error" role="alert">{problem}</p>}
       <label className="v3-field"><span>Title</span><input required maxLength={200} value={title} disabled={!open} onChange={event => setTitle(event.target.value)}/></label>
@@ -143,7 +148,7 @@ export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcom
         {booking
           ? <p className="v3-booking"><CalendarClock size={16} aria-hidden="true"/>{dateLabel(dateKey(booking.start, zone), today)} {rangeLabel(booking.start, booking.end, zone)} · {kindLabel(booking, blockFlexibility(booking))}</p>
           : <p className="v3-hint">No time is booked for this task.</p>}
-        {open && <button type="button" disabled={busy} onClick={() => guard(() => onPlan(task))}>{booking ? 'Change booked time…' : 'Plan a time…'}</button>}
+        {open && onPlan && <button type="button" disabled={busy} onClick={() => guard(() => onPlan(task))}>{booking ? 'Change booked time…' : 'Plan a time…'}</button>}
       </section>
 
       <fieldset className="v3-field">
@@ -162,7 +167,7 @@ export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcom
 
       {open && <div className="v3-actions v3-sticky-actions">
         <button type="button" disabled={busy} onClick={onClose}>Cancel</button>
-        <button className="primary" disabled={busy || !!draft.error}>{busy ? 'Saving…' : 'Save details'}</button>
+        <button className="primary" disabled={busy || stale || !!draft.error}>{busy ? 'Saving…' : 'Save details'}</button>
       </div>}
     </form>
 
@@ -171,9 +176,9 @@ export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcom
       {session && <p className="v3-hint">{running ? 'Recording now' : 'Paused'} · {minutesLabel(recordedMinutes(session, now))} recorded in this session.</p>}
       <div className="v3-actions">
         {running
-          ? <button type="button" disabled={busy} onClick={() => guard(() => onPause(session!.id))}><Pause size={16} aria-hidden="true"/>Pause</button>
-          : <button type="button" disabled={busy} onClick={() => guard(() => onStart(task))}><Play size={16} aria-hidden="true"/>{session ? 'Resume' : 'Start'}</button>}
-        <button type="button" disabled={busy} onClick={() => guard(() => onOutcome(task, 'choices'))}><Check size={16} aria-hidden="true"/>Done or partly done…</button>
+          ? onPause && <button type="button" disabled={busy} onClick={() => guard(() => onPause(session!.id))}><Pause size={16} aria-hidden="true"/>Pause</button>
+          : onStart && <button type="button" disabled={busy} onClick={() => guard(() => onStart(task))}><Play size={16} aria-hidden="true"/>{session ? 'Resume' : 'Start'}</button>}
+        {onOutcome && <button type="button" disabled={busy} onClick={() => guard(() => onOutcome(task, 'choices'))}><Check size={16} aria-hidden="true"/>Done or partly done…</button>}
       </div>
       <h3>Another day</h3>
       {deferring ? <div className="v3-stack v3-defer-review">
@@ -184,7 +189,7 @@ export function TaskDetails({ taskId, state, now, run, onClose, onPlan, onOutcom
         {selectedToday && <label className="v3-check"><input type="checkbox" checked={deselect} onChange={event => setDeselect(event.target.checked)}/><span>Remove it from today’s chosen tasks.</span></label>}
         <div className="v3-actions">
           <button type="button" disabled={busy} onClick={() => setDeferring(null)}>Back</button>
-          <button type="button" className="primary" disabled={busy || running} onClick={() => act({ type: 'task.defer', id: task.id, preferredDay: deferDate, ...(booking && bookingCancellable && cancelBooking ? { cancelBlockId: booking.id } : {}), ...(selectedToday && deselect ? { deselectFromDate: today } : {}) })}>{deferring === 'tomorrow' ? 'Move to tomorrow' : 'Move to Later'}</button>
+          <button type="button" className="primary" disabled={busy || stale || running} onClick={() => act({ type: 'task.defer', id: task.id, preferredDay: deferDate, ...(booking && bookingCancellable && cancelBooking ? { cancelBlockId: booking.id } : {}), ...(selectedToday && deselect ? { deselectFromDate: today } : {}) })}>{deferring === 'tomorrow' ? 'Move to tomorrow' : 'Move to Later'}</button>
         </div>
         {running && <p className="v3-hint">Pause or stop the recording before moving this task.</p>}
       </div> : <div className="v3-actions">

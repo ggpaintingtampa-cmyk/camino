@@ -1,5 +1,7 @@
 # Four AI prompts for the Caminos redesign
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](docs/redesign-v3/release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 These are four implementation role assignments. Prompt 4's setup batch is now authorized; its actual status and evidence are recorded in `docs/redesign-v3/coordination.md` and `review-handoff.md`. Prompts 1–3 remain separate assignments for the owner to start. Writing a prompt alone does not complete its work.
 
 Repository remote verified locally: **https://github.com/ggpaintingtampa-cmyk/camino**. Use `docs/redesign-v3/coordination.md` for the verified baseline commit, repository visibility, actual issue/PR links, and any publication limits.

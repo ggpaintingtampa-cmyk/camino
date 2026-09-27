@@ -1,5 +1,5 @@
 {
-  "name": "caminos-by-morgan", "version": "2.0.0", "private": true, "type": "module",
+  "name": "caminos-by-morgan", "version": "3.0.0", "private": true, "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5190 --strictPort",
     "api": "tsx server/main.ts",

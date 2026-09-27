@@ -1,5 +1,7 @@
 # Daily UI handoff (AI 2)
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 Branch `redesign/v3-daily-ui`, worktree `.worktrees/v3-daily-ui`, stacked on `redesign/v3-domain` at `f5fd16c`. Release R1. Written September 27, 2026.
 
 ## State of the code

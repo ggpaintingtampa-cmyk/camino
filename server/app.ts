@@ -40,7 +40,7 @@ export async function createApp(options:AppOptions):Promise<CaminosApp> {
     if(!databaseRelative.startsWith('..')) throw new Error('The private database cannot be inside the public asset directory.');
   }
   const now = options.now ?? Date.now;
-  const repository = new Repository(options.dbPath,{intent:options.databaseIntent ?? 'initialize-if-missing',allowDraftFormat:options.allowDraftFormat ?? true});
+  const repository = new Repository(options.dbPath,{intent:options.databaseIntent ?? 'initialize-if-missing',allowDraftFormat:options.allowDraftFormat ?? false});
   const weather = options.weather ?? new WeatherService(repository,fetch,now);
   const app = Fastify({logger:false,bodyLimit:1024*1024,trustProxy:'127.0.0.1'}) as unknown as CaminosApp;
   app.decorate('repository',repository);

@@ -3,7 +3,7 @@ import { ArrowRight, Bell, BellRing, Book, Calendar, ChevronRight, CircleAlert, 
 import type { TaskView } from '../shared/contracts';
 import { openDay } from '../shared/domain-core';
 import { effectiveNavOrder } from '../shared/navigation';
-import { pendingBookingForTask } from '../shared/planning';
+import { dayPlanForDate, pendingBookingForTask } from '../shared/planning';
 import { recordedMinutes, runningSession, sameTarget, unfinishedSessionForTarget } from '../shared/sessions';
 import type { Block, SessionTarget, Task } from '../shared/types';
 import * as api from './api';
@@ -18,6 +18,7 @@ import { useCommandRunner } from './hooks/useCommandRunner';
 import { MissingPage } from './MissingPage';
 import { EndDayDialog, ResolveDialog, SchedulePage, StartDayDialog, TaskEditor, TemplatesPage } from './planning';
 import { QuickCapture } from './planning/QuickCapture';
+import { PlanningDialog } from './planning/PlanningDialog';
 import { TaskDetails } from './planning/TaskDetails';
 import { SetupPage } from './SetupPage';
 import { TaskListPage } from './TaskListPage';
@@ -70,6 +71,7 @@ function Caminos() {
   const [route, setRoute] = useState(() => parseRoute(location.hash));
   const [addPage, setAddPage] = useState<{ id: View; kind?: string; key: number } | null>(null);
   const [scheduleDate, setScheduleDate] = useState<string | undefined>();
+  const [planning, setPlanning] = useState<{date: string; reset?: boolean} | null>(null);
   const [capture, setCapture] = useState(false);
   const [addOther, setAddOther] = useState(false);
   const [editor, setEditor] = useState<EditorTarget | null>(null);
@@ -171,8 +173,8 @@ function Caminos() {
     <main id="main" className="content" tabIndex={-1}>
       <div className={`page ${view === 'schedule' ? 'schedule-page' : ''}`} key={`${view}-${addPage?.key ?? ''}`}>
         <SaveNotice state={runner.saveState} busy={busy} online={runner.online} onRetry={() => void runner.retry()} onDismiss={runner.dismiss} onDiscardSignedOut={runner.discardSignedOut} onReconnect={() => void runner.refresh()}/>
-        {view === 'home' ? <HomePage {...page} go={go} actions={actions} onStartDay={() => setDayDialog('start')} onChangePlan={date => { setScheduleDate(date); go('schedule'); }}/>
-          : view === 'schedule' ? <SchedulePage {...page} initialDate={scheduleDate} onResolve={setResolve}/>
+        {view === 'home' ? <HomePage {...page} go={go} actions={actions} onStartDay={() => setDayDialog('start')} onChangePlan={date => setPlanning({ date, reset: !!dayPlanForDate(state, date) || !!running })}/>
+          : view === 'schedule' ? <SchedulePage {...page} initialDate={scheduleDate} onResolve={setResolve} onPlan={(date, reset) => setPlanning({ date, reset })}/>
           : view === 'tasks' ? <TaskListPage {...page} actions={actions} initialView={initialTaskView} onViewChange={next => history.replaceState(null, '', routeHash('tasks', { view: next === 'all' ? undefined : next }))}/>
           : view === 'history' ? <HistoryPage {...page}/>
           : view === 'goals' ? <GoalsPage {...page}/>
@@ -206,7 +208,7 @@ function Caminos() {
       <div className="add-grid">{ADD_OTHER.map(({ id, label, icon: Icon }) => <button type="button" key={id} onClick={() => pickAddOther(id)}><span className="add-tile-icon"><Icon size={22} aria-hidden="true"/></span><span>{label}</span></button>)}</div>
     </Modal>}
     {editor && <TaskEditor {...page} {...editor} onClose={() => setEditor(null)}/>}
-    {details && <TaskDetails key={details} taskId={details} state={state} now={now} run={run} onClose={() => setDetails(null)} onPlan={actions.plan} onOutcome={actions.outcome} onStart={task => { setDetails(null); actions.start({ kind: 'task', taskId: task.id }); }} onPause={sessionId => { setDetails(null); actions.pause(sessionId); }}/>}
+    {details && <TaskDetails key={details} taskId={details} state={state} now={now} run={run} runReviewed={runReviewed} onClose={() => setDetails(null)} onPlan={actions.plan} onOutcome={actions.outcome} onStart={task => { setDetails(null); actions.start({ kind: 'task', taskId: task.id }); }} onPause={sessionId => { setDetails(null); actions.pause(sessionId); }}/>}
     {outcome && outcomeTask && <TaskOutcomeDialog key={outcome.taskId} task={outcomeTask} state={state} now={now} run={run} initialMode={outcome.mode} onClose={() => setOutcome(null)}/>}
     {switching && running && <SwitchDialog runningTitle={targetTitle(state, running.target)} runningMinutes={recordedMinutes(running, now)} targetTitle={targetTitle(state, switching.target)} verb={unfinishedSessionForTarget(state, switching.target) ? 'resume' : 'start'} busy={busy}
       onCancel={() => setSwitching(null)}
@@ -215,8 +217,9 @@ function Caminos() {
         // The switch names the recording the owner saw. If another one runs by now, the server refuses it.
         if (await run({ type: 'session.switch', expectedRunningSessionId: switching.runningId, target: switching.target, ...(booking ? { plannedBlockId: booking } : {}) })) setSwitching(null);
       }}/>}
-    {dayDialog === 'start' && <StartDayDialog {...page} onClose={() => setDayDialog(null)}/>}
-    {dayDialog === 'end' && activeDay && <EndDayDialog {...page} day={activeDay} onClose={() => setDayDialog(null)} onResolve={setResolve} onOpenTask={taskId => setDetails(taskId)} onPlanTomorrow={date => { setScheduleDate(date); setDayDialog(null); go('schedule'); }}/>}
+    {planning && <PlanningDialog {...page} {...planning} onClose={() => setPlanning(null)}/>}
+    {dayDialog === 'start' && <StartDayDialog {...page} onClose={() => setDayDialog(null)} onPlanToday={date => { setDayDialog(null); setPlanning({ date }); }}/>}
+    {dayDialog === 'end' && activeDay && <EndDayDialog {...page} day={activeDay} onClose={() => setDayDialog(null)} onResolve={setResolve} onOpenTask={taskId => setDetails(taskId)} onPlanTomorrow={date => { setScheduleDate(date); setDayDialog(null); go('schedule'); setPlanning({ date }); }}/>}
     {resolve && <ResolveDialog block={state.blocks.find(block => block.id === resolve.id) ?? resolve} state={state} now={now} run={run} onClose={() => setResolve(null)}/>}
   </div>;
 }

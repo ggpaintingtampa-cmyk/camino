@@ -5,7 +5,7 @@ description: Use when planning, implementing, testing, or reviewing the Caminos 
 
 # Caminos: detailed implementation plan and execution skill
 
-Prepared September 27, 2026. **Status: implementation plan; application changes have not been made by creating this file.**
+Prepared September 27, 2026. **R1 is now integrated and checked.** See [release verification](docs/redesign-v3/release-verification.md) for implemented behavior, actual checks and remaining limits, and [deployment status](DEPLOYMENT-STATUS.md) for live activation. The instructions below retain the original phase breakdown and historical baseline; do not reimplement completed R1 phases. R2 remains deferred. Storage schema 2 is frozen with no draft marker; future persisted changes require a numbered migration. The user's later request explicitly authorized code integration, focused checks, GitHub push and production deployment.
 
 Review revision: the supplied independent AI review has been incorporated. Navigation activation now belongs to Phase 6; legacy four-tab commands remain valid for receipt replay; schema development stays provisional on disposable fixtures; migration of an existing database requires explicit opt-in; work attribution belongs to each interval; legacy timing projections have a defined transition; delivery uses two releases and at most two active AI sessions. See [the review resolution record](artifacts/redesign-v3/review-resolution.md) for evidence and verification limits.
 

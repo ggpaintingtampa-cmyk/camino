@@ -1,5 +1,7 @@
 # Batch 3 — planning implementation handoff
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 Status: independent component preparation implemented and tested; **Batch 3 is not complete**. Baseline `0884f68d44b60ad4c63fef01c260f440d95fd98d`, branch `redesign/v3-planning-ui`, isolated worktree `.worktrees/v3-planning-ui`.
 
 The owner assigned Batch 3 on September 27 and explicitly requires their confirmation that Batches 1 and 2 are complete before the final combined app is pushed/deployed live. No production rollout or default-branch merge is authorized in this batch. This preparation is retained on a local working branch; GitHub issues carry coordination updates. No code push or deployment has been performed for Batch 3.

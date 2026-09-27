@@ -13,7 +13,7 @@ export type SaveState =
   | { kind: 'stale'; label: string; message: string; currentRevision?: number }
   | { kind: 'uncertain'; label: string; message: string }
   | { kind: 'offline'; label: string; message: string }
-  | { kind: 'signed-out'; label: string; message: string };
+  | { kind: 'signed-out'; label: string; message: string; uncertain?: boolean };
 
 export type RunFailure = 'rejected' | 'stale' | 'uncertain' | 'offline' | 'signed-out' | 'blocked';
 export type RunOutcome =
@@ -72,7 +72,7 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
   const [saveState, setSaveState] = useState<SaveState>({ kind: 'idle' });
-  const retained = useRef<{ envelope: CommandEnvelope; label: string; signedOut: boolean } | null>(null);
+  const retained = useRef<{ envelope: CommandEnvelope; label: string; signedOut: boolean; uncertain: boolean } | null>(null);
   const [pending, setPending] = useState(false);
   const waiting = useRef<((outcome: RunOutcome) => void)[]>([]);
   const signedOut = useRef(onSignedOut);
@@ -101,6 +101,7 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
   const settle = (outcome: RunOutcome) => { for (const resolve of waiting.current.splice(0)) resolve(outcome); };
 
   const execute = useCallback(async (envelope: CommandEnvelope, label: string): Promise<RunOutcome> => {
+    const wasUncertain = retained.current?.uncertain === true;
     busyRef.current = true; setBusy(true); setSaveState({ kind: 'saving', label });
     try {
       const result = await api.mutate(envelope);
@@ -113,8 +114,8 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
       return outcome;
     } catch (caught) {
       const error = caught instanceof api.ApiError ? caught : new api.ApiError('Unable to complete this request.', 0, undefined, undefined, undefined, true);
-      if (error.uncertain) {
-        retained.current = { envelope, label, signedOut: false }; setPending(true);
+      if (error.uncertain || (wasUncertain && error.status !== 401 && error.code !== 'REVISION_CONFLICT')) {
+        retained.current = { envelope, label, signedOut: false, uncertain: true }; setPending(true);
         setSaveState({ kind: 'uncertain', label, message: UNCERTAIN });
         announce(UNCERTAIN, true);
         if (error.status === 0) setOnline(navigator.onLine !== false);
@@ -122,9 +123,9 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
         return new Promise<RunOutcome>(resolve => { waiting.current.push(resolve); });
       }
       if (error.status === 401) {
-        retained.current = { envelope, label, signedOut: true }; setPending(true);
-        const message = 'You were signed out, so this was not saved. Sign in to send it again.';
-        setSaveState({ kind: 'signed-out', label, message });
+        retained.current = { envelope, label, signedOut: true, uncertain: wasUncertain }; setPending(true);
+        const message = wasUncertain ? 'You were signed out while checking an earlier save. Its result is still unknown. Sign in and retry the same request safely.' : 'You were signed out, so this was not saved. Sign in to send it again.';
+        setSaveState({ kind: 'signed-out', label, message, uncertain: wasUncertain });
         const outcome: RunOutcome = { ok: false, reason: 'signed-out', message, code: error.code };
         settle(outcome); dropSession();
         return outcome;
@@ -175,7 +176,7 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
     return (await execute(kept.envelope, kept.label)).ok;
   }, [execute]);
   const discardSignedOut = useCallback(() => {
-    if (!retained.current?.signedOut) return;
+    if (!retained.current?.signedOut || retained.current.uncertain) return;
     retained.current = null; setPending(false); setSaveState({ kind: 'idle' });
   }, []);
   // A notice about a change that still needs its retry cannot be dismissed away.
@@ -197,7 +198,7 @@ export function useCommandRunner({ enabled, onSignedOut }: { enabled: boolean; o
   useEffect(() => {
     if (!enabled) return;
     // After signing in again, a change refused for being signed out can be sent as it was.
-    if (retained.current?.signedOut) setSaveState({ kind: 'signed-out', label: retained.current.label, message: 'This change was not saved because you were signed out. Send it again, or discard it.' });
+    if (retained.current?.signedOut) setSaveState({ kind: 'signed-out', label: retained.current.label, uncertain: retained.current.uncertain, message: retained.current.uncertain ? 'The earlier save still has an unknown result. Retry safely to confirm it.' : 'This change was not saved because you were signed out. Send it again, or discard it.' });
     void refresh();
     const tick = () => { if (!document.hidden && !busyRef.current) void refresh(); };
     const poll = setInterval(tick, 15000);

@@ -1,5 +1,7 @@
 # Ready-to-use Prompt 1
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](../release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 Copy the assignment below into the AI session. Read [coordination](../coordination.md) first for the actual integration baseline, issue links, and active-role roster. Start from the published integration branch after Prompt 4 setup; AI 1 and AI 2 may work together. Never start all three at once.
 
 This is a copy of Prompt 1 in [AI-IMPLEMENTATION-PROMPTS.md](../../../AI-IMPLEMENTATION-PROMPTS.md). Keep the assignment body synchronized when editing.

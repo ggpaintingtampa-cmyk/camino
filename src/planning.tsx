@@ -1,17 +1,21 @@
 import { useState, useRef, useEffect, type PointerEvent, type FormEvent } from 'react';
-import { ArrowRight, CalendarDays, CheckCircle2, Clock3, GripVertical, Plus, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Moon, Sun, AlertTriangle, Compass, Activity } from 'lucide-react';
+import { ArrowRight, CalendarDays, CheckCircle2, GripVertical, Plus, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Sun, AlertTriangle, Compass } from 'lucide-react';
 import type { Task, Block, Snapshot, Command, Day, TaskPatch } from '../shared/types';
 import type { TemplateBlock, DayTemplate } from '../shared/types';
 import { dateKey, localInstant, minuteOfDay, timeLabel, addDays } from '../shared/dates';
-import { unscheduledTasks, overlaps, dailySteps } from '../shared/selectors';
+import { unscheduledTasks, overlaps } from '../shared/selectors';
 import { summaryForDay } from '../shared/domain';
 import { blockFlexibility } from '../shared/domain-core';
 import { dayPlanForDate, pendingBookingForTask, previewPlacement } from '../shared/planning';
-import { hasRecordedWork, previewDayClose, recordedMinutesForBlock, runningSession, sessionState, unfinishedSessions } from '../shared/sessions';
+import { hasRecordedWork, previewDayClose, recordedMinutesForBlock, sessionState, unfinishedSessions } from '../shared/sessions';
 import { EstimateField } from './components/EstimateField';
 import { dateLabel, estimateLabel, kindLabel, minutesLabel, rangeLabel } from './components/format';
 import { targetTitle } from './components/taskActions';
 import { Modal, Field, DurationField, DateTimeField, Empty, type PageProps } from './ui';
+import { TemplateApplyDialog } from './planning/TemplateApplyDialog';
+import { EndDaySections } from './planning/EndDaySections';
+import { DayFactsSummary } from './review/DayFactsSummary';
+import { clipInterval, localDayRange } from '../shared/capacity';
 import './planning-v2.css';
 
 export function nextStart(now: string, date?: string, zone?: string) {
@@ -55,7 +59,7 @@ export function TaskEditor({ state, run, runReviewed, now, onClose, task, block,
   const [goalId, setGoal] = useState(task?.goalId ?? '');
   const [scheduled, setScheduled] = useState(!historical && (!!block || !!startAt || appointment || planning));
   const [dateExpanded, setDateExpanded] = useState(!!block || !!startAt || appointment || planning);
-  const [start, setStart] = useState(block?.start ?? startAt ?? nextStart(now, undefined, zone));
+  const [start, setStart] = useState(startAt ?? block?.start ?? nextStart(now, undefined, zone));
   const [busy, setBusy] = useState(false);
   // A confirmation belongs to one proposed time. Changing the time withdraws it.
   const [reviewedKey, setReviewedKey] = useState<string | null>(null);
@@ -72,7 +76,7 @@ export function TaskEditor({ state, run, runReviewed, now, onClose, task, block,
   const collisions = !isTask && scheduled ? overlaps(state, candidate) : [];
   const conflictRows = preview ? preview.conflicts.map(conflict => ({ conflict, entry: state.blocks.find(other => other.id === conflict.blockId) })) : [];
   const placementText = `${dateLabel(dateKey(start, zone), today)} · ${rangeLabel(start, end, zone)} · ${minutesLabel(slot)}`;
-  const keyFor = (isScheduled: boolean) => `${start}|${slot}|${isScheduled}`;
+  const keyFor = (isScheduled: boolean) => `${state.revision}|${start}|${slot}|${isScheduled}`;
   const review = reviewedKey === keyFor(scheduled);
   const keepOverlap = overlapKey === keyFor(scheduled);
 
@@ -218,19 +222,21 @@ export function ResolveDialog({ block, state, now, run, onClose }: { block: Bloc
   </Modal>;
 }
 
-export function SchedulePage({ state, now, run, runReviewed, initialDate, add, onResolve }: PageProps & { initialDate?: string; onResolve: (b: Block) => void }) {
+export function SchedulePage({ state, now, run, runReviewed, initialDate, add, onResolve, onPlan }: PageProps & { initialDate?: string; onResolve: (b: Block) => void; onPlan: (date: string, reset: boolean) => void }) {
   const zone = state.settings.timezone;
   const [date, setDate] = useState(initialDate ?? dateKey(now, zone));
   const [editor, setEditor] = useState<{ task?: Task; block?: Block; appointment?: boolean; startAt?: string } | null>(add ? {} : null);
   const [showList, setShowList] = useState(false);
   const [timeline, setTimeline] = useState(false);
   const [template, setTemplate] = useState('');
+  const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [drag, setDrag] = useState<{ task?: Task; block?: Block; x: number; y: number } | null>(null);
   const [dropError, setDropError] = useState('');
   const track = useRef<HTMLDivElement>(null);
   const marker = useRef<HTMLDivElement>(null);
   const pending = unscheduledTasks(state);
-  const blocks = state.blocks.filter(b => !b.archived && (dateKey(b.start, zone) === date || dateKey(b.end, zone) === date)).sort((a, b) => a.start.localeCompare(b.start));
+  const blocks = state.blocks.filter(b => !b.archived && clipInterval(b, localDayRange(date, zone))).sort((a, b) => a.start.localeCompare(b.start));
+  useEffect(() => { if (initialDate) setDate(initialDate); }, [initialDate]);
   useEffect(() => { if (timeline && date === dateKey(now, zone)) marker.current?.scrollIntoView({ block: 'center', behavior: 'instant' }); }, [date, timeline]);
   const startDrag = (e: PointerEvent, task?: Task, block?: Block) => { e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId); setDrag({ task, block, x: e.clientX, y: e.clientY }); setDropError(''); };
   function move(e: PointerEvent) { if (!drag) return; setDrag({ ...drag, x: e.clientX, y: e.clientY }); const viewport = document.querySelector('.content'); if (viewport) { const rect = viewport.getBoundingClientRect(); if (e.clientY > rect.bottom - 90) viewport.scrollTop += 22; if (e.clientY < rect.top + 80) viewport.scrollTop -= 22; } }
@@ -260,7 +266,10 @@ export function SchedulePage({ state, now, run, runReviewed, initialDate, add, o
     <div className="date-bar"><button aria-label="Previous day" onClick={() => setDate(addDays(date, -1))}><ChevronLeft size={18}/></button><label className="planning-date-label"><input aria-label="Schedule date" type="date" value={date} onChange={e => e.target.value && setDate(e.target.value)}/><CalendarDays size={15}/></label><button aria-label="Next day" onClick={() => setDate(addDays(date, 1))}><ChevronRight size={18}/></button></div>
     <div className="schedule-tools"><button className="planning-now-button" onClick={() => { setDate(dateKey(now, zone)); if (timeline) marker.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }}>Now</button><button aria-expanded={showList} onClick={() => setShowList(!showList)}>Without a time <span className="count">{pending.length}</span></button><button onClick={() => setEditor({ startAt: nextStart(now, date, zone) })}><Plus size={12}/>Task</button></div>
     {showList && <section className="card backlog"><h2>Open tasks without a time</h2><p className="muted">Tap a task to choose its day and time.{timeline ? ' You can also drag its handle onto the timeline.' : ''}</p>{pending.length === 0 ? <Empty>Every open task has a time, or there are none.</Empty> : pending.map(t => <div className="backlog-row" key={t.id}>{timeline && <button className="drag-handle" aria-label={`Drag ${t.title}`} style={{ touchAction: 'none' }} onPointerDown={e => startDrag(e, t)} onPointerMove={move} onPointerUp={drop} onPointerCancel={() => setDrag(null)}><GripVertical size={20}/></button>}<button className="task-row" onClick={() => setEditor({ task: t, startAt: nextStart(now, date, zone) })}><span><strong>{t.title}</strong><small>{t.tag} · {estimateLabel(t.duration)}</small></span><ArrowRight size={16}/></button></div>)}</section>}
-    <details className="template-apply"><summary>Apply a day template<ChevronDown size={16}/></summary><div className="row"><select aria-label="Day template" value={template} onChange={e => setTemplate(e.target.value)}><option value="">Choose template…</option>{state.templates.filter(t => !t.archived).map(t => <option key={t.id} value={t.id}>{t.title}</option>)}</select><button disabled={!template} onClick={() => run({ type: 'template.apply', id: template, date })}>Apply</button></div><p className="muted">Adds blocks to {date}; existing plans stay in place.</p></details>
+    <div className="v3-actions"><button className="primary" onClick={() => onPlan(date, false)}>Plan today</button><button onClick={() => onPlan(date, true)}>Reset today</button></div>
+    {dayPlanForDate(state, date) && <section className="card"><h2>Chosen for {date}</h2><p className="muted">Choosing a task does not book a time.</p>{dayPlanForDate(state, date)!.taskIds.map(id => { const task = state.tasks.find(t => t.id === id); return task && <button className="task-row" key={id} onClick={() => setEditor({ task, block: pendingBookingForTask(state, id) })}><span><strong>{task.title}{dayPlanForDate(state, date)?.mainTaskId === id ? ' · main task' : ''}</strong><small>{task.status} · {estimateLabel(task.duration)}{pendingBookingForTask(state, id) ? ' · booked' : ' · without a time'}</small></span></button>; })}</section>}
+    <details className="template-apply"><summary>Apply a day template<ChevronDown size={16}/></summary><div className="row"><select aria-label="Day template" value={template} onChange={e => setTemplate(e.target.value)}><option value="">Choose template…</option>{state.templates.filter(t => !t.archived).map(t => <option key={t.id} value={t.id}>{t.title}</option>)}</select><button disabled={!template} onClick={() => setApplyingTemplate(true)}>Review template</button></div><p className="muted">Review times, capacity and overlaps before adding entries to {date}.</p></details>
+    {applyingTemplate && <TemplateApplyDialog state={state} now={now} run={run} runReviewed={runReviewed} templateId={template} date={date} onClose={() => setApplyingTemplate(false)}/>}
     {dropError && <p role="status" className="notice">{dropError}</p>}
     {!timeline ? <div className="planning-agenda">{visibleBlocks.map((b, index) => {
       const { text, active } = entryStatus(state, b, now);
@@ -294,7 +303,7 @@ function CloseConsequences({ state, dayId, now, confirmed, onConfirm }: { state:
   </section>;
 }
 
-export function StartDayDialog({ state, now, run, runReviewed, onClose }: { state: Snapshot; now: string; run: PageProps['run']; runReviewed?: PageProps['runReviewed']; onClose: () => void }) {
+export function StartDayDialog({ state, now, run, runReviewed, onClose, onPlanToday }: { state: Snapshot; now: string; run: PageProps['run']; runReviewed?: PageProps['runReviewed']; onClose: () => void; onPlanToday?: (date: string) => void }) {
   const zone = state.settings.timezone;
   const previous = state.days.find(d => !d.archived && !d.endedAt);
   const [wake, setWake] = useState(now);
@@ -305,23 +314,24 @@ export function StartDayDialog({ state, now, run, runReviewed, onClose }: { stat
   const [energy, setEnergy] = useState('');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
-  const [step, setStep] = useState(0);
+  const [started, setStarted] = useState(false);
   const [notice, setNotice] = useState('');
   const [wakeDetails, setWakeDetails] = useState(false);
   const [sleepDetails, setSleepDetails] = useState(false);
   const [closeConfirmed, setCloseConfirmed] = useState(false);
+  useEffect(() => { setCloseConfirmed(false); }, [state.revision]);
   const form = useRef<HTMLFormElement>(null);
   async function start(e: FormEvent, onlyWake = false) {
     e.preventDefault(); setBusy(true); setNotice('');
     try {
-      const logDefaults = { category: '', description: '', notes: '' };
-      if (step < 1) { if (!await run({ type: 'day.start', date: dateKey(wake), wakeAt: wake, ...(!onlyWake && mood ? { mood: Number(mood) } : {}), ...(!onlyWake && energy ? { energy: Number(energy) } : {}), note: onlyWake ? '' : note })) return; setStep(1); }
-      if (!onlyWake && step < 2 && weight) { if (!await run({ type: 'log.save', log: { ...logDefaults, kind: 'weight', at: wake, value: Number(weight) } })) { setNotice('Your day is started. Save again to finish your weight check-in.'); return; } setStep(2); }
-      if (!onlyWake && sleep) { if (!await run({ type: 'log.save', log: { ...logDefaults, kind: 'sleep', at: wake, start: sleep, end: wake, ...(quality ? { quality: Number(quality) } : {}) } })) { setNotice('Your day is started. Save again to finish your sleep check-in.'); return; } }
-      onClose();
+      const logs: Extract<Command, { type: 'day.startWithCheckin' }>['logs'] = [];
+      if (!onlyWake && weight) logs.push({ kind: 'weight', at: wake, value: Number(weight) });
+      if (!onlyWake && sleep) logs.push({ kind: 'sleep', start: sleep, end: wake, ...(quality ? { quality: Number(quality) } : {}) });
+      if (await run({ type: 'day.startWithCheckin', date: dateKey(wake, zone), wakeAt: wake, ...(!onlyWake && mood ? { mood: Number(mood) } : {}), ...(!onlyWake && energy ? { energy: Number(energy) } : {}), note: onlyWake ? '' : note, logs })) setStarted(true);
     } finally { setBusy(false); }
   }
-  if (previous && previous.date !== dateKey(now, zone) && step === 0) {
+  if (started) return <Modal title="Your day is started" onClose={onClose}><div className="v3-stack"><p>Your check-in is saved. Choosing a plan is optional.</p>{onPlanToday && <button className="primary" onClick={() => onPlanToday(dateKey(wake, zone))}>Plan today</button>}<button onClick={onClose}>Continue to my day</button></div></Modal>;
+  if (previous && previous.date !== dateKey(now, zone)) {
     const preview = previewDayClose(state, previous.id, now);
     const needsConfirmation = preview.associatedSessions.length > 0;
     return <Modal title="A day still needs closing" onClose={onClose}>
@@ -341,20 +351,20 @@ export function StartDayDialog({ state, now, run, runReviewed, onClose }: { stat
     </Modal>;
   }
   const closedToday = state.days.find(d => d.date === dateKey(now, zone) && d.startedAt && d.endedAt);
-  if (closedToday && step === 0) return <Modal title="Today is already saved" onClose={onClose}><p>Your morning check-in and journal are preserved. You can reopen today to continue tracking.</p><button className="primary" disabled={busy} onClick={async () => { setBusy(true); try { if (await run({ type: 'day.reopen', id: closedToday.id })) onClose(); } finally { setBusy(false); } }}>Reopen today</button></Modal>;
-  const wakeMinutes = minuteOfDay(wake), hour = Math.floor(wakeMinutes / 60);
-  const setWakePart = (newHour: number, minute: number) => { try { setWake(localInstant(dateKey(wake), `${String(newHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`)); } catch { setNotice('That time is skipped by daylight saving. Choose another time.'); } };
+  if (closedToday) return <Modal title="Today is already saved" onClose={onClose}><p>Your morning check-in and journal are preserved. You can reopen today to continue tracking.</p><button className="primary" disabled={busy} onClick={async () => { setBusy(true); try { if (await run({ type: 'day.reopen', id: closedToday.id })) onClose(); } finally { setBusy(false); } }}>Reopen today</button></Modal>;
+  const wakeMinutes = minuteOfDay(wake, zone), hour = Math.floor(wakeMinutes / 60);
+  const setWakePart = (newHour: number, minute: number) => { try { setWake(localInstant(dateKey(wake, zone), `${String(newHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`, zone)); } catch { setNotice('That time is skipped by daylight saving. Choose another time.'); } };
   const sleepMinutes = sleep ? Math.round((Date.parse(wake) - Date.parse(sleep)) / 60000) : undefined;
   return <Modal className="planning-day-sheet planning-start-day" title="A fresh start" onClose={onClose}>
     <DayBrand/><header className="planning-day-intro"><p><Sun size={15}/>{new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: state.settings.timezone }).format(new Date(wake))}</p><h1>Good morning, {state.settings.name}.</h1><span>A quiet check-in before the world rushes in.</span></header>
     <form className="planning-day-form" ref={form} onSubmit={e => start(e)}>
       {notice && <p role="status" className="notice">{notice}</p>}
-      <section className="planning-wake-card"><h2>What time did you wake up?</h2><div className="planning-wake-wheel"><span className="planning-wheel-column"><small aria-hidden="true">{((hour + 10) % 12) + 1}</small><select aria-label="I woke up at hour" value={hour} onChange={e => setWakePart(Number(e.target.value), wakeMinutes % 60)}>{Array.from({ length: 24 }, (_, h) => <option value={h} key={h}>{h % 12 || 12}</option>)}</select><small aria-hidden="true">{hour % 12 + 1}</small></span><b>:</b><span className="planning-wheel-column"><small aria-hidden="true">{String((wakeMinutes + 55) % 60).padStart(2, '0')}</small><select aria-label="I woke up at minute" value={wakeMinutes % 60} onChange={e => setWakePart(hour, Number(e.target.value))}>{wakeMinutes % 5 !== 0 && <option value={wakeMinutes % 60}>{String(wakeMinutes % 60).padStart(2, '0')}</option>}{Array.from({ length: 12 }, (_, m) => <option value={m * 5} key={m}>{String(m * 5).padStart(2, '0')}</option>)}</select><small aria-hidden="true">{String((wakeMinutes + 5) % 60).padStart(2, '0')}</small></span><span className="planning-wheel-column"><button type="button" data-dirty aria-label="Toggle morning or afternoon" onClick={() => setWakePart((hour + 12) % 24, wakeMinutes % 60)}>{hour < 12 ? 'AM' : 'PM'}</button><small aria-hidden="true">{hour < 12 ? 'PM' : 'AM'}</small></span></div><button type="button" className="planning-wake-date-toggle" onClick={() => setWakeDetails(!wakeDetails)}>{wakeDetails ? 'Hide date' : 'Change date'}</button>{wakeDetails && <input aria-label="I woke up at date" type="date" value={dateKey(wake)} onChange={e => { if (e.target.value) { try { setWake(localInstant(e.target.value, `${String(hour).padStart(2, '0')}:${String(wakeMinutes % 60).padStart(2, '0')}`)); } catch { setNotice('Choose another wake time.'); } } }}/>}</section>
+      <section className="planning-wake-card"><h2>What time did you wake up?</h2><div className="planning-wake-wheel"><span className="planning-wheel-column"><small aria-hidden="true">{((hour + 10) % 12) + 1}</small><select aria-label="I woke up at hour" value={hour} onChange={e => setWakePart(Number(e.target.value), wakeMinutes % 60)}>{Array.from({ length: 24 }, (_, h) => <option value={h} key={h}>{h % 12 || 12}</option>)}</select><small aria-hidden="true">{hour % 12 + 1}</small></span><b>:</b><span className="planning-wheel-column"><small aria-hidden="true">{String((wakeMinutes + 55) % 60).padStart(2, '0')}</small><select aria-label="I woke up at minute" value={wakeMinutes % 60} onChange={e => setWakePart(hour, Number(e.target.value))}>{wakeMinutes % 5 !== 0 && <option value={wakeMinutes % 60}>{String(wakeMinutes % 60).padStart(2, '0')}</option>}{Array.from({ length: 12 }, (_, m) => <option value={m * 5} key={m}>{String(m * 5).padStart(2, '0')}</option>)}</select><small aria-hidden="true">{String((wakeMinutes + 5) % 60).padStart(2, '0')}</small></span><span className="planning-wheel-column"><button type="button" data-dirty aria-label="Toggle morning or afternoon" onClick={() => setWakePart((hour + 12) % 24, wakeMinutes % 60)}>{hour < 12 ? 'AM' : 'PM'}</button><small aria-hidden="true">{hour < 12 ? 'PM' : 'AM'}</small></span></div><button type="button" className="planning-wake-date-toggle" onClick={() => setWakeDetails(!wakeDetails)}>{wakeDetails ? 'Hide date' : 'Change date'}</button>{wakeDetails && <input aria-label="I woke up at date" type="date" value={dateKey(wake, zone)} onChange={e => { if (e.target.value) { try { setWake(localInstant(e.target.value, `${String(hour).padStart(2, '0')}:${String(wakeMinutes % 60).padStart(2, '0')}`, zone)); } catch { setNotice('Choose another wake time.'); } } }}/>}</section>
       <h2 className="planning-section-label">A few quick notes (optional)</h2>
       <section className="planning-checkin-card"><p>How are you feeling?</p><div className="planning-moods" role="group" aria-label="Mood">{['😭', '😔', '😐', '🙂', '🤩'].map((emoji, index) => <button type="button" key={emoji} aria-label={`Mood ${index + 1} of 5`} aria-pressed={mood === String(index + 1)} className={mood === String(index + 1) ? 'selected' : ''} onClick={() => setMood(mood === String(index + 1) ? '' : String(index + 1))}>{emoji}</button>)}</div></section>
       <section className="planning-checkin-card"><div className="planning-checkin-label"><p>Energy level</p><span>{energy ? `${energy} of 5` : 'Not recorded'}</span></div><div className="planning-energy" role="group" aria-label="Energy">{[1, 2, 3, 4, 5].map(n => <button type="button" key={n} aria-label={`Energy ${n} of 5`} aria-pressed={energy === String(n)} onClick={() => setEnergy(energy === String(n) ? '' : String(n))}><span className={Number(energy) >= n ? 'filled' : ''}/></button>)}</div></section>
       <div className="planning-morning-metrics"><label className="planning-checkin-card"><span>Morning weight</span><div><input aria-label="Morning weight (lb)" type="number" min="1" max="2000" step="0.1" value={weight} placeholder="—" onChange={e => setWeight(e.target.value)}/><small>lbs</small></div></label><button type="button" className="planning-checkin-card" aria-expanded={sleepDetails} onClick={() => setSleepDetails(!sleepDetails)}><span>Sleep duration</span><strong>{sleepMinutes !== undefined && sleepMinutes > 0 ? `${Math.floor(sleepMinutes / 60)}h ${sleepMinutes % 60}m` : 'Add sleep'}</strong></button></div>
-      {sleepDetails && <section className="planning-sleep-details"><button type="button" data-dirty onClick={() => setSleep(localInstant(addDays(dateKey(wake), -1), '23:00'))}>Set sleep start</button>{sleep && <><DateTimeField label="Fell asleep" value={sleep} onChange={setSleep}/><Field label="Sleep quality"><select value={quality} onChange={e => setQuality(e.target.value)}><option value="">Not recorded</option>{[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} / 5</option>)}</select></Field></>}</section>}
+      {sleepDetails && <section className="planning-sleep-details"><button type="button" data-dirty onClick={() => setSleep(localInstant(addDays(dateKey(wake, zone), -1), '23:00', zone))}>Set sleep start</button>{sleep && <><DateTimeField label="Fell asleep" value={sleep} onChange={setSleep} zone={zone}/><Field label="Sleep quality"><select value={quality} onChange={e => setQuality(e.target.value)}><option value="">Not recorded</option>{[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} / 5</option>)}</select></Field></>}</section>}
       <label className="planning-checkin-card planning-note"><span>Morning note</span><textarea aria-label="How are you waking up?" value={note} onChange={e => setNote(e.target.value)} rows={2} placeholder="Anything on your mind?"/></label>
       <button disabled={busy} className="primary planning-day-submit">{busy ? 'Saving…' : 'Start my day'}</button>
       <button type="button" disabled={busy} className="planning-skip" onClick={e => start(e, true)}>Just record wake time</button>
@@ -364,92 +374,101 @@ export function StartDayDialog({ state, now, run, runReviewed, onClose }: { stat
 
 export function EndDayDialog({ day, state, now, run, runReviewed, onClose, onResolve, onOpenTask, onPlanTomorrow }: { day: Day; state: Snapshot; now: string; run: PageProps['run']; runReviewed?: PageProps['runReviewed']; onClose: () => void; onResolve: (b: Block) => void; onOpenTask?: (taskId: string) => void; onPlanTomorrow: (date: string) => void }) {
   const zone = state.settings.timezone;
-  const today = dateKey(now, zone);
-  const tomorrowDate = addDays(today, 1);
+  const tomorrow = addDays(day.date, 1);
   const [summary, setSummary] = useState(day.summary || summaryForDay(state, day.id, now));
-  const [journal, setJournal] = useState(day.journal);
-  const [editSummary, setEditSummary] = useState(false);
   const [summaryDirty, setSummaryDirty] = useState(false);
+  const [journal, setJournal] = useState(day.journal);
+  const [changedPlan, setChangedPlan] = useState(day.reflection?.changedPlan ?? '');
+  const [easierTomorrow, setEasierTomorrow] = useState(day.reflection?.easierTomorrow ?? '');
   const [busy, setBusy] = useState(false);
   const [planTomorrow, setPlanTomorrow] = useState(false);
   const [closeConfirmed, setCloseConfirmed] = useState(false);
   const preview = previewDayClose(state, day.id, now);
-  const sessionKey = preview.expectedSessions.map(session => `${session.id}:${session.state}`).join('|');
-  // A confirmation belongs to the recordings that were shown. If they change, it is asked again.
-  useEffect(() => { setCloseConfirmed(false); }, [sessionKey]);
+  useEffect(() => { setCloseConfirmed(false); }, [state.revision]);
   const plan = dayPlanForDate(state, day.date);
   const chosen = (plan?.taskIds ?? []).map(id => state.tasks.find(task => task.id === id)).filter((task): task is Task => !!task && !task.archived);
-  const unresolved = state.blocks.filter(b => !b.archived && b.status === 'pending' && dateKey(b.start, zone) >= day.date && Date.parse(b.start) <= Date.parse(now));
+  const dayRange = localDayRange(day.date, zone);
+  const entries = state.blocks.filter(b => !b.archived && b.status !== 'cancelled' && clipInterval(b, dayRange));
   const chosenIds = new Set(chosen.map(task => task.id));
-  const backlog = state.tasks.filter(task => !task.archived && task.status === 'open' && !chosenIds.has(task.id) && !unresolved.some(block => block.taskId === task.id));
-  const dailyBlocks = state.blocks.filter(b => !b.archived && b.status !== 'cancelled' && dateKey(b.start, zone) === day.date);
-  const completed = dailyBlocks.filter(b => ['complete', 'attended'].includes(b.status)).length;
-  const logs = state.logs.filter(l => !l.archived && dateKey(l.at, zone) === day.date);
-  const sleep = logs.filter(l => l.kind === 'sleep').at(-1);
-  const steps = dailySteps(state, day.date);
-  const elapsed = day.startedAt ? Math.max(0, Math.round((Date.parse(now) - Date.parse(day.startedAt)) / 60000)) : undefined;
-  const conflicts = dailyBlocks.filter(b => !b.conflictReviewed && overlaps(state, b).some(other => !other.conflictReviewed && !b.acknowledgedConflictIds?.includes(other.id) && !other.acknowledgedConflictIds?.includes(b.id)));
-  const recordingTask = (taskId: string) => { const running = runningSession(state); return !!running && running.target.kind === 'task' && running.target.taskId === taskId; };
-
-  /** Tomorrow is an intention without a time. A booking is cancelled only when that is possible and shown. */
-  async function tomorrow(task: Task) {
+  const backlog = state.tasks.filter(task => !task.archived && task.status === 'open' && !chosenIds.has(task.id) && !entries.some(block => block.taskId === task.id));
+  const taskRow = (task: Task) => {
+    const booking = pendingBookingForTask(state, task.id);
+    const recording = unfinishedSessions(state).find(s => s.target.kind === 'task' && s.target.taskId === task.id);
+    const canDefer = !recording && (!booking || (blockFlexibility(booking) === 'flexible' && !hasRecordedWork(state, booking)));
+    return <div className="planning-v3-card v3-stack" key={task.id}>
+      <strong>{task.title}</strong><p className="muted">{task.status === 'complete' ? 'Done' : task.status === 'partial' ? 'Partly done' : recording ? sessionState(recording) === 'running' ? 'Recording now' : 'Paused' : 'Open'}</p>
+      {task.status === 'open' && <div className="v3-actions">
+        <button disabled={busy} onClick={async () => { setBusy(true); try { await run({ type: 'task.resolve', id: task.id, outcome: 'complete' }); } finally { setBusy(false); } }}>Done{recording ? ' · end recording' : ''}</button>
+        {canDefer && <button disabled={busy} onClick={async () => { setBusy(true); try {
+          const command: Command = { type: 'task.defer', id: task.id, preferredDay: tomorrow, ...(booking ? { cancelBlockId: booking.id } : {}), ...(chosenIds.has(task.id) ? { deselectFromDate: day.date } : {}) };
+          if (runReviewed) await runReviewed(command, state.revision); else await run(command);
+        } finally { setBusy(false); } }}>Tomorrow · no time{booking ? ' · cancel booking' : ''}</button>}
+        {onOpenTask && <button disabled={busy} onClick={() => onOpenTask(task.id)}>Details and outcomes</button>}
+      </div>}
+    </div>;
+  };
+  async function finish() {
     setBusy(true);
     try {
-      const booking = pendingBookingForTask(state, task.id);
-      const cancellable = !!booking && blockFlexibility(booking) === 'flexible' && !hasRecordedWork(state, booking);
-      await run({ type: 'task.defer', id: task.id, preferredDay: tomorrowDate, ...(booking && cancellable ? { cancelBlockId: booking.id } : {}), ...(plan?.taskIds.includes(task.id) && day.date === plan.date ? { deselectFromDate: plan.date } : {}) }, { label: 'Move task to tomorrow' });
+      const command: Command = { type: 'day.close', id: day.id, ...(summaryDirty ? { summary } : {}), journal, reflection: { changedPlan, easierTomorrow }, expectedSessions: preview.expectedSessions };
+      const okay = runReviewed ? (await runReviewed(command, preview.baseRevision)).ok : await run(command);
+      if (okay) { if (planTomorrow) onPlanTomorrow(tomorrow); else onClose(); }
     } finally { setBusy(false); }
   }
-  async function remindAbout(task: Task) { await run({ type: 'reminder.save', reminder: { title: task.title, body: 'A task is waiting in your task list.', startsAt: plusMinutes(now, 60), pinned: true, dismissed: false, source: 'owner' } }, { label: 'Set reminder' }); }
-  async function finish(closeDay: boolean) {
-    setBusy(true);
-    try {
-      let okay: boolean;
-      if (closeDay) {
-        // Writing is sent only when it was written here. The server keeps an edited summary and generates one only when none exists.
-        const command: Command = { type: 'day.close', id: day.id, ...(summaryDirty ? { summary } : {}), ...(journal !== day.journal ? { journal } : {}), expectedSessions: preview.expectedSessions };
-        okay = runReviewed ? (await runReviewed(command, preview.baseRevision)).ok : await run(command);
-      } else okay = await run({ type: 'day.save', id: day.id, summary: summaryDirty ? summary : day.summary, journal });
-      if (okay) { if (planTomorrow) onPlanTomorrow(tomorrowDate); else onClose(); }
-    } finally { setBusy(false); }
-  }
-  const taskActions = (task: Task) => <div className="planning-unresolved-actions">
-    <button disabled={busy || recordingTask(task.id)} aria-label={`Move ${task.title} to tomorrow without a time`} onClick={() => tomorrow(task)}>Tomorrow</button>
-    {onOpenTask && <button disabled={busy} aria-label={`Open ${task.title}`} onClick={() => onOpenTask(task.id)}>Open</button>}
-    <button disabled={busy} aria-label={`Archive ${task.title}`} onClick={() => { if (window.confirm('Archive this task? Any booking is cancelled and a recording ends. History is kept.')) void run({ type: 'record.archive', collection: 'tasks', id: task.id, archived: true }); }}>Archive</button>
-  </div>;
-  return <Modal className="planning-day-sheet planning-end-day" title="Wrapping up your day" onClose={onClose} dirty={journal !== day.journal || summaryDirty}>
-    <DayBrand/><header className="planning-day-intro"><p><Moon size={15}/>Good evening, {state.settings.name}</p><h1>Wrapping up your day</h1>{day.date !== today && <p className="muted">This is your open day from {dateLabel(day.date, today)}.</p>}</header>
-    <div className="planning-end-content">
-      <section><h2 className="planning-section-label">Chosen for this day</h2>
-        {!chosen.length && !unresolved.length ? <div className="planning-end-clear"><CheckCircle2 size={18}/>Nothing chosen is waiting for a decision.</div> : <div className="planning-unresolved-list">
-          {chosen.map(task => <div className="planning-unresolved-card" key={task.id}><div><strong>{task.title}</strong><span>{task.status === 'complete' ? 'Done' : task.status === 'partial' ? 'Partly done' : recordingTask(task.id) ? 'Recording now' : 'Open'}</span></div>{task.status === 'open' && taskActions(task)}</div>)}
-          {unresolved.filter(block => !block.taskId || !chosenIds.has(block.taskId)).map(block => { const task = block.taskId ? state.tasks.find(t => t.id === block.taskId) : undefined; return <div className="planning-unresolved-card" key={block.id}><div><button className="planning-item-title" onClick={() => onResolve(block)}>{block.title}</button><span>{timeLabel(block.start, zone)} · {block.snoozedUntil ? 'Reminder set' : entryStatus(state, block, now).text}</span></div><div className="planning-unresolved-actions">
-            <button disabled={busy} onClick={() => onResolve(block)} aria-label={`Record a result for ${block.title}`}>Result…</button>
-            {task && !hasRecordedWork(state, block) && blockFlexibility(block) === 'flexible' && <button disabled={busy} aria-label={`Move ${task.title} to tomorrow without a time`} onClick={() => tomorrow(task)}>Tomorrow</button>}
-            <button disabled={busy} onClick={() => onResolve(block)} aria-label={`Remind me to review ${block.title}`}>Remind me</button>
-          </div></div>; })}
-        </div>}
-        <p className="muted">You can leave the rest for later. Open tasks stay open when the day ends.</p>
-        {conflicts.map(block => <div className="notice warning" key={block.id}><span>{block.title} overlaps another entry.</span><button onClick={() => run({ type: 'block.conflictReviewed', id: block.id }, { label: 'Keep overlap' })}>Keep overlap</button></div>)}
-      </section>
-      {backlog.length > 0 && <details className="planning-end-backlog"><summary>Other open tasks ({backlog.length})</summary><div className="planning-unresolved-list">
-        {backlog.map(task => <div className="planning-unresolved-card" key={task.id}><div><strong>{task.title}</strong><span>{task.preferredDay ? `Intended for ${dateLabel(task.preferredDay, today)}` : 'No day chosen'}</span></div><div className="planning-unresolved-actions"><button disabled={busy || recordingTask(task.id)} aria-label={`Move ${task.title} to tomorrow without a time`} onClick={() => tomorrow(task)}>Tomorrow</button><button disabled={busy} aria-label={`Remind me about ${task.title} in an hour`} onClick={() => remindAbout(task)}>Remind me</button>{onOpenTask && <button disabled={busy} aria-label={`Open ${task.title}`} onClick={() => onOpenTask(task.id)}>Open</button>}</div></div>)}
-      </div></details>}
-      <section><div className="planning-section-heading"><h2 className="planning-section-label">Your day at a glance</h2><button onClick={() => { if (!editSummary && !summaryDirty && !day.summaryEdited) setSummary(summaryForDay(state, day.id, now)); setEditSummary(!editSummary); }}>{editSummary ? 'Keep summary' : 'Edit summary'}</button></div>{editSummary ? <Field label="Daily summary · editable facts"><textarea rows={8} value={summary} onChange={e => { setSummary(e.target.value); setSummaryDirty(true); }}/></Field> : <div className="planning-day-glance"><p><Sun size={15}/><span>{day.startedAt ? `Woke at ${timeLabel(day.startedAt, zone)}` : 'Wake time not recorded'}{day.mood ? ` · Mood ${['', 'Very low', 'Low', 'Okay', 'Good', 'Great'][day.mood]}` : ''}</span></p><p><CheckCircle2 size={15}/><span>{completed} of {dailyBlocks.length} calendar entries completed</span></p><p><Activity size={15}/><span>{steps === undefined ? 'Steps not recorded' : `${steps.toLocaleString()} steps`}{sleep?.duration ? ` · ${Math.floor(sleep.duration / 60)}h ${sleep.duration % 60}m sleep` : ' · Sleep not recorded'}</span></p>{elapsed !== undefined && <p><Clock3 size={15}/><span>Day open for {Math.floor(elapsed / 60)}h {elapsed % 60}m</span></p>}</div>}</section>
-      <section><label className="planning-section-label" htmlFor="planning-day-journal">Journal (optional)</label><textarea id="planning-day-journal" aria-label="My journal" value={journal} onChange={e => setJournal(e.target.value)} rows={3} placeholder="A few words, or a few paragraphs — whatever you need."/></section>
-      <label className="planning-tomorrow-switch"><span><CalendarDays size={16}/>Open tomorrow’s plan afterwards?</span><input type="checkbox" checked={planTomorrow} onChange={e => setPlanTomorrow(e.target.checked)}/><span className="planning-switch" aria-hidden="true"/></label>{planTomorrow && <p className="planning-tomorrow-note">After closing, the plan for {dateLabel(tomorrowDate, today).toLowerCase()} opens. Nothing is booked for you.</p>}
-      <div className="planning-end-actions">
-        <CloseConsequences state={state} dayId={day.id} now={now} confirmed={closeConfirmed} onConfirm={setCloseConfirmed}/>
-        <button className="primary planning-day-submit" disabled={busy || (preview.associatedSessions.length > 0 && !closeConfirmed)} aria-label="End day" onClick={() => finish(true)}>{busy ? 'Saving your day…' : 'End my day'}</button>
-        <button className="planning-skip" disabled={busy} onClick={() => finish(false)}>Save and keep going</button>
-      </div>
-    </div>
+  return <Modal className="v3-sheet" title="Close your day" onClose={onClose}>
+    <EndDaySections dateLabel={day.date}
+      commitments={<><DayFactsSummary state={state} date={day.date} now={now}/>{chosen.map(taskRow)}
+        {entries.filter(block => !block.taskId || !chosenIds.has(block.taskId)).map(block => <section className="planning-v3-card v3-stack" key={block.id}><strong>{block.title}</strong><p>{rangeLabel(block.start, block.end, zone)} · {entryStatus(state, block, now).text}</p>{block.status === 'pending' && <button disabled={busy} onClick={() => onResolve(block)}>Record result…</button>}</section>)}
+        {!chosen.length && !entries.length && <p>No tasks or calendar commitments were chosen for this date.</p>}
+        <details><summary>Edit factual summary</summary><Field label="Daily factual summary"><textarea rows={6} maxLength={10000} value={summary} onChange={e => { setSummary(e.target.value); setSummaryDirty(true); }}/></Field><p className="muted">An edited summary is preserved unless you explicitly regenerate it in Review.</p></details>
+      </>}
+      backlogCount={backlog.length} backlog={backlog.map(taskRow)}
+      changedPlan={changedPlan} onChangedPlanChange={setChangedPlan} easierTomorrow={easierTomorrow} onEasierTomorrowChange={setEasierTomorrow} journal={journal} onJournalChange={setJournal}
+      sessionConsequence={<>{preview.associatedSessions.map(session => <p key={session.id}>{targetTitle(state, session.target)} · {session.state} · {minutesLabel(session.recordedMinutes)} recorded. Closing ends this recording and leaves the task open.</p>)}{preview.continuingSessions.map(session => <p key={session.id}>{targetTitle(state, session.target)} is attached elsewhere and continues recording.</p>)}</>}
+      requiresStopConfirmation={preview.associatedSessions.length > 0} stopConfirmed={closeConfirmed} onStopConfirmedChange={setCloseConfirmed}
+      planTomorrow={planTomorrow} onPlanTomorrowChange={setPlanTomorrow} disabled={busy || !preview.valid} onCloseDay={finish} onKeepOpen={onClose}/>
   </Modal>;
 }
-
-export function TemplatesPage({state,run}:PageProps){
- const [edit,setEdit]=useState<DayTemplate|true|null>(null);const [title,setTitle]=useState('');const [rows,setRows]=useState<TemplateBlock[]>([]);const open=(t?:DayTemplate)=>{setTitle(t?.title??'');setRows(t?.blocks??[{title:'',kind:'routine',tag:'Personal',startMinute:420,duration:15,notes:''}]);setEdit(t??true);};
- const update=(i:number,changes:Partial<TemplateBlock>)=>setRows(rows.map((r,j)=>j===i?{...r,...changes}:r));
- return <><header className="page-heading"><h1>Day templates</h1><p>Your familiar rhythm, ready to reuse.</p></header><button className="primary" onClick={()=>open()}><Plus size={18}/>New template</button><div className="stack">{state.templates.filter(t=>!t.archived).map(t=><section className="card" key={t.id}><h2>{t.title}</h2><p className="muted">{t.blocks.length} blocks · {t.blocks.reduce((n,b)=>n+b.duration,0)} minutes</p><div className="inline-actions"><button onClick={()=>open(t)}>Edit</button><button onClick={()=>run({type:'record.archive',collection:'templates',id:t.id,archived:true})}>Archive</button></div></section>)}</div>{edit&&<Modal title="Day template" onClose={()=>setEdit(null)}><form className="stack" onSubmit={async e=>{e.preventDefault();if(await run({type:'template.save',template:{...(edit===true?{}:edit),title,blocks:rows}}))setEdit(null);}}><Field label="Template name"><input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="A steady workday"/></Field>{rows.map((r,i)=><fieldset className="template-row" key={i}><legend>Block {i+1}</legend><Field label="Title"><input required value={r.title} onChange={e=>update(i,{title:e.target.value})}/></Field><div className="grid-two"><Field label="Kind"><select value={r.kind} onChange={e=>update(i,{kind:e.target.value as TemplateBlock['kind']})}><option value="routine">Routine</option><option value="task">Task</option><option value="appointment">Appointment</option></select></Field><Field label="Area"><select value={r.tag} onChange={e=>update(i,{tag:e.target.value as TemplateBlock['tag']})}><option>Personal</option><option>Work</option></select></Field></div><Field label="Start"><select value={r.startMinute} onChange={e=>update(i,{startMinute:Number(e.target.value)})}>{Array.from({length:288},(_,j)=><option key={j} value={j*5}>{String(Math.floor(j*5/60)).padStart(2,'0')}:{String(j*5%60).padStart(2,'0')}</option>)}</select></Field><DurationField value={r.duration} onChange={n=>update(i,{duration:n})}/><button type="button" onClick={()=>setRows(rows.filter((_,j)=>i!==j))}><X size={16}/>Remove block</button></fieldset>)}<button type="button" onClick={()=>setRows([...rows,{title:'',kind:'routine',tag:'Personal',startMinute:540,duration:30,notes:''}])}><Plus size={18}/>Add block</button><button className="primary" disabled={!rows.length}>Save template</button></form></Modal>}</>;
+export function TemplatesPage({ state, now, run, runReviewed }: PageProps) {
+  const [edit, setEdit] = useState<DayTemplate | true | null>(null);
+  const [title, setTitle] = useState('');
+  const [rows, setRows] = useState<TemplateBlock[]>([]);
+  const [date, setDate] = useState(dateKey(now, state.settings.timezone));
+  const [applying, setApplying] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const used = (template: DayTemplate) => state.blocks.some(block => block.id.startsWith(`tpl:${template.id}:`));
+  const open = (template?: DayTemplate) => {
+    const copy = template && used(template);
+    setTitle(template ? `${template.title}${copy ? ' copy' : ''}` : '');
+    setRows(template?.blocks ?? [{ title: '', kind: 'routine', tag: 'Personal', startMinute: 420, duration: 15, notes: '' }]);
+    setEdit(copy ? true : template ?? true);
+  };
+  const update = (i: number, changes: Partial<TemplateBlock>) => setRows(rows.map((row, index) => index === i ? { ...row, ...changes } : row));
+  return <div className="v3-stack">
+    <header className="page-heading"><h1>Day templates</h1><p>Your familiar rhythm, ready to review.</p></header>
+    <button className="primary" onClick={() => open()}><Plus size={18}/>New template</button>
+    <Field label="Apply on date"><input type="date" value={date} onChange={e => { if (e.target.value) setDate(e.target.value); }}/></Field>
+    {state.templates.filter(t => !t.archived).map(template => <section className="planning-v3-card v3-stack" key={template.id}>
+      <h2>{template.title}</h2><p className="muted">{template.blocks.length} entries · {template.blocks.reduce((n, b) => n + b.duration, 0)} minutes before overlap adjustment</p>
+      {used(template) && <p className="muted">This template has been applied. Changing its entries creates a new template and preserves existing history.</p>}
+      <div className="v3-actions"><button onClick={() => setApplying(template.id)}>Review template</button><button onClick={() => open(template)}>{used(template) ? 'Make edited copy' : 'Edit'}</button><button onClick={() => run({ type: 'record.archive', collection: 'templates', id: template.id, archived: true })}>Archive</button></div>
+    </section>)}
+    {applying && <TemplateApplyDialog state={state} now={now} run={run} runReviewed={runReviewed} templateId={applying} date={date} onClose={() => setApplying(null)}/>}
+    {edit && <Modal title="Day template" onClose={() => setEdit(null)}><form className="stack" onSubmit={async e => {
+      e.preventDefault(); setBusy(true);
+      try { if (await run({ type: 'template.save', template: { ...(edit === true ? {} : edit), title, blocks: rows } })) setEdit(null); } finally { setBusy(false); }
+    }}>
+      <Field label="Template name"><input required value={title} onChange={e => setTitle(e.target.value)} placeholder="A steady workday"/></Field>
+      {rows.map((row, i) => <fieldset className="template-row" key={i}><legend>Entry {i + 1}</legend>
+        <Field label="Title"><input required value={row.title} onChange={e => update(i, { title: e.target.value })}/></Field>
+        <div className="grid-two"><Field label="Kind"><select value={row.kind} onChange={e => update(i, { kind: e.target.value as TemplateBlock['kind'] })}><option value="routine">Routine</option><option value="task">Task</option><option value="appointment">Appointment</option></select></Field>
+          <Field label="Area"><select value={row.tag} onChange={e => update(i, { tag: e.target.value as TemplateBlock['tag'] })}><option>Personal</option><option>Work</option></select></Field></div>
+        <Field label="Start"><select value={row.startMinute} onChange={e => update(i, { startMinute: Number(e.target.value) })}>{Array.from({ length: 288 }, (_, j) => <option key={j} value={j * 5}>{String(Math.floor(j * 5 / 60)).padStart(2, '0')}:{String(j * 5 % 60).padStart(2, '0')}</option>)}</select></Field>
+        <DurationField value={row.duration} onChange={duration => update(i, { duration })}/>
+        <button type="button" onClick={() => setRows(rows.filter((_, j) => i !== j))}><X size={16}/>Remove entry</button>
+      </fieldset>)}
+      <button type="button" onClick={() => setRows([...rows, { title: '', kind: 'routine', tag: 'Personal', startMinute: 540, duration: 30, notes: '' }])}><Plus size={18}/>Add entry</button>
+      <button className="primary" disabled={busy || !rows.length}>Save template</button>
+    </form></Modal>}
+  </div>;
 }

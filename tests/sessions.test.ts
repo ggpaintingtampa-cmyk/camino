@@ -350,7 +350,8 @@ describe('bookings and the compatibility projection', () => {
   it('a booking with recorded work cannot be moved, also while its recording is paused', () => {
     let state = run(linked(), { type: 'block.start', id: 'slot' }, t('14:00'));
     state = run(state, { type: 'session.pause', id: state.workSessions[0].id }, t('14:10'));
-    refuse(state, { type: 'block.save', block: { ...state.blocks[0], start: t('16:00'), end: t('17:00') } }, t('14:20'), 'ACTIVE_TASK');
+    const block = Object.fromEntries(Object.entries(state.blocks[0]).filter(([key]) => key !== 'createdAt' && key !== 'updatedAt')) as typeof state.blocks[number];
+    refuse(state, { type: 'block.save', block: { ...block, start: t('16:00'), end: t('17:00') } }, t('14:20'), 'ACTIVE_TASK');
   });
   it('the effective role follows the stored choice, else the kind', () => {
     expect(blockFlexibility({ kind: 'appointment' })).toBe('fixed');

@@ -377,7 +377,13 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       }
       bump(envelope, now); audit(state, before, ledger, `Envelope ${outcome}: ${envelope.title}`, now); break;
     }
-    case 'template.save': upsert(state.templates, command.template, now); break;
+    case 'template.save': {
+      const existing = state.templates.find(template => template.id === command.template.id);
+      if (existing && state.blocks.some(block => block.id.startsWith(`tpl:${existing.id}:`)) && JSON.stringify(existing.blocks) !== JSON.stringify(command.template.blocks)) {
+        fail('This template has already been applied. Make a copy to change its entries without changing occurrence identities.', 'TEMPLATE_ALREADY_APPLIED', 409);
+      }
+      upsert(state.templates, command.template, now); break;
+    }
     case 'template.apply': applyTemplate(context, command); break;
     case 'location.save': {
       const location = upsert(state.locations, command.location, now);
@@ -424,11 +430,11 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     }
     case 'settings.save': {
       state.settings.name = command.name; state.settings.timezone = command.timezone;
-      // Runs after fingerprint, receipt and revision handling. Once a five-tab order is
-      // stored, a fresh four-tab request is normalized instead of storing a second order.
+      // The five-tab shell ships with this build. Normalize fresh legacy saves only
+      // after fingerprint, receipt and revision handling; accepted retries never get here.
       if (command.navOrder !== undefined) {
-        if (state.settings.navOrderV3) state.settings.navOrderV3 = convertLegacyNavOrder(command.navOrder);
-        else state.settings.navOrder = [...command.navOrder];
+        state.settings.navOrderV3 = convertLegacyNavOrder(command.navOrder);
+        delete state.settings.navOrder;
       }
       break;
     }
@@ -485,9 +491,10 @@ export function summaryForDay(state: State, dayId: string, now?: string): string
     lines.push(`${timeLabel(block.start, zone)}–${timeLabel(block.end, zone)} ${block.title}: ${outcome}${actual}${block.notes ? `; ${block.notes}` : ''}.`);
   }
   const completedOn = (task: Task) => {
-    // An explicit outcome dates the completion. Only a task without one falls back to the legacy inference.
+    // Only explicit evidence dates an unscheduled completion. A later metadata edit
+    // must never make an undated legacy task appear completed on that edit's date.
     const outcome = [...state.taskOutcomes].reverse().find(o => o.taskId === task.id && o.kind !== 'reopen');
-    if (!outcome) return dateKey(task.updatedAt, zone) === day.date;
+    if (!outcome) return false;
     return outcome.kind === 'complete' && (outcome.dayId ? outcome.dayId === day.id : outcome.contextDate === day.date);
   };
   for (const task of state.tasks.filter(t => !t.archived && t.status === 'complete' && completedOn(t) && !blocks.some(b => b.taskId === t.id && b.status === 'complete'))) {

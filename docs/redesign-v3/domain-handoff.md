@@ -1,5 +1,7 @@
 # Domain handoff (AI 1)
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 Branch `redesign/v3-domain`, stacked on the contract commit `1206415` (PR #8). Baseline `redesign/v3-integration` at `0884f68`. Release R1 domain code, Phases 2–5 plus review facts. Phase 6 navigation is not started.
 
 ## State of the code

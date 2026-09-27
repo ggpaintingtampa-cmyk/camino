@@ -1,22 +1,14 @@
 # Caminos by Morgan
 
-## Redesign plan and implementation handoff
+## Caminos v3 — daily planning (R1)
 
-The current source implements v2. The v3 redesign is documented and available in Figma, but its new behavior has not been implemented by these planning updates.
+R1 is implemented: Today / Plan / Tasks / Review / More, title-only capture, optional estimates, direct work recording, reviewed day planning and Reset, template previews, optional check-in, and explicit day closure. [Release verification](docs/redesign-v3/release-verification.md) records the focused checks and limits; [deployment status](DEPLOYMENT-STATUS.md) records live activation.
 
-The final review adds release markers to every acceptance row/item in `skill.md` sections 13 and 16.1. Phase 3 now bridges legacy `day.end` to explicit session-aware closure; booking references belong to individual intervals. AI 2 temporarily owns early planning compatibility and Phase 6 Settings so each slice uses at most two roles. The planned R1 database policy permits missing-file creation only for deliberate initialization/test harness setup and explicit scratch restore; ordinary read/command/MCP paths must refuse it. That application safeguard is still future work.
+Read [skill.md](skill.md) for the detailed plan and R1/R2 acceptance markers, [contracts](docs/redesign-v3/contracts.md) for the implemented API/storage rules, [REDESIGN-SCHEMA.md](REDESIGN-SCHEMA.md) for product intent, and [Figma handoff](artifacts/redesign-v3/README.md) for design references. The singular skill.md is separate from [skills.md](skills.md). The [four AI prompts](AI-IMPLEMENTATION-PROMPTS.md) and workstream handoffs retain the historical assignments; completed R1 work should not be restarted.
 
-Prompt 4's first code batch is test infrastructure only; v3 application behavior remains pending. See [coordination and start order](docs/redesign-v3/coordination.md), [setup evidence](docs/redesign-v3/review-handoff.md), and the ready-to-use [Prompt 1](docs/redesign-v3/prompts/01-domain.md), [Prompt 2](docs/redesign-v3/prompts/02-daily-ui.md), and [Prompt 3](docs/redesign-v3/prompts/03-planning-ui.md).
+Schema 2 is frozen. An existing schema-1 database requires an explicit absolute path, target version, apply flag and new verified backup. Ordinary API/CLI/MCP opens never migrate; read/command/MCP paths refuse missing databases. Only deliberate server initialization, owner setup or isolated test/restore operations create databases. Never use the local .data database as a disposable fixture.
 
-Read [REDESIGN-SCHEMA.md](REDESIGN-SCHEMA.md) for product behavior, [skill.md](skill.md) for the detailed code plan, [the Figma handoff](artifacts/redesign-v3/README.md) for editable designs, and [AI-IMPLEMENTATION-PROMPTS.md](AI-IMPLEMENTATION-PROMPTS.md) for four coordinated AI assignments. The singular `skill.md` is separate from the existing [skills.md](skills.md) project guide.
-
-The independent AI review is resolved in [review-resolution.md](artifacts/redesign-v3/review-resolution.md). The corrected plan keeps four-tab navigation until the Phase 6 shell/Settings activation, preserves legacy settings commands for receipt replay, attributes work per interval, and defines the legacy block timing projection. Draft schemas remain provisional on disposable fixtures until the supported release/owner-data boundary.
-
-Delivery has two source milestones: **R1** establishes the dependable daily loop; **R2** adds advanced focus allocations, template variants, detailed change history, weekly learning, and remaining enhancements. All accepted work remains in scope. The four roles operate with **at most two active AI sessions**, using GitHub issues/PRs and parked-role handoffs.
-
-The planned migration operation requires explicit opt-in, a literal absolute database target, a target version, and a new verified backup. Normal API/CLI/MCP opening must not trigger migration. That safeguard and new CLI interface are requirements for later implementation, not features already present. Do not inspect or use `.data/hermes.sqlite` as a disposable fixture merely because it is in this workspace.
-
-The reviewer reported WebKit cannot launch here because `libevent-2.1.so.7` is missing. This documentation update did not rerun browser tests; implementation must record/reproduce that baseline or obtain compatible-host coverage. Other AI environments should translate Codex-specific editing/runtime paths while preserving the same project boundaries and test requirements.
+R2 remains deferred: focus-window allocations, positioned buffers, template variants/subsets, detailed plan-change history and weekly learning. See the R2 markers in skill.md. Chromium has focused R1 coverage; WebKit is blocked on this workstation by a missing host library.
 
 ## Caminos rename
 
@@ -28,13 +20,13 @@ A private personal dashboard for the phone, with a graphite-and-gold interface r
 
 ## What this version does
 
-Version 2 implements all 18 screens from [Caminos — Redesign v2](https://www.figma.com/design/546RE6EDMQscrkcNhjL8gL/Caminos?node-id=1-2). The interface uses the supplied graphite/gold tokens, system fonts and Lucide icons. References, synthetic captures and side-by-side comparisons are under `artifacts/figma-v2` and `artifacts/redesign-v2`; see `design-qa.md` for verification.
+Version 3 implements the R1 daily loop from the v3 Figma proposal, retaining the existing supporting tools. The interface uses graphite/gold tokens, system fonts and Lucide icons.
 
-- **Home:** daily briefing, forecast, current task countdown, first appointments, important pending decisions, due goals, reminders and envelope deadlines. Start Day records wake time and optional check-in data; End Day preserves a factual summary beside a personal journal.
-- **Schedule:** compact chronological agenda by default, with an explicit 24-hour timeline for five-minute placement and touch dragging. Precise controls, unscheduled tasks, appointments, reusable templates and overlap warnings remain available. Expired tasks offer completion, missed, partial or snooze; a partial result creates a linked follow-up task with your chosen remaining duration.
+- **Today and Tasks:** current recording, next fixed commitment and chosen priorities; title-only capture; All/Today/Later views; direct start, pause, resume, stop and outcome actions. Work can be recorded without a calendar entry or Start Day.
+- **Plan:** untimed daily priorities, optional working window and spare time, honest capacity, compact agenda/timeline, reviewed time booking, Reset before/after preview, and whole-template preview with overlap consent. Tomorrow sets an intended day without booking 09:00.
 - **Goals:** parent/child goals and checkable steps, equal-weight leaf progress, target dates from daily through ten years, pins, pauses and archiving.
 - **Health and practice:** steps, repeated weight entries in pounds, workouts, sleep duration/quality, simple food notes and Rocket League sessions, with today/7-day/30-day summaries.
-- **Journal and history:** month navigation, factual summaries that can be edited explicitly, separate personal writing, and search across records. Missing information stays unknown; generated prose uses stored facts.
+- **Review and journal:** selected work, explicit outcomes, calendar reservations and recorded intervals shown as separate facts. Optional day closure stops disclosed recordings; personal reflection stays separate from the factual summary. Calendar, search and edited summaries remain available.
 - **Money:** independent Personal and Company balances, cash reservations in envelopes, earned and Lost/Charity buckets, expiry decisions, and an adjustment history. This tracks your manually entered balances; it does not transfer money.
 - **Private AI/file operations:** `pnpm caminosctl` reads records and applies the same validated commands as the app. It does not expose a public AI endpoint or require editing SQLite directly.
 

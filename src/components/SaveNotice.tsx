@@ -29,9 +29,9 @@ export function SaveNotice({ state, busy, online, onRetry, onDismiss, onDiscardS
     </div>}
     {state.kind === 'signed-out' && <div className="v3-notice v3-notice-warning" role="alert">
       <TriangleAlert size={18} aria-hidden="true"/>
-      <p><strong>{state.label}: not saved.</strong> {state.message}</p>
+      <p><strong>{state.label}: {state.uncertain ? 'result unknown' : 'not saved'}.</strong> {state.message}</p>
       <button type="button" className="primary" disabled={busy} onClick={onRetry}>Send again</button>
-      <button type="button" disabled={busy} onClick={onDiscardSignedOut}>Discard</button>
+      {!state.uncertain && <button type="button" disabled={busy} onClick={onDiscardSignedOut}>Discard</button>}
     </div>}
     {state.kind === 'stale' && <div className="v3-notice v3-notice-warning" role="alert">
       <TriangleAlert size={18} aria-hidden="true"/>

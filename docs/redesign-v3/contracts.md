@@ -1,5 +1,7 @@
 # Caminos v3 domain contracts
 
+**27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
+
 Owner: AI 1 (Domain, [#2](https://github.com/ggpaintingtampa-cmyk/camino/issues/2)). Reviewers: AI 2 for client-facing contracts, AI 3 for preview/session/plan semantics, AI 4 for integration and operations.
 
 Baseline: `redesign/v3-integration` at `0884f68`. Source of requirements: `skill.md` sections 3.4, 4–7, 12 (Phases 2–5) and 13.1–13.6.
@@ -41,7 +43,7 @@ The visual name "v3" is unrelated to storage format 2.
 
 **Draft rule.** While `CURRENT_SCHEMA_DRAFT` is defined, a database in that format is disposable by definition. Every change to a stored shape during Phases 2–5 increments the draft number. A build refuses a database whose draft number differs from its own with `DRAFT_FORMAT_MISMATCH`; the fixture is recreated, not migrated. Creating or migrating into a draft format needs an explicit draft opt-in (section 6.1), and a draft-state export is not a supported export format. The format is frozen (the draft constant and member are removed) when it first touches non-disposable owner data or is published as a supported release or export format, whichever comes first. After that, stored meaning changes only through a new numbered migration.
 
-Constants in `shared/state-format.ts`: `CURRENT_SCHEMA_VERSION = 2`, `CURRENT_SCHEMA_DRAFT = 2` (draft 2 added the optional `settings.navOrderV3`), `CURRENT_SQL_VERSION = 2`, `LEGACY_SQL_VERSION = 1`.
+Released constants in `shared/state-format.ts`: `CURRENT_SCHEMA_VERSION = 2`, `CURRENT_SCHEMA_DRAFT = undefined` (schema 2 is frozen; development drafts must be recreated), `CURRENT_SQL_VERSION = 2`, `LEGACY_SQL_VERSION = 1`. Future persisted changes require a numbered migration.
 
 **Old-build hazard.** The baseline build stamps `user_version = 1` on every open and keeps writing. If it ever opens a migrated database, the next new-build open sees disagreeing versions and refuses with `STATE_INVALID`. Rolling back code after a migration therefore needs the pre-migration backup; it is not repaired in place.
 
@@ -558,11 +560,11 @@ Coded by AI 2 together with the five-tab shell and the settings editor, because 
 - `settings.save` keeps accepting exactly the original four-tab shape, forever. Its schema branch is not edited, so an accepted request still parses to the same JSON and reaches its receipt.
 - New command `settings.saveV3 { name, timezone, navOrder?: NavIdV3[] }` with exactly five distinct IDs. A supplied order is stored in `settings.navOrderV3` and removes `settings.navOrder`. An omitted order changes neither.
 - Stored invariant: `navOrder` and `navOrderV3` are never both present (`two-navigation-orders`).
-- A fresh four-tab `settings.save` on a state that already has `navOrderV3` is normalized inside the domain, after fingerprint, receipt and revision handling: the order is converted and stored as `navOrderV3`. A replayed accepted request returns through its receipt first and applies nothing.
+- A fresh four-tab `settings.save` is always normalized inside the domain, after fingerprint, receipt and revision handling: the order is converted and stored as `navOrderV3`. A replayed accepted request returns through its receipt first and applies nothing.
 - Conversion, `convertLegacyNavOrder` in `shared/navigation.ts`: `goals` leaves the bar, `tasks` follows `schedule`, `history` follows `tasks`, the rest keep their relative order. Default `home, schedule, tasks, history, more`.
 - The shell reads `effectiveNavOrder(settings)`: the stored five-tab order, else the four-tab preference through the conversion. Opening the new build therefore rewrites nothing, and `migrateLegacyState` keeps the four-tab preference unchanged.
 
-Coded, not yet run through tests. Matrix rows M21 and M22 still need their tests.
+Verified by screens/settings, legacy fingerprint and migration receipt-replay tests during integration.
 
 ### 7.4 Requests to other roles
 
@@ -577,7 +579,7 @@ Coded, not yet run through tests. Matrix rows M21 and M22 still need their tests
 
 | Area | R1 | R2 |
 |---|---|---|
-| Storage | Format 2 draft, explicit migration, open intent, legacy verify/export/backup | `planChanges`, `templateApplications`, later draft or migration |
+| Storage | Frozen format 2, explicit migration, open intent, legacy verify/export/backup | `planChanges`, `templateApplications`, later numbered migration |
 | Task | Optional estimate, guidance, preferred day, deadline, effort and checklist fields, outcomes | Energy filter behavior, goal next-step command |
 | Sessions | All five commands, legacy adapters, per-interval attribution | — |
 | Plan | Selection, main task, window, unplaced reserve, fixed/flexible | Focus windows, positioned buffers and transitions, allocations, small-plan mode |
@@ -607,7 +609,7 @@ Matrix rows this workstream answers: M01–M13, M15–M25 (M21, M22 with Phase 6
 | `endReason: 'day-closed'` | Distinguishes an owner Stop from a disclosed close consequence |
 | Deterministic plan ID `dayplan:<date>` | One plan per date holds by construction |
 
-## 10. Implementation status
+## 10. Historical role handoff status (superseded by release verification)
 
 "Coded" means the source exists and compiles. It does not mean verified: see `domain-handoff.md` for which suites have and have not been run.
 

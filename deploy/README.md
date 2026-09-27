@@ -24,7 +24,7 @@ Use `owner-setup --replace` only for an intentional password change; it revokes 
 
 Alternatively, `sudo -u hermes hermesctl setup-link` generates a high-entropy, single-use link valid for 15 minutes so the owner can choose a password in the browser. The token is stored only as a digest in the database and carried in the URL fragment, never an HTTP request URL. Only the latest link works; existing owners cannot be replaced through this endpoint. Treat the CLI's link output as a temporary credential. The browser posts the token with the chosen password over HTTPS and the same preauthentication CSRF protections as login.
 
-Always use the installed wrapper for production commands. It refuses root and other user identities, rejects database-path overrides, fixes the production database/origin, clears runtime override variables and changes into `/srv/hermes/current` before loading TypeScript. This avoids failures from an inaccessible inherited caller directory and prevents an accidentally created database in the caller's workspace. Pass absolute `--file` and `--out` paths with permissions allowing the service account to access them. For a command file private to the caller, use shell input redirection instead of widening file permissions:
+Use the installed wrapper for ordinary production commands. It refuses root and other user identities, rejects database-path overrides, fixes the production database/origin, clears runtime override variables and changes into `/srv/hermes/current` before loading TypeScript. Explicit release migrations use the narrowly scoped operator path below because the wrapper intentionally rejects `--db`. Pass absolute `--file` and `--out` paths with permissions allowing the service account to access them. For a command file private to the caller, use shell input redirection instead of widening file permissions:
 
 ```sh
 sudo -u hermes hermesctl command --stdin < /absolute/private/command.json
@@ -36,9 +36,29 @@ Enable/start `hermes.service` and `hermes-backup.timer`. Check `https://hermes.a
 
 ## Backup and recovery
 
+### Schema 2 release cutover
+
+Normal server, CLI and MCP opens never migrate. Read/command/MCP paths refuse a missing source; only deliberate server/owner initialization, the synthetic harness and a new scratch-restore destination may create a database. Schema 2 is frozen without a draft marker.
+
+For an existing provisioned VPS, deploy a new sealed **code-only** release while preserving the reviewed service units, runtime, wrapper and Caddy configuration. Do not replace differing units just to satisfy `install.sh`. Transfer only built `dist`, `server`, `shared`, installed `node_modules`, manifests and deployment documentation; exclude databases, credentials, environment files and browser artifacts. Verify the archive digest and Node/native ABI, seal as root:hermes, and retain the old release.
+
+Run the new release CLI as `hermes`, from that release directory, before changing `current`:
+
+```sh
+# Set release_path to the verified, sealed absolute release directory.
+cd "$release_path"
+sudo -u hermes /opt/hermes/node/bin/node node_modules/tsx/dist/cli.mjs server/cli.ts migrate --db /var/lib/hermes/hermes.sqlite --to-schema 2
+```
+
+Preflight prints only versions, revision, counts and rule/record IDs. Make a private verified backup and use `restore-scratch` to create a new copy under a mode-0700 service-owned directory. Rehearse the explicit migration against that copy with its own new backup; keep all owner data on the VPS and print only structural verification results.
+
+Before the real apply, stop `hermes.service` and its backup timer and confirm the backup service/writers are idle. Invoke the same CLI with `--apply --backup /var/backups/hermes/NEW_PRE_RELEASE.sqlite`. It creates and verifies the backup and transactionally rechecks the source revision/digest. Only after successful migration, atomically change `current` to the matching new code, start/enable `hermes.service`, and restore the backup timer. Verify HTTPS health, the exact built assets, unauthenticated API rejection and private response headers without reading personal records.
+
+**Rollback across this migration requires matching code and data.** Do not point old code at schema 2. Stop the service, retain the failed database/WAL/SHM set privately, restore the verified pre-migration backup to a new path first, verify it, then install it with the proper owner/mode and activate the old release. An offline restore revokes browser sessions, so sign-in is required. Preserve any post-cutover writes for explicit reconciliation; never silently discard them.
+
 The daily timer uses SQLite's online backup API, mode 0600, and immediately verifies integrity plus snapshot revision. Backups include password hashes and must stay private. No destructive retention policy is applied. Copy backups off the server through a separately authorized private backup destination when available; same-server backups do not protect from disk loss.
 
-`sudo -u hermes hermesctl verify --file BACKUP` is a read-only check. `sudo -u hermes hermesctl restore-scratch --file BACKUP --out NEW_PATH` copies to an unused destination, checks integrity, and removes old sessions. Use absolute paths and a private scratch directory with mode 0700. Compare an owner export against the original records. Recovery of the live service requires stopping Caminos, preserving the current database and any WAL/SHM files as a set, then placing the verified restored database at the live path with the proper owner/mode. Never overwrite a running database. Keep the prior file set for recovery until the restored service is verified. A release rollback changes only the `current` link and restarts the service; do not roll back data silently.
+`sudo -u hermes hermesctl verify --file BACKUP` is a read-only check. `sudo -u hermes hermesctl restore-scratch --file BACKUP --out NEW_PATH` copies to an unused destination, checks integrity, and removes old sessions. Use absolute paths and a private scratch directory with mode 0700. Compare records privately without printing their contents. Recovery requires stopping Caminos and preserving the current database/WAL/SHM set before installing the verified restore with the correct owner/mode. Never overwrite a running database. A code-only rollback is valid only when both releases support the same persisted format; the schema-1/schema-2 boundary requires the paired recovery above.
 
 ## API and local AI use
 
