@@ -1,6 +1,6 @@
 # R1 integration and release verification — 27 September 2026
 
-The owner authorized combining all four batches, focused checks, GitHub push and production deployment. Work was integrated without spawning agents. Domain `f5fd16c`, daily UI `626b143`, planning components `0a4b2ea`, and the earlier harness are combined on `redesign/v3-release`. Deployment evidence is recorded separately in [DEPLOYMENT-STATUS.md](../../DEPLOYMENT-STATUS.md).
+The owner authorized combining all four batches, focused checks, GitHub push and production deployment. Work was integrated without spawning agents. Domain `f5fd16c`, daily UI `626b143`, planning components `0a4b2ea`, and the earlier harness are combined in release commit `ef451b8`, merged through [PR #6](https://github.com/ggpaintingtampa-cmyk/camino/pull/6). R1 is deployed. Private migration rehearsal, exact preservation checks, verified backups and public health/asset/auth checks passed; evidence is recorded in [DEPLOYMENT-STATUS.md](../../DEPLOYMENT-STATUS.md).
 
 ## Resulting behavior
 

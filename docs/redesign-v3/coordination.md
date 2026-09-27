@@ -2,7 +2,7 @@
 
 **27 September 2026 integration update:** R1 is implemented and integrated; see [release verification](release-verification.md) for actual checks and limits. The assignments and handoff status below record earlier stages. Do not restart completed R1 work. R2 remains deferred. The owner subsequently authorized integration, focused checks, push and deployment; no additional agents are requested.
 
-Prompt 4's first setup/test-infrastructure batch completed September 27, 2026. AI 4 is now parked. The owner can start Prompts 1 and 2 together; Prompt 3 follows their prerequisite handoff and a freed slot. Application redesign features and R1/R2 acceptance remain pending.
+R1 is integrated, merged through PR #6 and deployed at code commit `ef451b8`. No role needs restarting for R1. The owner authorized final integration and deployment after supplying the other AI handoffs. [Release verification](release-verification.md) distinguishes the focused checks from the larger original acceptance matrix; WebKit and R2 remain pending. The roster and start-order notes below retain the earlier coordination history.
 
 Repository: https://github.com/ggpaintingtampa-cmyk/camino. Default branch: `main`; verified starting commit: `cca9aaf13d7078f2a2a63e1633b9289c0f08a247`. Shared integration branch: `redesign/v3-integration`. Do not merge integration into `main` or deploy without a separate owner instruction.
 

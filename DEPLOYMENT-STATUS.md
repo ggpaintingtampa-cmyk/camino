@@ -1,4 +1,28 @@
-# Caminos source rename — 26 September 2026
+# Caminos v3 R1 production — 27 September 2026
+
+Live at [hermes.andresinbox.tech](https://hermes.andresinbox.tech). Active sealed release: `/srv/hermes/releases/2026-09-27-v3.0-r1`, code commit `ef451b8738a3130dc2ed0dff1c4759f702cdf01d`. [Integration PR #6](https://github.com/ggpaintingtampa-cmyk/camino/pull/6) is merged into main. The [release archive](https://github.com/ggpaintingtampa-cmyk/camino/releases/tag/v3.0.0-r1) contains code/assets/dependencies only and was verified on the VPS against SHA-256 `fdd98513afd84bc77f76519d708684552beba1a536954460671f7bcf88329e7e`.
+
+The four R1 workstreams are integrated: Today / Plan / Tasks / Review / More, independent task recording, reviewed planning and Reset, template previews, optional morning check-in, explicit day closure, and factual Review beside journal writing. R2 remains deferred as recorded in [release verification](docs/redesign-v3/release-verification.md).
+
+## Migration and recovery
+
+Schema 2 / SQL version 2 were frozen before publication. A private backup and scratch restore on the VPS rehearsed the migration before the live cutover. Normal opens never migrate. With the app stopped and backup writers idle, the explicit migration created and verified `/var/backups/hermes/caminos-pre-v3-r1-20260927.sqlite`, then migrated revision 3 to 4. Every legacy record collection and all owner/authentication, weather-cache and command-receipt tables were compared privately before activation and matched exactly. No record contents or secrets were printed, exported off-server or used as fixtures.
+
+The previous release `/srv/hermes/releases/2026-09-19-v2.0` and pre-migration backup remain available. **Rollback requires paired old code and its schema-1 backup; switching only the code link is unsafe.** Preserve any later writes and the current database/WAL/SHM set before a controlled restore. See [operations](deploy/README.md).
+
+A post-release backup through the existing wrapper succeeded at `/var/backups/hermes/caminos-post-v3-r1-20260927.sqlite`, revision 4, schema/SQL 2. Data/backup directories retain mode 0700 and SQLite/backup files mode 0600, owned by hermes:hermes. The new code is sealed root:hermes. No credentials, cookies, runtime paths, Caddy/DNS configuration or Pirata services were changed.
+
+## Availability and checks
+
+At the start, Caddy returned 502 because the old app service was inactive; systemd recorded a successful prior exit. The service was also disabled for startup. The old release was first restarted, then replaced after rehearsal. The app is now active **and enabled**; its daily backup timer is active and enabled. The precise cause of the earlier stop was not established. No password reset was required. The unused temporary deployment SSH key was removed from the Hostinger account and local disk; it was absent from the server's authorized keys.
+
+Public HTTPS `/` and `/healthz` return 200, with the health service named Caminos. The exact JavaScript and CSS hashes match the built release. Both `/api/snapshot` and its encoded-path equivalent return 401 without authentication; responses retain private/no-store headers and the page retains CSP. Owner credentials and sessions were preserved; production verification did not sign in or write test records.
+
+Local verification: typecheck, lint and build passed; 192 focused backend checks and ten Chromium scenarios passed. WebKit launch was attempted and blocked by missing `libevent-2.1.so.7`. No full legacy browser-suite, real-device or screen-reader pass is claimed. See the linked release verification for exact scope and deferred R2 work.
+
+---
+
+# Historical source rename — 26 September 2026
 
 The source app has been renamed to Caminos. This change has not been deployed to Haven. Existing runtime paths, hostname, service units, account and data remain in place. The report below records the earlier release; it is not verification of a Caminos deployment.
 
