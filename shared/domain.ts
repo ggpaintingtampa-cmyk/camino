@@ -3,33 +3,16 @@ import { addDays, dateKey, localInstant, minuteOfDay, timeLabel, validDate } fro
 import { commandSchema } from './schema';
 import { dailySteps, goalProgress } from './selectors';
 import { CURRENT_SCHEMA_DRAFT, CURRENT_SCHEMA_VERSION } from './state-format';
+import { bump, createBase, DomainError, fail, find, live, notImplemented, upsert } from './domain-core';
+import { applyTaskCommand } from './tasks';
+import { applySessionCommand } from './sessions';
+import { applyPlanningCommand } from './planning';
 
-export class DomainError extends Error {
-  readonly statusCode: number;
-  constructor(message: string, public readonly code = 'INVALID_COMMAND', public readonly status = 400) {
-    super(message); this.name = 'DomainError'; this.statusCode = status;
-  }
-}
+export { DomainError };
 
-function fail(message: string, code = 'INVALID_COMMAND', status = 400): never { throw new DomainError(message, code, status); }
-function find<T extends { id: string }>(list: T[], id: string): T {
-  const record = list.find(item => item.id === id);
-  if (!record) fail('This record could not be found. Refresh and try again.', 'NOT_FOUND', 404);
-  return record;
-}
-function live<T extends Base>(list: T[], id: string): T {
-  const record = find(list, id);
-  if (record.archived) fail('Restore this record before changing it.', 'ARCHIVED', 409);
-  return record;
-}
-function createBase(now: string, id?: string): Base { return { id: id || crypto.randomUUID(), createdAt: now, updatedAt: now }; }
-function upsert<T extends Base>(list: T[], draft: Omit<T, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }, now: string): T {
-  const old = draft.id ? list.find(item => item.id === draft.id) : undefined;
-  const record = { ...draft, ...createBase(now, draft.id), createdAt: old?.createdAt || now } as T;
-  if (old) list[list.indexOf(old)] = record; else list.push(record);
-  return record;
-}
-function bump(record: Base, now: string) { record.updatedAt = now; }
+const TASK_INTENT_MEMBERS = ['firstAction', 'doneWhen', 'preferredDay', 'deadline', 'effort', 'checklist'] as const;
+const BLOCK_V3_MEMBERS = ['flexibility', 'acknowledgedConflictIds', 'rescheduledFromId', 'supersededById', 'changeReason', 'changeSource'] as const;
+
 function isInDay(state: State, day: Day, instant: string, now: string): boolean {
   return dateKey(instant, state.settings.timezone) === day.date ||
     (!!day.startedAt && Date.parse(instant) >= Date.parse(day.startedAt) && Date.parse(instant) <= Date.parse(day.endedAt || now));
@@ -122,6 +105,8 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
   switch (command.type) {
     case 'task.save': {
       const draft = command.task;
+      // Transitional: the handler that stores these members lands with the task-intent phase.
+      if (draft.duration === undefined || TASK_INTENT_MEMBERS.some(member => draft[member] !== undefined)) notImplemented('task.save with v3 members');
       const old = draft.id ? state.tasks.find(t => t.id === draft.id) : undefined;
       if (draft.goalId) {
         if (draft.goalId === old?.goalId) find(state.goals, draft.goalId);
@@ -138,6 +123,8 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     }
     case 'block.save': {
       const draft = command.block;
+      // Transitional: the handler that stores or checks these members lands with the session phase.
+      if (BLOCK_V3_MEMBERS.some(member => draft[member] !== undefined)) notImplemented('block.save with v3 members');
       validateSchedule(draft.start, draft.end, state);
       const old = draft.id ? state.blocks.find(b => b.id === draft.id) : undefined;
       if (draft.archived) fail('Use Archive to preserve schedule history.');
@@ -374,6 +361,8 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     }
     case 'template.save': upsert(state.templates, command.template, now); break;
     case 'template.apply': {
+      // Transitional: reviewed mode lands with the reviewed-operations phase.
+      if (command.acknowledgedConflictIds !== undefined) notImplemented('template.apply in reviewed mode');
       const template = live(state.templates, command.id);
       // Stable IDs make retries and reapplying a day's template nonduplicating.
       for (const [index, item] of template.blocks.entries()) {
@@ -436,6 +425,14 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       if (command.navOrder !== undefined) state.settings.navOrder = [...command.navOrder];
       break;
     }
+    case 'task.capture': case 'task.update': case 'task.resolve': case 'task.reopen':
+      applyTaskCommand({ state, now }, command); break;
+    case 'session.start': case 'session.pause': case 'session.resume': case 'session.switch': case 'session.stop':
+      applySessionCommand({ state, now }, command); break;
+    case 'dayPlan.save': case 'task.defer': case 'task.plan': case 'plan.apply':
+      applyPlanningCommand({ state, now }, command); break;
+    case 'day.startWithCheckin': case 'day.close':
+      notImplemented(command.type);
   }
   state.revision = input.revision + 1;
   return state;

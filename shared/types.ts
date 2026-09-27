@@ -10,12 +10,8 @@ export interface Base { id:string; createdAt:string; updatedAt:string; archived?
 export type TaskDeadline = {kind:'date'; date:string} | {kind:'instant'; at:string; timezone:string};
 export type TaskEffort = 'light'|'moderate'|'demanding';
 export interface ChecklistItem {id:string; text:string; done:boolean}
-/**
- * `duration` is the owner's estimate in minutes. It is still required in this contract
- * commit; the Phase 2 behavioral change makes it optional (absent = unknown, never zero).
- * See docs/redesign-v3/contracts.md, "Breaking changes and their prerequisites".
- */
-export interface Task extends Base {title:string; duration:number; tag:Tag; labels:string[]; goalId?:string; notes:string; status:'open'|'complete'|'partial'; remainingTaskId?:string;
+/** `duration` is the owner's estimate in minutes. Absent means unknown; it is never zero. */
+export interface Task extends Base {title:string; duration?:number; tag:Tag; labels:string[]; goalId?:string; notes:string; status:'open'|'complete'|'partial'; remainingTaskId?:string;
   firstAction?:string; doneWhen?:string; preferredDay?:string; deadline?:TaskDeadline; effort?:TaskEffort; checklist?:ChecklistItem[]}
 
 export type Flexibility = 'fixed'|'flexible';
@@ -72,9 +68,9 @@ type Draft<T extends Base> = Omit<T,'id'|'createdAt'|'updatedAt'> & {id?:string}
 /**
  * Legacy wire drafts are spelled out so a record extension never widens one by accident.
  * `task.save` replaces the task. A v3 member it carries is stored as sent; one it omits keeps
- * its stored value. `duration` is required in this contract commit and optional from Phase 2.
+ * its stored value. An omitted `duration` keeps the stored estimate, or leaves it unknown.
  */
-export interface LegacyTaskDraft {id?:string; archived?:boolean; title:string; duration:number; tag:Tag; labels:string[]; goalId?:string; notes:string; status:Task['status']; remainingTaskId?:string;
+export interface LegacyTaskDraft {id?:string; archived?:boolean; title:string; duration?:number; tag:Tag; labels:string[]; goalId?:string; notes:string; status:Task['status']; remainingTaskId?:string;
   firstAction?:string; doneWhen?:string; preferredDay?:string; deadline?:TaskDeadline; effort?:TaskEffort; checklist?:ChecklistItem[]}
 /** Members after `flexibility` are server-owned: a client may echo the stored value, never change it. */
 export interface LegacyBlockDraft {id?:string; archived?:boolean; taskId?:string; title:string; kind:Block['kind']; tag:Tag; start:string; end:string; notes:string; status:Block['status']; snoozedUntil?:string; actualStart?:string; actualEnd?:string; conflictReviewed?:boolean;
