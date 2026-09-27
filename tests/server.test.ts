@@ -223,7 +223,7 @@ describe('durable command API',() => {
       app.inject({method:'POST',url:'/api/commands',headers:requestHeaders(),payload:envelope({type:'settings.save',name:'Two',timezone:'America/New_York'})}),
     ]);
     expect([one.statusCode,two.statusCode].sort()).toEqual([200,409]);
-    const other=new Repository(join(directory,'separate.sqlite'));
+    const other=new Repository(join(directory,'separate.sqlite'),{intent:'initialize-if-missing',allowDraftFormat:true});
     expect(other.snapshot().revision).toBe(0);
     expect(other.ownerHash()).toBeUndefined();
     expect(other.session(cookie.split('=')[1],timestamp)).toBeUndefined();

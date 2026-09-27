@@ -5,11 +5,16 @@ import { Modal, Field, Empty } from '../ui';
 import { api } from '../api';
 import { FeatureForm, PageHeading, dayKey, shiftDay, prettyDate, clockLabel, durationLabel, type FeatureProps } from './common';
 
+import { DayFactsSummary } from '../review/DayFactsSummary';
+import { factsForDay } from '../../shared/review';
+
 interface SearchResult{id:string;type:string;title:string;text:string;date?:string}
 export function HistoryPage({state,now,run,add}:FeatureProps) {
  const zone=state.settings.timezone;
  const today=dayKey(now,zone);
  const [date,setDate]=useState(today);
+ const [browsing,setBrowsing]=useState(false);
+ const dayFacts=factsForDay(state,date,now);
  const [month,setMonth]=useState(today.slice(0,7));
  const [query,setQuery]=useState('');
  const [results,setResults]=useState<SearchResult[]>([]);
@@ -32,6 +37,9 @@ export function HistoryPage({state,now,run,add}:FeatureProps) {
  const dates=Array.from({length:Math.ceil((offset+daysInMonth)/7)*7},(_,index)=>index>=offset&&index<offset+daysInMonth?shiftDay(first,index-offset):undefined);
  const records=new Set([
   ...state.days.filter(item=>!item.archived).map(item=>item.date),
+  ...state.dayPlans.map(item=>item.date),
+  ...state.taskOutcomes.map(item=>dayKey(item.at,zone)),
+  ...state.workSessions.flatMap(item=>item.intervals.flatMap(interval=>[dayKey(interval.start,zone),dayKey(interval.end??now,zone)])),
   ...state.logs.filter(item=>!item.archived).map(item=>dayKey(item.kind==='sleep'&&item.end?item.end:item.at,zone)),
   ...state.blocks.filter(item=>!item.archived).map(item=>dayKey(item.start,zone)),
   ...state.goals.filter(item=>!item.archived).map(item=>item.targetDate),
@@ -41,19 +49,20 @@ export function HistoryPage({state,now,run,add}:FeatureProps) {
  const logs=state.logs.filter(item=>!item.archived&&dayKey(item.kind==='sleep'&&item.end?item.end:item.at,zone)===date).sort((a,b)=>Date.parse(a.at)-Date.parse(b.at));
  const goals=state.goals.filter(item=>!item.archived&&item.targetDate===date);
  const reminders=state.reminders.filter(item=>!item.archived&&dayKey(item.startsAt,zone)===date);
- const completed=blocks.filter(item=>item.status==='complete'||item.status==='attended').length;
  const steps=logs.filter(item=>item.kind==='steps').at(-1);
  const sleep=logs.filter(item=>item.kind==='sleep'&&item.start&&item.end);
  const facts=[
   [day?.startedAt?`Woke at ${clockLabel(day.startedAt,zone)}`:'Wake time not recorded',day?.mood?`Mood: ${day.mood}/5`:undefined,day?.energy?`Energy: ${day.energy}/5`:undefined].filter(Boolean).join(' · '),
-  blocks.length?`${completed}/${blocks.length} scheduled blocks completed`:'Schedule not recorded',
+  `${dayFacts.completedTaskIds.length} tasks marked done · ${dayFacts.partialTaskIds.length} partly done`,
   [steps?.value!==undefined?`${steps.value.toLocaleString()} steps`:'Steps not recorded',sleep.length?`${durationLabel(sleep.reduce((total,item)=>total+(Date.parse(item.end!)-Date.parse(item.start!))/60000,0))} sleep`:'Sleep not recorded'].join(' · '),
  ];
  const activityCount=blocks.length+logs.length+goals.length+reminders.length;
  function changeMonth(amount:number){setMonth(new Date(Date.UTC(year,monthNumber-1+amount,1,12)).toISOString().slice(0,7));}
  function selectDate(value:string){setDate(value);setMonth(value.slice(0,7));}
  return <div className="feature-page life-v2 life-history">
-  <PageHeading eyebrow="The days become your story" title="Journal & history" description="A factual record, with room for your own words."/>
+  <PageHeading eyebrow={prettyDate(date)} title="Review" description="A record, not a score."/>
+  <div className="v3-actions"><button aria-expanded={browsing} onClick={()=>setBrowsing(!browsing)}>Calendar and search</button><button onClick={()=>selectDate(today)}>Today</button></div>
+  {browsing&&<>
   <div className="feature-search"><Search size={16}/><input type="search" aria-label="Search history" value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search days, notes, tasks, goals…"/></div>
   {query.trim()&&<section className="feature-card life-search-results">
    <div className="feature-section-label"><h2>Search results</h2><small>{searching?'Searching…':`${results.length} found`}</small></div>
@@ -72,13 +81,16 @@ export function HistoryPage({state,now,run,add}:FeatureProps) {
     {dates.map((value,index)=>value?<button key={value} aria-label={`${prettyDate(value)}${records.has(value)?', has records':''}`} aria-pressed={value===date} className={`${value===date?'selected':''} ${value===today?'today':''}`} onClick={()=>selectDate(value)}><span>{Number(value.slice(8))}</span>{records.has(value)&&<i/>}</button>:<span key={`empty-${index}`} aria-hidden="true"/>)}
    </div>
   </section>
+  </>}
+  <DayFactsSummary state={state} date={date} now={now}/>
   <section className="life-selected-day">
    <div className="feature-section-label life-journal-date"><h2>{prettyDate(date)}</h2><button className="feature-link-button" onClick={()=>setEdit(true)}><Pencil size={13}/>{day?'Edit entry':'Add entry'}</button></div>
    <section className="feature-card life-daily-record">
-    <div className="feature-section-label"><h2>Daily record</h2>{day&&<button className="icon-button" aria-label="Regenerate daily summary" onClick={()=>setRegenerate(true)}><RefreshCw size={13}/></button>}</div>
-    {day?.summary?<><p className="feature-journal-text">{day.summary}</p><small className="life-saved-checkin">{facts[0]}</small></>:<div className="life-day-facts">{facts.map(fact=><p key={fact}>{fact}</p>)}</div>}
+    <div className="feature-section-label"><h2>Saved summary</h2>{day&&<button className="icon-button" aria-label="Regenerate daily summary" onClick={()=>setRegenerate(true)}><RefreshCw size={13}/></button>}</div>
+    {day?.summary?<><p className="muted">{day.summaryEdited ? 'Edited summary · preserved' : 'Saved factual summary'}</p><p className="feature-journal-text">{day.summary}</p><small className="life-saved-checkin">{facts[0]}</small></>:<div className="life-day-facts">{facts.map(fact=><p key={fact}>{fact}</p>)}</div>}
     {day?.note&&<p className="feature-journal-note">{day.note}</p>}
    </section>
+   {(day?.reflection?.changedPlan || day?.reflection?.easierTomorrow) && <section className="feature-card"><h2>Reflection</h2>{day.reflection.changedPlan && <p><strong>What changed the plan?</strong><br/>{day.reflection.changedPlan}</p>}{day.reflection.easierTomorrow && <p><strong>What would make tomorrow easier?</strong><br/>{day.reflection.easierTomorrow}</p>}</section>}
    <button className="feature-card life-journal-card" aria-label={day?'Edit personal journal':'Add personal journal'} onClick={()=>setEdit(true)}><span className="life-card-label">Your journal</span><span className={`feature-journal-text ${!day?.journal?'life-journal-placeholder':''}`}>{day?.journal||'Write something about today…'}</span></button>
   </section>
   {activityCount>0&&<details className="life-recorded-activities"><summary>View recorded activities <span>{activityCount}</span><ChevronDown size={15}/></summary><div className="life-health-history-content">

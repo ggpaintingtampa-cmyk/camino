@@ -13,11 +13,37 @@ const area = z.enum(['personal', 'company']);
 const tag = z.enum(['Personal', 'Work']);
 const base = { id: id.optional(), archived: z.boolean().optional() };
 
-const task = z.strictObject({ ...base, title, duration, tag, labels: z.array(z.string().trim().min(1).max(60)).max(30), goalId: id.optional(), notes: text, status: z.enum(['open', 'complete', 'partial']), remainingTaskId: id.optional() });
+// ── v3 values ───────────────────────────────────────────────────────────────
+// No defaults and no new transforms: a parsed envelope stays a faithful image of the wire
+// request, so receipt fingerprints never depend on schema evolution. Defaults live in the domain.
+// Optional members added to a legacy shape are appended last for the same reason.
+const zone = z.string().refine(validZone, 'Unknown time zone');
+const guidance = z.string().trim().min(1).max(500);
+const label = z.string().trim().min(1).max(60);
+const shortNote = z.string().trim().min(1).max(1000);
+const unique = (values: string[]) => new Set(values).size === values.length;
+const ids = (max: number) => z.array(id).max(max).refine(unique, 'Each record may appear once');
+const flexibility = z.enum(['fixed', 'flexible']);
+const spareMinutes = z.number().int().min(0).max(1440).multipleOf(5);
+const deadline = z.discriminatedUnion('kind', [
+  z.strictObject({ kind: z.literal('date'), date }),
+  z.strictObject({ kind: z.literal('instant'), at: iso, timezone: zone }),
+]);
+const effort = z.enum(['light', 'moderate', 'demanding']);
+const checklist = z.array(z.strictObject({ id, text: z.string().trim().min(1).max(200), done: z.boolean() })).max(50)
+  .refine(items => unique(items.map(item => item.id)), 'Checklist items need distinct ids');
+const taskIntent = { firstAction: guidance.optional(), doneWhen: guidance.optional(), preferredDay: date.optional(), deadline: deadline.optional(), effort: effort.optional(), checklist: checklist.optional() };
+const span = (v: { start: string; end: string }) => Date.parse(v.end) - Date.parse(v.start);
+const bookable = (v: { start: string; end: string }) => span(v) > 0 && span(v) <= 86400000;
+const windowed = (v: { start: string; end: string }) => span(v) > 0 && span(v) <= 25 * 3600000;
+
+const task = z.strictObject({ ...base, title, duration: duration.optional(), tag, labels: z.array(z.string().trim().min(1).max(60)).max(30), goalId: id.optional(), notes: text, status: z.enum(['open', 'complete', 'partial']), remainingTaskId: id.optional(), ...taskIntent });
 const block = z.strictObject({
   ...base, taskId: id.optional(), title, kind: z.enum(['task', 'appointment', 'routine']), tag,
   start: iso, end: iso, notes: text, status: z.enum(['pending', 'complete', 'missed', 'partial', 'attended', 'cancelled']),
   snoozedUntil: iso.optional(), actualStart: iso.optional(), actualEnd: iso.optional(), conflictReviewed: z.boolean().optional(),
+  flexibility: flexibility.optional(), acknowledgedConflictIds: ids(200).optional(), rescheduledFromId: id.optional(), supersededById: id.optional(),
+  changeReason: z.enum(['moved', 'deferred', 'cancelled', 'replanned', 'task-resolved']).optional(), changeSource: z.enum(['reset', 'plan', 'task', 'template']).optional(),
 }).refine(v => Date.parse(v.end) > Date.parse(v.start), 'End must follow start')
   .refine(v => Date.parse(v.end) - Date.parse(v.start) <= 86400000, 'Blocks cannot exceed 24 hours');
 const goal = z.strictObject({ ...base, title, parentId: id.optional(), targetDate: date, notes: text, status: z.enum(['active', 'paused', 'completed', 'archived']), checked: z.boolean(), pinned: z.boolean() });
@@ -36,6 +62,48 @@ const reminder = z.strictObject({ ...base, title, body: text, startsAt: iso, exp
 const envelope = z.strictObject({ ...base, area, title, amount: amount.refine(v => v > 0, 'Envelope must contain money'), purpose: z.string().trim().min(1).max(1000), expiresAt: iso, notes: text });
 const template = z.strictObject({ ...base, id: id.max(100).optional(), title, blocks: z.array(z.strictObject({ title, kind: z.enum(['task', 'appointment', 'routine']), tag, startMinute: z.number().int().min(0).max(1435).multipleOf(5), duration, notes: text })).min(1).max(200) });
 const location = z.strictObject({ ...base, name: title, latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180), primary: z.boolean(), postcode: z.string().max(20).optional() });
+
+// ── v3 command payloads ─────────────────────────────────────────────────────
+const placed = { start: iso, end: iso, acknowledgedConflictIds: ids(200) };
+const planWindow = z.strictObject({ start: iso, end: iso }).refine(windowed, 'The window must end after it starts, within 25 hours');
+const taskCapture = z.strictObject({ id: id.optional(), title, notes: text.optional(), duration: duration.optional(), tag: tag.optional(), labels: z.array(label).max(30).optional(), goalId: id.optional(), ...taskIntent });
+const taskPatch = z.strictObject({
+  title: title.optional(), notes: text.optional(), tag: tag.optional(), labels: z.array(label).max(30).optional(),
+  duration: duration.nullable().optional(), goalId: id.nullable().optional(), firstAction: guidance.nullable().optional(), doneWhen: guidance.nullable().optional(),
+  preferredDay: date.nullable().optional(), deadline: deadline.nullable().optional(), effort: effort.nullable().optional(), checklist: checklist.nullable().optional(),
+}).refine(patch => Object.keys(patch).length > 0, 'Change at least one field');
+const remainingWork = z.strictObject({ duration, preferredDay: date.optional(), taskId: id.optional(), placement: z.strictObject({ blockId: id, start: iso, acknowledgedConflictIds: ids(200) }).optional() });
+const sessionTarget = z.discriminatedUnion('kind', [
+  z.strictObject({ kind: z.literal('task'), taskId: id }),
+  z.strictObject({ kind: z.literal('routine'), blockId: id }),
+]);
+const mainSelected = (v: { taskIds: string[]; mainTaskId?: string }) => !v.mainTaskId || v.taskIds.includes(v.mainTaskId);
+const dayPlan = z.strictObject({
+  date, taskIds: ids(100), mainTaskId: id.optional(), window: planWindow.optional(), protectedSpareMinutes: spareMinutes, note: shortNote.optional(), timezone: zone.optional(),
+}).refine(mainSelected, 'The main task must be one of the selected tasks');
+const planOperation = z.discriminatedUnion('op', [
+  z.strictObject({ op: z.literal('selection.set'), taskIds: ids(100), mainTaskId: id.optional() }).refine(mainSelected, 'The main task must be one of the selected tasks'),
+  z.strictObject({ op: z.literal('preferredDay.set'), taskId: id, preferredDay: date.nullable() }),
+  z.strictObject({ op: z.literal('window.set'), window: planWindow.nullable() }),
+  z.strictObject({ op: z.literal('spare.set'), protectedSpareMinutes: spareMinutes }),
+  z.strictObject({ op: z.literal('session.pause'), sessionId: id }),
+  z.strictObject({ op: z.literal('placement.set'), taskId: id, newBlockId: id, flexibility: flexibility.optional(), ...placed }).refine(bookable, 'End must follow start, within 24 hours'),
+  z.strictObject({ op: z.literal('placement.move'), blockId: id, newBlockId: id, ...placed }).refine(bookable, 'End must follow start, within 24 hours'),
+  z.strictObject({ op: z.literal('placement.extend'), blockId: id, end: iso, acknowledgedConflictIds: ids(200) }),
+  z.strictObject({ op: z.literal('placement.cancel'), blockId: id, reason: z.enum(['deferred', 'cancelled']) }),
+  z.strictObject({ op: z.literal('appointment.change'), blockId: id, newBlockId: id, ...placed }).refine(bookable, 'End must follow start, within 24 hours'),
+]);
+const reflection = z.strictObject({ changedPlan: z.string().max(2000).optional(), easierTomorrow: z.string().max(2000).optional() });
+const checkinLog = z.discriminatedUnion('kind', [
+  z.strictObject({ kind: z.literal('sleep'), start: iso, end: iso, quality: rating.optional(), notes: text.optional() }).refine(bookable, 'Sleep must end after it starts, within 24 hours'),
+  z.strictObject({ kind: z.literal('weight'), at: iso, value: z.number().gt(0).max(2000), notes: text.optional() }),
+]);
+const expectedSessions = z.array(z.strictObject({ id, state: z.enum(['running', 'paused']) })).max(50)
+  .refine(items => unique(items.map(item => item.id)), 'Each session may appear once');
+const taskResolve = z.discriminatedUnion('outcome', [
+  z.strictObject({ type: z.literal('task.resolve'), id, outcome: z.literal('complete'), note: shortNote.optional() }),
+  z.strictObject({ type: z.literal('task.resolve'), id, outcome: z.literal('partial'), remaining: remainingWork, note: shortNote.optional() }),
+]);
 
 export const commandSchema = z.discriminatedUnion('type', [
   z.strictObject({ type: z.literal('task.save'), task }),
@@ -57,10 +125,27 @@ export const commandSchema = z.discriminatedUnion('type', [
   z.strictObject({ type: z.literal('envelope.create'), envelope }),
   z.strictObject({ type: z.literal('envelope.resolve'), id, outcome: z.enum(['earned', 'lost', 'extend', 'handled', 'cancelled']), expiresAt: iso.optional() }),
   z.strictObject({ type: z.literal('template.save'), template }),
-  z.strictObject({ type: z.literal('template.apply'), id, date }),
+  z.strictObject({ type: z.literal('template.apply'), id, date, acknowledgedConflictIds: ids(200).optional() }),
   z.strictObject({ type: z.literal('location.save'), location }),
   z.strictObject({ type: z.literal('record.archive'), collection: z.enum(['tasks', 'blocks', 'goals', 'logs', 'reminders', 'templates', 'locations']), id, archived: z.boolean() }),
   z.strictObject({ type: z.literal('settings.save'), name: title, timezone: z.string().refine(validZone, 'Unknown time zone'), navOrder: z.array(z.enum(['home','schedule','goals','more'])).length(4).refine(order => new Set(order).size === 4, 'Include each main tab once').optional() }),
+  z.strictObject({ type: z.literal('task.capture'), task: taskCapture }),
+  z.strictObject({ type: z.literal('task.update'), id, patch: taskPatch }),
+  taskResolve,
+  z.strictObject({ type: z.literal('task.reopen'), id, note: shortNote.optional() }),
+  z.strictObject({ type: z.literal('task.defer'), id, preferredDay: date.nullable(), cancelBlockId: id.optional(), deselectFromDate: date.optional() }),
+  z.strictObject({ type: z.literal('task.plan'), task: z.union([z.strictObject({ id }), z.strictObject({ capture: taskCapture })]), blockId: id, flexibility: flexibility.optional(), ...placed }).refine(bookable, 'End must follow start, within 24 hours'),
+  z.strictObject({ type: z.literal('dayPlan.save'), plan: dayPlan }),
+  z.strictObject({ type: z.literal('session.start'), target: sessionTarget, plannedBlockId: id.optional() }),
+  z.strictObject({ type: z.literal('session.pause'), id }),
+  z.strictObject({ type: z.literal('session.resume'), id, plannedBlockId: id.optional() }),
+  z.strictObject({ type: z.literal('session.switch'), expectedRunningSessionId: id, target: sessionTarget, plannedBlockId: id.optional() }),
+  z.strictObject({ type: z.literal('session.stop'), id }),
+  z.strictObject({ type: z.literal('plan.apply'), date, source: z.enum(['reset', 'plan']), operations: z.array(planOperation).min(1).max(100) }),
+  z.strictObject({ type: z.literal('day.startWithCheckin'), date, wakeAt: iso.optional(), mood: rating.optional(), energy: rating.optional(), note: text.optional(), logs: z.array(checkinLog).max(4) }),
+  z.strictObject({ type: z.literal('day.close'), id, summary: text.optional(), journal: text.optional(), reflection: reflection.optional(), expectedSessions }),
+  // The legacy `settings.save` branch above is never edited: an accepted four-tab request must still parse to reach its receipt.
+  z.strictObject({ type: z.literal('settings.saveV3'), name: title, timezone: zone, navOrder: z.array(z.enum(['home', 'schedule', 'tasks', 'history', 'more'])).length(5).refine(unique, 'Include each main tab once').optional() }),
 ]);
 
 export const commandEnvelopeSchema = z.strictObject({ requestId: id, baseRevision: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER - 1), command: commandSchema });

@@ -13,7 +13,7 @@ describe('private local command and recovery tool',()=>{
     const dir=mkdtempSync(join(tmpdir(),'caminos-cli-test-'));directories.push(dir);
     const db=join(dir,'original.sqlite');
     const invoke=(args:string[],input?:string)=>JSON.parse(execFileSync(process.execPath,['--import','tsx',resolve('server/cli.ts'),...args,'--db',db],{cwd:resolve('.'),input,encoding:'utf8',env:{...process.env,HERMES_ORIGIN:'https://caminos.test'}}));
-    expect(invoke(['owner-setup','--password-stdin'],'synthetic-secret-only-in-test-2026\n').ok).toBe(true);
+    expect(invoke(['owner-setup','--password-stdin','--allow-draft-format'],'synthetic-secret-only-in-test-2026\n').ok).toBe(true);
     const request={requestId:randomUUID(),baseRevision:0,command:{type:'ledger.adjust',area:'personal',account:50000,cash:50000,earned:0,lost:0,reason:'Synthetic recovery test'}};
     expect(invoke(['command','--stdin'],JSON.stringify(request)).revision).toBe(1);
     expect(invoke(['command','--stdin'],JSON.stringify(request)).revision).toBe(1);

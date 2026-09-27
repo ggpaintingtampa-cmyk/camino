@@ -3,8 +3,10 @@ import { createServer, type AddressInfo } from 'node:net';
 import { resolve } from 'node:path';
 import { createApp } from '../../server/app';
 import type { Command, CommandEnvelope, Snapshot } from '../../shared/types';
+import { browserHarnessConfig } from '../support/browser-config';
 
-const origin = 'http://127.0.0.1:5197';
+// Setup-only infrastructure change: honor the same isolated port as Playwright.
+const origin = browserHarnessConfig().origin;
 const fixtureDate = '2026-09-18';
 
 async function login(page: Page) {

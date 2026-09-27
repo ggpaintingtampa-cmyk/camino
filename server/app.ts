@@ -5,7 +5,9 @@ import argon2 from 'argon2';
 import { timingSafeEqual } from 'node:crypto';
 import { relative, resolve } from 'node:path';
 import { ZodError, z } from 'zod';
+import type { DatabaseOpenIntent, ErrorDetails } from '../shared/contracts.js';
 import type { CommandEnvelope } from '../shared/types.js';
+import { DomainError } from '../shared/domain-core.js';
 import { DuplicateRequest, Repository, RevisionConflict, type Session } from './repository.js';
 import { WeatherService } from './weather.js';
 
@@ -16,6 +18,13 @@ export interface AppOptions {
   staticDir?:string;
   now?:()=>number;
   weather?:Pick<WeatherService,'forecast'|'search'>;
+  /**
+   * Transitional defaults: `initialize-if-missing` with drafts allowed, so callers that predate
+   * the open intent keep working. They become `open-existing` / `false` once every caller
+   * passes both. The server entry point always passes them explicitly.
+   */
+  databaseIntent?:DatabaseOpenIntent;
+  allowDraftFormat?:boolean;
 }
 export type CaminosApp = FastifyInstance & {repository:Repository};
 const safeEqual = (a:string, b:string) => { const left = Buffer.from(a); const right = Buffer.from(b); return left.length === right.length && timingSafeEqual(left,right); };
@@ -31,7 +40,7 @@ export async function createApp(options:AppOptions):Promise<CaminosApp> {
     if(!databaseRelative.startsWith('..')) throw new Error('The private database cannot be inside the public asset directory.');
   }
   const now = options.now ?? Date.now;
-  const repository = new Repository(options.dbPath);
+  const repository = new Repository(options.dbPath,{intent:options.databaseIntent ?? 'initialize-if-missing',allowDraftFormat:options.allowDraftFormat ?? false});
   const weather = options.weather ?? new WeatherService(repository,fetch,now);
   const app = Fastify({logger:false,bodyLimit:1024*1024,trustProxy:'127.0.0.1'}) as unknown as CaminosApp;
   app.decorate('repository',repository);
@@ -73,8 +82,9 @@ export async function createApp(options:AppOptions):Promise<CaminosApp> {
     if (error instanceof ZodError) return reply.code(400).send({error:'Please check the information and try again.',code:'VALIDATION',issues:error.issues.map(x=>({path:x.path.join('.'),message:x.message}))});
     if (error instanceof RevisionConflict) return reply.code(409).send({error:error.message,code:'REVISION_CONFLICT',currentRevision:error.currentRevision});
     if (error instanceof DuplicateRequest) return reply.code(409).send({error:error.message,code:'REQUEST_ID_REUSED'});
-    const known = error as Error & {statusCode?:number;code?:string};
-    if (known.statusCode && known.statusCode >= 400 && known.statusCode < 500) return reply.code(known.statusCode).send({error:known.message,code:known.code ?? 'INVALID_REQUEST'});
+    const known = error as Error & {statusCode?:number;code?:string;details?:ErrorDetails};
+    // Details of a domain error are record IDs, states and indexes only.
+    if (known.statusCode && known.statusCode >= 400 && known.statusCode < 500) return reply.code(known.statusCode).send({error:known.message,code:known.code ?? 'INVALID_REQUEST',...(error instanceof DomainError && error.details ? {details:error.details} : {})});
     // Never log form bodies, session cookies, diary entries, or credentials.
     process.stderr.write(`Caminos request error: ${request.method} ${request.routeOptions.url ?? '/unknown'}\n`);
     return reply.code(500).send({error:'Caminos could not complete that request. Your saved data is unchanged.',code:'SERVER_ERROR'});
@@ -126,7 +136,7 @@ export async function createApp(options:AppOptions):Promise<CaminosApp> {
   });
   app.get('/api/export',async (_request,reply) => {
     reply.header('Content-Disposition',`attachment; filename="caminos-export-${new Date(now()).toISOString().slice(0,10)}.json"`);
-    return {format:'caminos-owner-export',version:1,exportedAt:new Date(now()).toISOString(),state:repository.snapshot()};
+    return repository.exportEnvelope(new Date(now()).toISOString());
   });
   app.get('/api/search',async (request) => {
     const {q} = z.object({q:z.string().max(200).default('')}).parse(request.query);

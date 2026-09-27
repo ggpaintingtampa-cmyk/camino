@@ -1,5 +1,15 @@
 # Caminos by Morgan
 
+## Caminos v3 — daily planning (R1)
+
+R1 is implemented: Today / Plan / Tasks / Review / More, title-only capture, optional estimates, direct work recording, reviewed day planning and Reset, template previews, optional check-in, and explicit day closure. [Release verification](docs/redesign-v3/release-verification.md) records the focused checks and limits; [deployment status](DEPLOYMENT-STATUS.md) records live activation.
+
+Read [skill.md](skill.md) for the detailed plan and R1/R2 acceptance markers, [contracts](docs/redesign-v3/contracts.md) for the implemented API/storage rules, [REDESIGN-SCHEMA.md](REDESIGN-SCHEMA.md) for product intent, and [Figma handoff](artifacts/redesign-v3/README.md) for design references. The singular skill.md is separate from [skills.md](skills.md). The [four AI prompts](AI-IMPLEMENTATION-PROMPTS.md) and workstream handoffs retain the historical assignments; completed R1 work should not be restarted.
+
+Schema 2 is frozen. An existing schema-1 database requires an explicit absolute path, target version, apply flag and new verified backup. Ordinary API/CLI/MCP opens never migrate; read/command/MCP paths refuse missing databases. Only deliberate server initialization, owner setup or isolated test/restore operations create databases. Never use the local .data database as a disposable fixture.
+
+R2 remains deferred: focus-window allocations, positioned buffers, template variants/subsets, detailed plan-change history and weekly learning. See the R2 markers in skill.md. Chromium has focused R1 coverage; WebKit is blocked on this workstation by a missing host library.
+
 ## Caminos rename
 
 The app is now Caminos. Screens, install metadata, asset names, exports, command output and development tooling use the new name. Use `pnpm caminosctl` for local commands and `deploy/caminos-mcp.mjs` for new AI-tool connections.
@@ -10,13 +20,13 @@ A private personal dashboard for the phone, with a graphite-and-gold interface r
 
 ## What this version does
 
-Version 2 implements all 18 screens from [Caminos — Redesign v2](https://www.figma.com/design/546RE6EDMQscrkcNhjL8gL/Caminos?node-id=1-2). The interface uses the supplied graphite/gold tokens, system fonts and Lucide icons. References, synthetic captures and side-by-side comparisons are under `artifacts/figma-v2` and `artifacts/redesign-v2`; see `design-qa.md` for verification.
+Version 3 implements the R1 daily loop from the v3 Figma proposal, retaining the existing supporting tools. The interface uses graphite/gold tokens, system fonts and Lucide icons.
 
-- **Home:** daily briefing, forecast, current task countdown, first appointments, important pending decisions, due goals, reminders and envelope deadlines. Start Day records wake time and optional check-in data; End Day preserves a factual summary beside a personal journal.
-- **Schedule:** compact chronological agenda by default, with an explicit 24-hour timeline for five-minute placement and touch dragging. Precise controls, unscheduled tasks, appointments, reusable templates and overlap warnings remain available. Expired tasks offer completion, missed, partial or snooze; a partial result creates a linked follow-up task with your chosen remaining duration.
+- **Today and Tasks:** current recording, next fixed commitment and chosen priorities; title-only capture; All/Today/Later views; direct start, pause, resume, stop and outcome actions. Work can be recorded without a calendar entry or Start Day.
+- **Plan:** untimed daily priorities, optional working window and spare time, honest capacity, compact agenda/timeline, reviewed time booking, Reset before/after preview, and whole-template preview with overlap consent. Tomorrow sets an intended day without booking 09:00.
 - **Goals:** parent/child goals and checkable steps, equal-weight leaf progress, target dates from daily through ten years, pins, pauses and archiving.
 - **Health and practice:** steps, repeated weight entries in pounds, workouts, sleep duration/quality, simple food notes and Rocket League sessions, with today/7-day/30-day summaries.
-- **Journal and history:** month navigation, factual summaries that can be edited explicitly, separate personal writing, and search across records. Missing information stays unknown; generated prose uses stored facts.
+- **Review and journal:** selected work, explicit outcomes, calendar reservations and recorded intervals shown as separate facts. Optional day closure stops disclosed recordings; personal reflection stays separate from the factual summary. Calendar, search and edited summaries remain available.
 - **Money:** independent Personal and Company balances, cash reservations in envelopes, earned and Lost/Charity buckets, expiry decisions, and an adjustment history. This tracks your manually entered balances; it does not transfer money.
 - **Private AI/file operations:** `pnpm caminosctl` reads records and applies the same validated commands as the app. It does not expose a public AI endpoint or require editing SQLite directly.
 
@@ -33,7 +43,7 @@ CAMINOS_ALLOW_HTTP=1 CAMINOS_ORIGIN=http://127.0.0.1:5190 pnpm api
 pnpm dev
 ```
 
-The API listens on `127.0.0.1:3003`; Vite serves `http://127.0.0.1:5190` and proxies `/api`. The development database defaults to `.data/hermes.sqlite` and begins empty. Do not point local tests at production data.
+The API listens on `127.0.0.1:3003`; Vite serves `http://127.0.0.1:5190` and proxies `/api`. The development database defaults to `.data/hermes.sqlite`; only a newly initialized database begins empty. An existing file may contain owner records and must not be treated as disposable. Use explicitly isolated synthetic paths for tests and never point them at production data.
 
 Choose an independent owner password through a concealed terminal prompt:
 

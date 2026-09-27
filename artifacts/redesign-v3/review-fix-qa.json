@@ -1,0 +1,28 @@
+{
+  "status": "design-and-documentation-only",
+  "reviewSource": "Independent AI findings supplied by the owner in this conversation",
+  "fileKey": "546RE6EDMQscrkcNhjL8gL",
+  "pageId": "115:2",
+  "changedFrames": [
+    { "id": "115:54", "name": "00 Blueprint", "width": 1440, "height": 788 },
+    { "id": "119:88", "name": "S03 / Today", "width": 390, "height": 844 },
+    { "id": "123:377", "name": "S08O / Update this task", "width": 390, "height": 844 }
+  ],
+  "createdNodeIds": ["135:560", "I135:560;117:10", "136:561"],
+  "mutatedNodeIds": ["116:27", "116:31", "116:32", "I123:401;117:10", "123:401", "119:100", "119:112"],
+  "stopControls": [
+    { "id": "135:560", "width": 141, "height": 48, "destinationId": "123:453" },
+    { "id": "123:401", "width": 342, "height": 48, "destinationId": "123:453" }
+  ],
+  "destinationReadBack": true,
+  "screenshotsInspected": ["blueprint", "task-outcomes", "paused-initial", "paused-after-compact-action-row"],
+  "realPersistenceTested": false,
+  "applicationTestsRun": false,
+  "databaseOpened": false,
+  "githubMutated": false,
+  "webkitStatus": "Reviewer reported missing libevent-2.1.so.7; not rerun in this documentation pass",
+  "fullOriginalDesignAuditRerun": false,
+  "documentValidation": "passed: skill format, sections/phases, local links, four standalone prompts, corrected-contract checks, whitespace",
+  "sourceFilesHashCompared": 55,
+  "sourceFilesChanged": 0
+}

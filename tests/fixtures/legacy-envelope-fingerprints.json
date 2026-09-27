@@ -1,0 +1,502 @@
+{
+  "note": "Captured from integration baseline 0884f68 before any schema edit. Synthetic content only. Never regenerate to make a test pass.",
+  "baselineCommit": "0884f68",
+  "envelopes": {
+    "task.save": {
+      "wire": {
+        "requestId": "legacy-task_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "task.save",
+          "task": {
+            "title": "  Draft synthetic proposal  ",
+            "duration": 30,
+            "tag": "Work",
+            "labels": [
+              " writing "
+            ],
+            "notes": "Synthetic note",
+            "status": "open"
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-task_save\",\"baseRevision\":7,\"command\":{\"type\":\"task.save\",\"task\":{\"title\":\"Draft synthetic proposal\",\"duration\":30,\"tag\":\"Work\",\"labels\":[\"writing\"],\"notes\":\"Synthetic note\",\"status\":\"open\"}}}",
+      "fingerprint": "f943c964d1d605e008d2f423c71b4e6cee88e13fea14f2fabe73ba255f2e171a"
+    },
+    "task.save.linked": {
+      "wire": {
+        "requestId": "legacy-task_save_linked",
+        "baseRevision": 7,
+        "command": {
+          "type": "task.save",
+          "task": {
+            "id": "task-1",
+            "archived": false,
+            "title": "Read twenty pages",
+            "duration": 45,
+            "tag": "Personal",
+            "labels": [],
+            "goalId": "goal-1",
+            "notes": "",
+            "status": "complete"
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-task_save_linked\",\"baseRevision\":7,\"command\":{\"type\":\"task.save\",\"task\":{\"id\":\"task-1\",\"archived\":false,\"title\":\"Read twenty pages\",\"duration\":45,\"tag\":\"Personal\",\"labels\":[],\"goalId\":\"goal-1\",\"notes\":\"\",\"status\":\"complete\"}}}",
+      "fingerprint": "f57b16c908bf1850feb66cb7e4d4d7ce2c41089cdeebb0fb7e5c93bae8bbea93"
+    },
+    "block.save": {
+      "wire": {
+        "requestId": "legacy-block_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.save",
+          "block": {
+            "title": "Arrange workspace",
+            "kind": "task",
+            "tag": "Personal",
+            "start": "2026-09-18T12:00:00-04:00",
+            "end": "2026-09-18T12:30:00-04:00",
+            "notes": "",
+            "status": "pending"
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_save\",\"baseRevision\":7,\"command\":{\"type\":\"block.save\",\"block\":{\"title\":\"Arrange workspace\",\"kind\":\"task\",\"tag\":\"Personal\",\"start\":\"2026-09-18T16:00:00.000Z\",\"end\":\"2026-09-18T16:30:00.000Z\",\"notes\":\"\",\"status\":\"pending\"}}}",
+      "fingerprint": "f5c4d5bbc33aa23a2a4f81af14b70725dc6726d9d7db4507557969240e808c28"
+    },
+    "block.save.appointment": {
+      "wire": {
+        "requestId": "legacy-block_save_appointment",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.save",
+          "block": {
+            "id": "block-9",
+            "title": "Synthetic appointment",
+            "kind": "appointment",
+            "tag": "Work",
+            "start": "2026-09-18T18:00:00.000Z",
+            "end": "2026-09-18T19:00:00.000Z",
+            "notes": "Room 2",
+            "status": "pending",
+            "conflictReviewed": true
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_save_appointment\",\"baseRevision\":7,\"command\":{\"type\":\"block.save\",\"block\":{\"id\":\"block-9\",\"title\":\"Synthetic appointment\",\"kind\":\"appointment\",\"tag\":\"Work\",\"start\":\"2026-09-18T18:00:00.000Z\",\"end\":\"2026-09-18T19:00:00.000Z\",\"notes\":\"Room 2\",\"status\":\"pending\",\"conflictReviewed\":true}}}",
+      "fingerprint": "a700b8d93ea1b869ad86703ec4415e49c9a66edbf98711c6417163f2fc281d24"
+    },
+    "block.start": {
+      "wire": {
+        "requestId": "legacy-block_start",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.start",
+          "id": "block-1"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_start\",\"baseRevision\":7,\"command\":{\"type\":\"block.start\",\"id\":\"block-1\"}}",
+      "fingerprint": "05e154ce25204089accd93bcd29f6b0b4fcce2e57f17b8c1e990f78f543cbdea"
+    },
+    "block.resolve.complete": {
+      "wire": {
+        "requestId": "legacy-block_resolve_complete",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.resolve",
+          "id": "block-1",
+          "outcome": "complete"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_resolve_complete\",\"baseRevision\":7,\"command\":{\"type\":\"block.resolve\",\"id\":\"block-1\",\"outcome\":\"complete\"}}",
+      "fingerprint": "07b9dd0cac5b00fbefe5a09c501d6bdd1bc33f94ebcb60cb75c714c551f22be0"
+    },
+    "block.resolve.partial": {
+      "wire": {
+        "requestId": "legacy-block_resolve_partial",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.resolve",
+          "id": "block-1",
+          "outcome": "partial",
+          "remainingDuration": 20,
+          "remainingStart": "2026-09-19T09:00:00-04:00"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_resolve_partial\",\"baseRevision\":7,\"command\":{\"type\":\"block.resolve\",\"id\":\"block-1\",\"outcome\":\"partial\",\"remainingDuration\":20,\"remainingStart\":\"2026-09-19T13:00:00.000Z\"}}",
+      "fingerprint": "13d8c32f6d365c622eddc9a42474e65cb7153de3827238487da1d4926a93dcf5"
+    },
+    "block.snooze": {
+      "wire": {
+        "requestId": "legacy-block_snooze",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.snooze",
+          "id": "block-1",
+          "until": "2026-09-18T17:10:00+00:00"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_snooze\",\"baseRevision\":7,\"command\":{\"type\":\"block.snooze\",\"id\":\"block-1\",\"until\":\"2026-09-18T17:10:00.000Z\"}}",
+      "fingerprint": "d5af7fd00aeea2c3359f8364e38a5f6e94861caa9b2aa648f4b1c9456cc42c35"
+    },
+    "block.conflictReviewed": {
+      "wire": {
+        "requestId": "legacy-block_conflictReviewed",
+        "baseRevision": 7,
+        "command": {
+          "type": "block.conflictReviewed",
+          "id": "block-1"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-block_conflictReviewed\",\"baseRevision\":7,\"command\":{\"type\":\"block.conflictReviewed\",\"id\":\"block-1\"}}",
+      "fingerprint": "8845fb67f1e51100f0a303a54ae20cfc575ce7d56b8178c47a5cf3ebff62561b"
+    },
+    "day.start": {
+      "wire": {
+        "requestId": "legacy-day_start",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.start",
+          "date": "2026-09-18",
+          "mood": 3,
+          "energy": 4,
+          "note": "Synthetic check-in",
+          "wakeAt": "2026-09-18T07:05:00-04:00"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_start\",\"baseRevision\":7,\"command\":{\"type\":\"day.start\",\"date\":\"2026-09-18\",\"mood\":3,\"energy\":4,\"note\":\"Synthetic check-in\",\"wakeAt\":\"2026-09-18T11:05:00.000Z\"}}",
+      "fingerprint": "4913438eeeee2b8f41b5c41fcbf3b7cf914695c17ec13d3fb620816064f95d82"
+    },
+    "day.start.wakeOnly": {
+      "wire": {
+        "requestId": "legacy-day_start_wakeOnly",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.start",
+          "date": "2026-09-18"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_start_wakeOnly\",\"baseRevision\":7,\"command\":{\"type\":\"day.start\",\"date\":\"2026-09-18\"}}",
+      "fingerprint": "2b1671e728d1c9da7a4fd14ad9d37443945378ce3300ed256b55beeb02fee319"
+    },
+    "day.reopen": {
+      "wire": {
+        "requestId": "legacy-day_reopen",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.reopen",
+          "id": "day-1"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_reopen\",\"baseRevision\":7,\"command\":{\"type\":\"day.reopen\",\"id\":\"day-1\"}}",
+      "fingerprint": "c0c6c6172c62b4464943361d9e1b196eea6ee983ff6eae43486bfde8c66f9d5e"
+    },
+    "day.end": {
+      "wire": {
+        "requestId": "legacy-day_end",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.end",
+          "id": "day-1"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_end\",\"baseRevision\":7,\"command\":{\"type\":\"day.end\",\"id\":\"day-1\"}}",
+      "fingerprint": "9c364c11f56dc507ee67de691f4e9c8eb7b648683e300d6a91379bc279c24060"
+    },
+    "day.end.writing": {
+      "wire": {
+        "requestId": "legacy-day_end_writing",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.end",
+          "id": "day-1",
+          "summary": "Synthetic summary",
+          "journal": "Synthetic journal"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_end_writing\",\"baseRevision\":7,\"command\":{\"type\":\"day.end\",\"id\":\"day-1\",\"summary\":\"Synthetic summary\",\"journal\":\"Synthetic journal\"}}",
+      "fingerprint": "95de26f930876aabb7066b1071cd162b084511d9453f9c0dd9cb528adc182208"
+    },
+    "day.save": {
+      "wire": {
+        "requestId": "legacy-day_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.save",
+          "date": "2026-09-17",
+          "summary": "Synthetic summary",
+          "journal": "",
+          "note": "n"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_save\",\"baseRevision\":7,\"command\":{\"type\":\"day.save\",\"date\":\"2026-09-17\",\"summary\":\"Synthetic summary\",\"journal\":\"\",\"note\":\"n\"}}",
+      "fingerprint": "bf2ffc94dc1712315fa9ed155ac6d8ba19b2cc12c73e98f286de4c2f012fba04"
+    },
+    "day.checkin": {
+      "wire": {
+        "requestId": "legacy-day_checkin",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.checkin",
+          "id": "day-1",
+          "mood": 2,
+          "wakeAt": "2026-09-18T11:00:00Z"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_checkin\",\"baseRevision\":7,\"command\":{\"type\":\"day.checkin\",\"id\":\"day-1\",\"mood\":2,\"wakeAt\":\"2026-09-18T11:00:00.000Z\"}}",
+      "fingerprint": "5f5ea1e829671a886f702312dd995fb3ebe2402e8297b91728d6aa9391d7577c"
+    },
+    "day.regenerate": {
+      "wire": {
+        "requestId": "legacy-day_regenerate",
+        "baseRevision": 7,
+        "command": {
+          "type": "day.regenerate",
+          "id": "day-1"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-day_regenerate\",\"baseRevision\":7,\"command\":{\"type\":\"day.regenerate\",\"id\":\"day-1\"}}",
+      "fingerprint": "70955dda7530e9cae4a65b6a9169d3dd5f41ccb60aa6c8745a9f22c568433fd5"
+    },
+    "goal.save": {
+      "wire": {
+        "requestId": "legacy-goal_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "goal.save",
+          "goal": {
+            "title": "Synthetic goal",
+            "parentId": "goal-0",
+            "targetDate": "2026-12-31",
+            "notes": "",
+            "status": "active",
+            "checked": false,
+            "pinned": true
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-goal_save\",\"baseRevision\":7,\"command\":{\"type\":\"goal.save\",\"goal\":{\"title\":\"Synthetic goal\",\"parentId\":\"goal-0\",\"targetDate\":\"2026-12-31\",\"notes\":\"\",\"status\":\"active\",\"checked\":false,\"pinned\":true}}}",
+      "fingerprint": "12cdd1c3718ea3eb20453a7d32177070886ca183baa65dfae0a13de434895d43"
+    },
+    "log.save.weight": {
+      "wire": {
+        "requestId": "legacy-log_save_weight",
+        "baseRevision": 7,
+        "command": {
+          "type": "log.save",
+          "log": {
+            "kind": "weight",
+            "at": "2026-09-18T07:30:00-04:00",
+            "value": 180.5,
+            "category": "",
+            "description": "",
+            "notes": ""
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-log_save_weight\",\"baseRevision\":7,\"command\":{\"type\":\"log.save\",\"log\":{\"kind\":\"weight\",\"at\":\"2026-09-18T11:30:00.000Z\",\"value\":180.5,\"category\":\"\",\"description\":\"\",\"notes\":\"\"}}}",
+      "fingerprint": "c426e34f0e9bef720c8fbfd88b3c0c1491a05feff5695a82085743aed60bf0ec"
+    },
+    "log.save.sleep": {
+      "wire": {
+        "requestId": "legacy-log_save_sleep",
+        "baseRevision": 7,
+        "command": {
+          "type": "log.save",
+          "log": {
+            "kind": "sleep",
+            "at": "2026-09-18T11:00:00Z",
+            "start": "2026-09-18T03:00:00Z",
+            "end": "2026-09-18T11:00:00Z",
+            "quality": 4,
+            "category": "",
+            "description": "",
+            "notes": ""
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-log_save_sleep\",\"baseRevision\":7,\"command\":{\"type\":\"log.save\",\"log\":{\"kind\":\"sleep\",\"at\":\"2026-09-18T11:00:00.000Z\",\"start\":\"2026-09-18T03:00:00.000Z\",\"end\":\"2026-09-18T11:00:00.000Z\",\"quality\":4,\"category\":\"\",\"description\":\"\",\"notes\":\"\"}}}",
+      "fingerprint": "54fd27713cf84a69a7ba05bf6f2ce4e406c4cd90c6767ea9d4f0d771d13fd71e"
+    },
+    "reminder.save": {
+      "wire": {
+        "requestId": "legacy-reminder_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "reminder.save",
+          "reminder": {
+            "title": "Synthetic reminder",
+            "body": "",
+            "startsAt": "2026-09-18T12:00:00Z",
+            "expiresAt": "2026-09-19T12:00:00Z",
+            "pinned": false,
+            "dismissed": false,
+            "source": "owner"
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-reminder_save\",\"baseRevision\":7,\"command\":{\"type\":\"reminder.save\",\"reminder\":{\"title\":\"Synthetic reminder\",\"body\":\"\",\"startsAt\":\"2026-09-18T12:00:00.000Z\",\"expiresAt\":\"2026-09-19T12:00:00.000Z\",\"pinned\":false,\"dismissed\":false,\"source\":\"owner\"}}}",
+      "fingerprint": "622d5d4565836a87a56440f31df6454df911b7a70e5911ce8699d33b9bbb1acb"
+    },
+    "ledger.adjust": {
+      "wire": {
+        "requestId": "legacy-ledger_adjust",
+        "baseRevision": 7,
+        "command": {
+          "type": "ledger.adjust",
+          "area": "personal",
+          "account": 50000,
+          "cash": 50000,
+          "earned": 0,
+          "lost": 0,
+          "reason": " Synthetic opening balance "
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-ledger_adjust\",\"baseRevision\":7,\"command\":{\"type\":\"ledger.adjust\",\"area\":\"personal\",\"account\":50000,\"cash\":50000,\"earned\":0,\"lost\":0,\"reason\":\"Synthetic opening balance\"}}",
+      "fingerprint": "ddc4a709d93de179262747218c0264c93e7cf04210f0b75ebd75c07a0c8d9991"
+    },
+    "envelope.create": {
+      "wire": {
+        "requestId": "legacy-envelope_create",
+        "baseRevision": 7,
+        "command": {
+          "type": "envelope.create",
+          "envelope": {
+            "area": "company",
+            "title": "Synthetic envelope",
+            "amount": 2500,
+            "purpose": "Synthetic purpose",
+            "expiresAt": "2026-09-20T17:00:00-04:00",
+            "notes": ""
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-envelope_create\",\"baseRevision\":7,\"command\":{\"type\":\"envelope.create\",\"envelope\":{\"area\":\"company\",\"title\":\"Synthetic envelope\",\"amount\":2500,\"purpose\":\"Synthetic purpose\",\"expiresAt\":\"2026-09-20T21:00:00.000Z\",\"notes\":\"\"}}}",
+      "fingerprint": "c1eaedec0522dacae03203c3684ef38a00e4493c61ebe75383444d5a83f039db"
+    },
+    "envelope.resolve": {
+      "wire": {
+        "requestId": "legacy-envelope_resolve",
+        "baseRevision": 7,
+        "command": {
+          "type": "envelope.resolve",
+          "id": "env-1",
+          "outcome": "extend",
+          "expiresAt": "2026-09-25T21:00:00Z"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-envelope_resolve\",\"baseRevision\":7,\"command\":{\"type\":\"envelope.resolve\",\"id\":\"env-1\",\"outcome\":\"extend\",\"expiresAt\":\"2026-09-25T21:00:00.000Z\"}}",
+      "fingerprint": "7e3947af302546ac7d24fd76aced68f5829325801e09ea10ead98bd986f3db6d"
+    },
+    "template.save": {
+      "wire": {
+        "requestId": "legacy-template_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "template.save",
+          "template": {
+            "title": "Synthetic regular day",
+            "blocks": [
+              {
+                "title": "Morning routine",
+                "kind": "routine",
+                "tag": "Personal",
+                "startMinute": 420,
+                "duration": 30,
+                "notes": ""
+              },
+              {
+                "title": "Admin window",
+                "kind": "task",
+                "tag": "Work",
+                "startMinute": 600,
+                "duration": 60,
+                "notes": "n"
+              }
+            ]
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-template_save\",\"baseRevision\":7,\"command\":{\"type\":\"template.save\",\"template\":{\"title\":\"Synthetic regular day\",\"blocks\":[{\"title\":\"Morning routine\",\"kind\":\"routine\",\"tag\":\"Personal\",\"startMinute\":420,\"duration\":30,\"notes\":\"\"},{\"title\":\"Admin window\",\"kind\":\"task\",\"tag\":\"Work\",\"startMinute\":600,\"duration\":60,\"notes\":\"n\"}]}}}",
+      "fingerprint": "cfe6b5e462364d9cf233b502368de976da6d2eaab9cce0e3ff00ffa81e5f0a5b"
+    },
+    "template.apply": {
+      "wire": {
+        "requestId": "legacy-template_apply",
+        "baseRevision": 7,
+        "command": {
+          "type": "template.apply",
+          "id": "tpl-1",
+          "date": "2026-09-21"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-template_apply\",\"baseRevision\":7,\"command\":{\"type\":\"template.apply\",\"id\":\"tpl-1\",\"date\":\"2026-09-21\"}}",
+      "fingerprint": "64e4d249239bb3f4fdfd465e83ec9f7204582c28c549ac83119a6a04f954538d"
+    },
+    "location.save": {
+      "wire": {
+        "requestId": "legacy-location_save",
+        "baseRevision": 7,
+        "command": {
+          "type": "location.save",
+          "location": {
+            "name": "Synthetic City",
+            "latitude": 28.2,
+            "longitude": -82.4,
+            "primary": false,
+            "postcode": "00000"
+          }
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-location_save\",\"baseRevision\":7,\"command\":{\"type\":\"location.save\",\"location\":{\"name\":\"Synthetic City\",\"latitude\":28.2,\"longitude\":-82.4,\"primary\":false,\"postcode\":\"00000\"}}}",
+      "fingerprint": "13980b5a5ed0899390fde7a82861203070e296abb6dc608750f8d3049ef60dd1"
+    },
+    "record.archive": {
+      "wire": {
+        "requestId": "legacy-record_archive",
+        "baseRevision": 7,
+        "command": {
+          "type": "record.archive",
+          "collection": "tasks",
+          "id": "task-1",
+          "archived": true
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-record_archive\",\"baseRevision\":7,\"command\":{\"type\":\"record.archive\",\"collection\":\"tasks\",\"id\":\"task-1\",\"archived\":true}}",
+      "fingerprint": "8bcf3a4f30055b3883882543b5356396578a4362e45118b18ffe5695a6339997"
+    },
+    "settings.save.noNav": {
+      "wire": {
+        "requestId": "legacy-settings_save_noNav",
+        "baseRevision": 7,
+        "command": {
+          "type": "settings.save",
+          "name": "Morgan",
+          "timezone": "America/New_York"
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-settings_save_noNav\",\"baseRevision\":7,\"command\":{\"type\":\"settings.save\",\"name\":\"Morgan\",\"timezone\":\"America/New_York\"}}",
+      "fingerprint": "f36637fcbdea88d5403ae6d846fb48fadc6a45da8c8c53fb3677c6faab603127"
+    },
+    "settings.save.fourTab": {
+      "wire": {
+        "requestId": "legacy-settings_save_fourTab",
+        "baseRevision": 7,
+        "command": {
+          "type": "settings.save",
+          "name": " Morgan ",
+          "timezone": "America/Chicago",
+          "navOrder": [
+            "schedule",
+            "home",
+            "goals",
+            "more"
+          ]
+        }
+      },
+      "parsed": "{\"requestId\":\"legacy-settings_save_fourTab\",\"baseRevision\":7,\"command\":{\"type\":\"settings.save\",\"name\":\"Morgan\",\"timezone\":\"America/Chicago\",\"navOrder\":[\"schedule\",\"home\",\"goals\",\"more\"]}}",
+      "fingerprint": "3f2e89a77bc099e50ca2709390944341413fe9b0143fd421add032a1d6700467"
+    }
+  }
+}

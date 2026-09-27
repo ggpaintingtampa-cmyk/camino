@@ -7,10 +7,10 @@ describe('main navigation preferences',()=>{
   const now='2026-09-18T14:10:00Z';
   const original=initialState();
   const changed=applyCommand(original,{type:'settings.save',name:'Owner',timezone:'America/New_York',navOrder:['goals','home','schedule','more']},now);
-  expect(changed.settings.navOrder).toEqual(['goals','home','schedule','more']);
+  expect(changed.settings.navOrderV3).toEqual(['home','schedule','tasks','history','more']);
   expect(original.settings.navOrder).toBeUndefined();
   const renamed=applyCommand(changed,{type:'settings.save',name:'Andre',timezone:'America/New_York'},now);
-  expect(renamed.settings.navOrder).toEqual(changed.settings.navOrder);
+  expect(renamed.settings.navOrderV3).toEqual(changed.settings.navOrderV3);
  });
  it('rejects omissions, duplicate tabs and unknown routes',()=>{
   const settings={type:'settings.save',name:'Owner',timezone:'America/New_York'};
