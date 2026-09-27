@@ -1,18 +1,15 @@
 import type { CapacityResult, EntryConflict, InstantRange, TaskCredit } from './contracts';
 import { localDayRange } from './dates';
-import type { Block, DayPlanDraft, Flexibility, PlanWindow, State, Task } from './types';
+import { blockFlexibility } from './domain-core';
+import type { Block, DayPlanDraft, PlanWindow, State, Task } from './types';
 
-export { localDayRange };
+export { blockFlexibility, localDayRange };
 
 const MINUTE = 60000;
 const ms = (instant: string) => Date.parse(instant);
 const iso = (value: number) => new Date(value).toISOString();
 const minutes = (value: number) => Math.floor(value / MINUTE);
 
-/** The stored role, else fixed for an appointment and flexible for everything else. */
-export function blockFlexibility(block: Pick<Block, 'kind' | 'flexibility'>): Flexibility {
-  return block.flexibility ?? (block.kind === 'appointment' ? 'fixed' : 'flexible');
-}
 /** A live block that still holds its place: not archived, not cancelled, not missed. */
 export function isPositionedLive(block: Block): boolean {
   return !block.archived && block.status !== 'cancelled' && block.status !== 'missed';

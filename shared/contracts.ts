@@ -184,7 +184,7 @@ export interface TemplatePreview {
   entries:TemplatePreviewEntry[];
   /** Union minutes the not-yet-applied entries would reserve. */
   addedReservedMinutes:number;
-  /** Fixed appointments colliding with not-yet-applied entries; send them as `acknowledgedConflictIds`. */
+  /** Every positioned-live entry a not-yet-applied entry overlaps; send them as `acknowledgedConflictIds`. */
   requiredAcknowledgements:string[];
   capacityBefore:CapacityResult; capacityAfter:CapacityResult;
 }

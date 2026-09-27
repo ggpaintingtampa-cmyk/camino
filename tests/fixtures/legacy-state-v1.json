@@ -1,0 +1,422 @@
+{
+  "revision": 31,
+  "settings": {
+    "name": "Synthetic Owner",
+    "timezone": "America/New_York",
+    "currency": "USD",
+    "navOrder": [
+      "home",
+      "goals",
+      "schedule",
+      "more"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-thirty",
+      "title": "Synthetic thirty minute task",
+      "duration": 30,
+      "tag": "Personal",
+      "labels": [
+        "fixture"
+      ],
+      "notes": "Estimate stays thirty",
+      "status": "open",
+      "createdAt": "2026-09-14T10:46:00.000Z",
+      "updatedAt": "2026-09-14T10:46:00.000Z"
+    },
+    {
+      "id": "task-parent-linked",
+      "title": "Synthetic task on a parent goal",
+      "duration": 45,
+      "tag": "Work",
+      "labels": [],
+      "goalId": "goal-parent",
+      "notes": "",
+      "status": "open",
+      "createdAt": "2026-09-14T10:47:00.000Z",
+      "updatedAt": "2026-09-14T10:47:00.000Z"
+    },
+    {
+      "id": "task-done",
+      "title": "Synthetic finished task",
+      "duration": 25,
+      "tag": "Work",
+      "labels": [],
+      "goalId": "goal-step",
+      "notes": "",
+      "status": "complete",
+      "createdAt": "2026-09-14T10:48:00.000Z",
+      "updatedAt": "2026-09-14T13:28:00.000Z"
+    },
+    {
+      "id": "task-split",
+      "title": "Synthetic split task",
+      "duration": 60,
+      "tag": "Personal",
+      "labels": [
+        "chain"
+      ],
+      "notes": "",
+      "status": "partial",
+      "createdAt": "2026-09-14T10:49:00.000Z",
+      "updatedAt": "2026-09-14T14:50:00.000Z",
+      "remainingTaskId": "661e924c-7011-46e2-a993-9b5439e740a5"
+    },
+    {
+      "id": "task-archived",
+      "title": "Synthetic archived task",
+      "duration": 15,
+      "tag": "Personal",
+      "labels": [],
+      "notes": "",
+      "status": "open",
+      "createdAt": "2026-09-14T10:50:00.000Z",
+      "updatedAt": "2026-09-14T10:51:00.000Z",
+      "archived": true
+    },
+    {
+      "title": "Synthetic split task",
+      "duration": 20,
+      "tag": "Personal",
+      "notes": "",
+      "labels": [
+        "chain"
+      ],
+      "status": "open",
+      "id": "661e924c-7011-46e2-a993-9b5439e740a5",
+      "createdAt": "2026-09-14T14:50:00.000Z",
+      "updatedAt": "2026-09-14T14:50:00.000Z"
+    },
+    {
+      "id": "tpl:template-morning:2026-09-15:0:task",
+      "title": "Synthetic template task",
+      "duration": 60,
+      "tag": "Work",
+      "notes": "",
+      "labels": [],
+      "status": "open",
+      "createdAt": "2026-09-14T20:01:00.000Z",
+      "updatedAt": "2026-09-14T20:01:00.000Z"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "block-done",
+      "taskId": "task-done",
+      "title": "Synthetic finished task",
+      "kind": "task",
+      "tag": "Work",
+      "start": "2026-09-14T13:00:00.000Z",
+      "end": "2026-09-14T13:30:00.000Z",
+      "notes": "",
+      "status": "complete",
+      "createdAt": "2026-09-14T11:10:00.000Z",
+      "updatedAt": "2026-09-14T13:28:00.000Z",
+      "actualStart": "2026-09-14T13:02:00.000Z",
+      "actualEnd": "2026-09-14T13:28:00.000Z"
+    },
+    {
+      "id": "block-split",
+      "taskId": "task-split",
+      "title": "Synthetic split task",
+      "kind": "task",
+      "tag": "Personal",
+      "start": "2026-09-14T14:00:00.000Z",
+      "end": "2026-09-14T15:00:00.000Z",
+      "notes": "",
+      "status": "partial",
+      "createdAt": "2026-09-14T11:11:00.000Z",
+      "updatedAt": "2026-09-14T14:50:00.000Z",
+      "actualStart": "2026-09-14T14:05:00.000Z",
+      "actualEnd": "2026-09-14T14:50:00.000Z"
+    },
+    {
+      "id": "block-appointment",
+      "title": "Synthetic appointment",
+      "kind": "appointment",
+      "tag": "Personal",
+      "start": "2026-09-14T18:00:00.000Z",
+      "end": "2026-09-14T18:30:00.000Z",
+      "notes": "",
+      "status": "attended",
+      "createdAt": "2026-09-14T11:12:00.000Z",
+      "updatedAt": "2026-09-14T18:35:00.000Z"
+    },
+    {
+      "id": "tpl:template-morning:2026-09-15:0",
+      "title": "Synthetic template task",
+      "kind": "task",
+      "tag": "Work",
+      "start": "2026-09-15T13:00:00.000Z",
+      "end": "2026-09-15T14:00:00.000Z",
+      "taskId": "tpl:template-morning:2026-09-15:0:task",
+      "notes": "",
+      "status": "pending",
+      "createdAt": "2026-09-14T20:01:00.000Z",
+      "updatedAt": "2026-09-15T13:05:00.000Z",
+      "actualStart": "2026-09-15T13:05:00.000Z"
+    },
+    {
+      "id": "tpl:template-morning:2026-09-15:1",
+      "title": "Synthetic routine",
+      "kind": "routine",
+      "tag": "Personal",
+      "start": "2026-09-15T11:00:00.000Z",
+      "end": "2026-09-15T11:45:00.000Z",
+      "notes": "",
+      "status": "pending",
+      "createdAt": "2026-09-14T20:01:00.000Z",
+      "updatedAt": "2026-09-14T20:01:00.000Z"
+    }
+  ],
+  "days": [
+    {
+      "id": "fc7564c8-4155-4bfb-aafd-a4e794eb2394",
+      "createdAt": "2026-09-14T10:52:00.000Z",
+      "updatedAt": "2026-09-14T10:52:00.000Z",
+      "date": "2026-09-10",
+      "endedAt": "2026-09-14T10:52:00.000Z",
+      "note": "",
+      "summary": "Synthetic earlier entry.",
+      "journal": "Synthetic journal without a wake time",
+      "summaryEdited": true
+    },
+    {
+      "id": "aa2530ab-c2d8-40eb-a298-c0c2dc14f169",
+      "createdAt": "2026-09-14T11:00:00.000Z",
+      "updatedAt": "2026-09-15T01:00:00.000Z",
+      "date": "2026-09-14",
+      "startedAt": "2026-09-14T10:30:00.000Z",
+      "mood": 4,
+      "energy": 3,
+      "note": "Synthetic morning note",
+      "summary": "Synthetic summary edited by the owner.",
+      "journal": "Synthetic evening journal",
+      "endedAt": "2026-09-15T01:00:00.000Z",
+      "summaryEdited": true
+    },
+    {
+      "id": "8013817c-a125-4f91-ba31-30ad431d50a2",
+      "createdAt": "2026-09-15T11:00:00.000Z",
+      "updatedAt": "2026-09-15T11:00:00.000Z",
+      "date": "2026-09-15",
+      "startedAt": "2026-09-15T10:45:00.000Z",
+      "mood": 3,
+      "energy": 4,
+      "note": "",
+      "summary": "",
+      "journal": ""
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal-parent",
+      "title": "Synthetic parent goal",
+      "targetDate": "2026-12-31",
+      "notes": "Parent of one step",
+      "status": "completed",
+      "checked": true,
+      "pinned": true,
+      "createdAt": "2026-09-14T10:44:00.000Z",
+      "updatedAt": "2026-09-14T13:28:00.000Z"
+    },
+    {
+      "id": "goal-step",
+      "title": "Synthetic step",
+      "parentId": "goal-parent",
+      "targetDate": "2026-10-15",
+      "notes": "",
+      "status": "completed",
+      "checked": true,
+      "pinned": false,
+      "createdAt": "2026-09-14T10:45:00.000Z",
+      "updatedAt": "2026-09-14T13:28:00.000Z"
+    }
+  ],
+  "logs": [
+    {
+      "id": "log-sleep",
+      "kind": "sleep",
+      "at": "2026-09-14T10:30:00.000Z",
+      "start": "2026-09-14T03:00:00.000Z",
+      "end": "2026-09-14T10:30:00.000Z",
+      "quality": 4,
+      "category": "",
+      "description": "",
+      "notes": "",
+      "duration": 450,
+      "createdAt": "2026-09-14T11:05:00.000Z",
+      "updatedAt": "2026-09-14T11:05:00.000Z"
+    },
+    {
+      "id": "log-weight",
+      "kind": "weight",
+      "at": "2026-09-14T10:35:00.000Z",
+      "value": 180.5,
+      "category": "",
+      "description": "",
+      "notes": "Synthetic weight",
+      "createdAt": "2026-09-14T11:06:00.000Z",
+      "updatedAt": "2026-09-14T11:06:00.000Z"
+    },
+    {
+      "id": "log-steps",
+      "kind": "steps",
+      "at": "2026-09-14T11:07:00.000Z",
+      "value": 4200,
+      "category": "",
+      "description": "",
+      "notes": "",
+      "createdAt": "2026-09-14T11:07:00.000Z",
+      "updatedAt": "2026-09-14T11:07:00.000Z"
+    }
+  ],
+  "reminders": [
+    {
+      "id": "reminder-one",
+      "title": "Synthetic reminder",
+      "body": "Bring the synthetic notebook",
+      "startsAt": "2026-09-14T12:00:00.000Z",
+      "expiresAt": "2026-09-15T03:00:00.000Z",
+      "pinned": true,
+      "dismissed": false,
+      "source": "owner",
+      "createdAt": "2026-09-14T11:08:00.000Z",
+      "updatedAt": "2026-09-14T11:08:00.000Z"
+    }
+  ],
+  "envelopes": [
+    {
+      "id": "envelope-gym",
+      "area": "personal",
+      "title": "Synthetic gym visits",
+      "amount": 10000,
+      "purpose": "Three synthetic visits",
+      "expiresAt": "2026-09-20T23:00:00.000Z",
+      "notes": "Fixture envelope",
+      "status": "active",
+      "createdAt": "2026-09-14T10:43:00.000Z",
+      "updatedAt": "2026-09-14T10:43:00.000Z"
+    }
+  ],
+  "adjustments": [
+    {
+      "id": "54224908-e932-4014-a4d6-958611ee0974",
+      "createdAt": "2026-09-14T10:41:00.000Z",
+      "updatedAt": "2026-09-14T10:41:00.000Z",
+      "area": "personal",
+      "reason": "Synthetic opening balance",
+      "before": {
+        "area": "personal",
+        "account": 0,
+        "cash": 0,
+        "earned": 0,
+        "lost": 0
+      },
+      "after": {
+        "area": "personal",
+        "account": 120000,
+        "cash": 120000,
+        "earned": 0,
+        "lost": 0
+      }
+    },
+    {
+      "id": "ade3092a-7d0b-44c6-8cfc-34094963a37a",
+      "createdAt": "2026-09-14T10:42:00.000Z",
+      "updatedAt": "2026-09-14T10:42:00.000Z",
+      "area": "company",
+      "reason": "Synthetic company balance",
+      "before": {
+        "area": "company",
+        "account": 0,
+        "cash": 0,
+        "earned": 0,
+        "lost": 0
+      },
+      "after": {
+        "area": "company",
+        "account": 400000,
+        "cash": 390000,
+        "earned": 6000,
+        "lost": 4000
+      }
+    },
+    {
+      "id": "d35e91b4-a05c-4857-9b22-d6bc8351370b",
+      "createdAt": "2026-09-14T10:43:00.000Z",
+      "updatedAt": "2026-09-14T10:43:00.000Z",
+      "area": "personal",
+      "reason": "Reserved for envelope: Synthetic gym visits",
+      "before": {
+        "area": "personal",
+        "account": 120000,
+        "cash": 120000,
+        "earned": 0,
+        "lost": 0
+      },
+      "after": {
+        "area": "personal",
+        "account": 120000,
+        "cash": 110000,
+        "earned": 0,
+        "lost": 0
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "template-morning",
+      "title": "Synthetic morning",
+      "blocks": [
+        {
+          "title": "Synthetic template task",
+          "kind": "task",
+          "tag": "Work",
+          "startMinute": 540,
+          "duration": 60,
+          "notes": ""
+        },
+        {
+          "title": "Synthetic routine",
+          "kind": "routine",
+          "tag": "Personal",
+          "startMinute": 420,
+          "duration": 45,
+          "notes": ""
+        }
+      ],
+      "createdAt": "2026-09-14T20:00:00.000Z",
+      "updatedAt": "2026-09-14T20:00:00.000Z"
+    }
+  ],
+  "ledgers": [
+    {
+      "area": "personal",
+      "account": 120000,
+      "cash": 110000,
+      "earned": 0,
+      "lost": 0
+    },
+    {
+      "area": "company",
+      "account": 400000,
+      "cash": 390000,
+      "earned": 6000,
+      "lost": 4000
+    }
+  ],
+  "locations": [
+    {
+      "id": "home-34638",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z",
+      "name": "Land O’ Lakes, FL",
+      "postcode": "34638",
+      "latitude": 28.2189,
+      "longitude": -82.4599,
+      "primary": true
+    }
+  ]
+}

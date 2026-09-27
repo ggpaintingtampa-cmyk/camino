@@ -1,22 +1,18 @@
-import type { Adjustment, Base, Block, Command, Day, Goal, Ledger, State, Task } from './types';
-import { addDays, dateKey, localInstant, minuteOfDay, timeLabel, validDate } from './dates';
+import type { Adjustment, Base, Command, Day, Goal, HealthLog, Ledger, State, Task } from './types';
+import { addDays, dateKey, timeLabel, validDate } from './dates';
 import { commandSchema } from './schema';
 import { dailySteps, goalProgress } from './selectors';
 import { CURRENT_SCHEMA_DRAFT, CURRENT_SCHEMA_VERSION } from './state-format';
-import { bump, createBase, DomainError, fail, find, live, notImplemented, upsert } from './domain-core';
-import { applyTaskCommand } from './tasks';
-import { applySessionCommand } from './sessions';
-import { applyPlanningCommand } from './planning';
+import { bump, createBase, DomainError, fail, find, isInDay, live, pendingBooking as scheduled, refreshGoal, syncGoalAncestors, syncGoalFromTask, upsert, validateSchedule, type CommandContext } from './domain-core';
+import { applyTaskCommand, applyTaskOutcome } from './tasks';
+import { applySessionCommand, dayCloseEntries, endSession, endSessionForTarget, endSessionUnderBooking, hasRecordedWork, isSessionBacked, recordedMinutesForBlock, sessionRef, sessionState, sessionsAssociatedWithDay, sessionViolations, settleBlock, splitRunningIntervalForDay, startSession, type DayCloseEntrySet } from './sessions';
+import { applyPlanningCommand, applyTemplate } from './planning';
 
 export { DomainError };
 
-const TASK_INTENT_MEMBERS = ['firstAction', 'doneWhen', 'preferredDay', 'deadline', 'effort', 'checklist'] as const;
-const BLOCK_V3_MEMBERS = ['flexibility', 'acknowledgedConflictIds', 'rescheduledFromId', 'supersededById', 'changeReason', 'changeSource'] as const;
+const TASK_KEPT_MEMBERS = ['duration', 'firstAction', 'doneWhen', 'preferredDay', 'deadline', 'effort', 'checklist'] as const;
+const BLOCK_SERVER_MEMBERS = ['acknowledgedConflictIds', 'rescheduledFromId', 'supersededById', 'changeReason', 'changeSource'] as const;
 
-function isInDay(state: State, day: Day, instant: string, now: string): boolean {
-  return dateKey(instant, state.settings.timezone) === day.date ||
-    (!!day.startedAt && Date.parse(instant) >= Date.parse(day.startedAt) && Date.parse(instant) <= Date.parse(day.endedAt || now));
-}
 function ledgerFor(state: State, area: Ledger['area']): Ledger {
   const ledger = state.ledgers.find(l => l.area === area);
   if (!ledger) fail('The money ledger is missing.', 'INVALID_STATE', 409);
@@ -31,53 +27,49 @@ function ensureMoney(ledger: Ledger) {
     if (!Number.isSafeInteger(ledger[key]) || ledger[key] < 0 || ledger[key] > 1_000_000_000_000) fail('This change would produce an invalid money balance. Review the ledger first.', 'INSUFFICIENT_BALANCE', 409);
   }
 }
-function scheduled(state: State, taskId: string, exceptId?: string): Block | undefined {
-  return state.blocks.find(b => !b.archived && b.taskId === taskId && b.status === 'pending' && b.id !== exceptId);
-}
-function validateSchedule(start: string, end: string, state: State) {
-  for (const instant of [start, end]) {
-    const ms = Date.parse(instant);
-    if (ms % 60000 !== 0 || minuteOfDay(instant, state.settings.timezone) % 5 !== 0) fail('Schedule times use five-minute increments.');
+type DayStartCommand = Extract<Command, { type: 'day.start' | 'day.startWithCheckin' }>;
+/** Returns false for the accepted no-op on a day that is already started. */
+function startDay(context: CommandContext, command: DayStartCommand): boolean {
+  const { state, now } = context;
+  const existing = state.days.find(day => day.date === command.date && !day.archived);
+  const other = state.days.find(day => !day.archived && !day.endedAt && day.id !== existing?.id);
+  if (other) fail('Review or close your previous open day before starting this day.', 'DAY_OPEN', 409);
+  // A repeated Start request cannot revise a genuine prior check-in or reopen
+  // a closed day. Corrections and reopening each have their own explicit action.
+  if (existing?.startedAt) return false;
+  const wakeAt = command.wakeAt || now;
+  if (dateKey(wakeAt, state.settings.timezone) !== command.date) fail('Wake time must be on the selected date.');
+  if (Date.parse(wakeAt) > Date.parse(now)) fail('Wake time cannot be in the future.');
+  let day = existing;
+  if (day) {
+    day.startedAt = wakeAt;
+    if (command.date === dateKey(now, state.settings.timezone)) delete day.endedAt;
+    if (command.mood !== undefined) day.mood = command.mood;
+    if (command.energy !== undefined) day.energy = command.energy;
+    if (command.note !== undefined) day.note = command.note;
+    bump(day, now);
+  } else {
+    day = { ...createBase(now), date: command.date, startedAt: wakeAt, mood: command.mood, energy: command.energy, note: command.note || '', summary: '', journal: '' };
+    state.days.push(day);
   }
-  if (Date.parse(end) <= Date.parse(start) || Date.parse(end) - Date.parse(start) > 86400000) fail('A block must last between five minutes and 24 hours.');
+  // Work already running joins the day from this command's time on, never from the wake time.
+  if (!day.endedAt) splitRunningIntervalForDay(context, day);
+  return true;
 }
-function syncGoalFromTask(state: State, task: Task, now: string) {
-  if (!task.goalId || task.status !== 'complete') return;
-  const goal = state.goals.find(g => g.id === task.goalId && !g.archived && g.status !== 'archived');
-  if (goal && !state.goals.some(g => g.parentId === goal.id && !g.archived && g.status !== 'archived')) {
-    if (state.tasks.some(t => !t.archived && t.goalId === goal.id && t.status === 'open')) return;
-    goal.checked = true; goal.status = 'completed'; bump(goal, now);
-    syncGoalAncestors(state, goal.id, now);
+/** Shared by `day.end` and `day.close`. Ends the day's recordings without inventing an outcome. */
+function closeDay(context: CommandContext, day: Day, entrySet: DayCloseEntrySet) {
+  const { state, now } = context;
+  if (day.startedAt && Date.parse(now) < Date.parse(day.startedAt)) fail('A day cannot end before it starts.');
+  for (const session of sessionsAssociatedWithDay(state, day.id)) endSession(context, session, 'day-closed');
+  // Appointments remain unreviewed: do not invent attendance or absence.
+  for (const { block, effect } of dayCloseEntries(state, day, now, entrySet)) {
+    if (effect !== 'marked-not-completed') continue;
+    settleBlock(context, block, 'missed');
+    if (block.taskId) bump(find(state.tasks, block.taskId), now);
   }
+  day.endedAt = now;
 }
-function refreshGoal(state: State, goal: Goal, now: string) {
-  if (!goal.archived && goal.status !== 'archived') {
-    const progress = goalProgress(state, goal.id);
-    goal.checked = progress.total > 0 && progress.completed === progress.total;
-    if (goal.checked) goal.status = 'completed';
-    else if (goal.status === 'completed') goal.status = 'active';
-    bump(goal, now);
-  }
-}
-function syncGoalAncestors(state: State, id: string, now: string) {
-  let ancestor = state.goals.find(g => g.id === id)?.parentId;
-  const seen = new Set<string>();
-  while (ancestor && !seen.has(ancestor)) {
-    seen.add(ancestor);
-    const goal = find(state.goals, ancestor);
-    refreshGoal(state, goal, now);
-    ancestor = goal.parentId;
-  }
-}
-function finishBlock(state: State, block: Block, outcome: Block['status'], now: string) {
-  block.status = outcome; block.actualEnd = block.actualStart ? now : undefined;
-  delete block.snoozedUntil; bump(block, now);
-  if (block.taskId) {
-    const task = find(state.tasks, block.taskId);
-    task.status = outcome === 'complete' ? 'complete' : outcome === 'partial' ? 'partial' : 'open';
-    bump(task, now); syncGoalFromTask(state, task, now);
-  }
-}
+function sameValue(a: unknown, b: unknown): boolean { return JSON.stringify(a) === JSON.stringify(b); }
 
 export function initialState(): State {
   const origin = '2026-01-01T00:00:00.000Z';
@@ -102,11 +94,10 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
   now = new Date(now).toISOString();
   const command: Command = result.data;
   const state: State = structuredClone(input);
+  const context: CommandContext = { state, now };
   switch (command.type) {
     case 'task.save': {
       const draft = command.task;
-      // Transitional: the handler that stores these members lands with the task-intent phase.
-      if (draft.duration === undefined || TASK_INTENT_MEMBERS.some(member => draft[member] !== undefined)) notImplemented('task.save with v3 members');
       const old = draft.id ? state.tasks.find(t => t.id === draft.id) : undefined;
       if (draft.goalId) {
         if (draft.goalId === old?.goalId) find(state.goals, draft.goalId);
@@ -117,20 +108,26 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       if (old?.remainingTaskId && draft.status !== old.status) fail('Update the linked remaining task to finish this work.', 'PARTIAL_TASK', 409);
       if (old && draft.archived !== old.archived && draft.archived) fail('Use Archive to preserve related schedule history.');
       if (old && scheduled(state, old.id) && draft.status !== old.status) fail('Resolve the scheduled block to update this task.', 'TASK_SCHEDULED', 409);
-      const task = upsert(state.tasks, draft, now);
+      // This command cannot clear an estimate or a v3 member: what it omits keeps its stored value.
+      const kept = Object.fromEntries(TASK_KEPT_MEMBERS.filter(member => draft[member] === undefined && old?.[member] !== undefined).map(member => [member, old![member]]));
+      const task = upsert(state.tasks, { ...draft, ...kept, status: old?.status ?? draft.status }, now);
+      // A status change is an outcome, recorded at command time like every other one.
+      if (old?.status === 'open' && draft.status === 'complete') applyTaskOutcome(context, task, { kind: 'complete', source: 'task.save' });
+      else if (old?.status === 'complete' && draft.status === 'open') applyTaskOutcome(context, task, { kind: 'reopen', source: 'task.save' });
+      else task.status = draft.status;
       syncGoalFromTask(state, task, now);
       break;
     }
     case 'block.save': {
       const draft = command.block;
-      // Transitional: the handler that stores or checks these members lands with the session phase.
-      if (BLOCK_V3_MEMBERS.some(member => draft[member] !== undefined)) notImplemented('block.save with v3 members');
-      validateSchedule(draft.start, draft.end, state);
+      validateSchedule(state, draft.start, draft.end);
       const old = draft.id ? state.blocks.find(b => b.id === draft.id) : undefined;
       if (draft.archived) fail('Use Archive to preserve schedule history.');
       if (old && old.archived) fail('Archived schedule history cannot be overwritten.', 'ARCHIVED', 409);
       if (old && old.kind !== draft.kind) fail('A block’s kind cannot change. Create a new block instead.');
       if (draft.status !== (old?.status || 'pending') || draft.actualStart !== old?.actualStart || draft.actualEnd !== old?.actualEnd || draft.snoozedUntil !== old?.snoozedUntil) fail('Use the task outcome, start or snooze actions to change its progress.');
+      // Echo only: a spread stored record passes, a changed or invented value does not.
+      if (BLOCK_SERVER_MEMBERS.some(member => draft[member] !== undefined && !sameValue(draft[member], old?.[member]))) fail('Plan links and acknowledgements are kept by Caminos and cannot be edited here.');
       if (old && old.status !== 'pending') fail('Completed schedule history is preserved. Create a new block instead.', 'ALREADY_RESOLVED', 409);
       if (draft.kind !== 'task' && draft.taskId) fail('Only a task block can refer to a task.');
       if (old?.taskId && old.taskId !== draft.taskId) fail('A scheduled block cannot change its task.');
@@ -145,20 +142,26 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
           taskId = task.id;
         }
       }
+      const flexibility = draft.flexibility ?? old?.flexibility;
+      const stored = { ...draft, taskId, ...(flexibility ? { flexibility } : {}) };
+      // Members the server owns stay with the stored record; an omitted one is not a request to clear it.
+      for (const member of BLOCK_SERVER_MEMBERS) if (old?.[member] !== undefined) Object.assign(stored, { [member]: old[member] });
       if (old && (old.start !== draft.start || old.end !== draft.end)) {
-        if (old.actualStart) fail('Resolve the active block before moving it.', 'ACTIVE_TASK', 409);
-        old.status = 'cancelled'; bump(old, now);
-        upsert(state.blocks, { ...draft, id: undefined, taskId, conflictReviewed: false }, now);
-      } else upsert(state.blocks, { ...draft, taskId }, now);
+        if (hasRecordedWork(state, old)) fail('Resolve the active block before moving it.', 'ACTIVE_TASK', 409);
+        // A moved booking is a new block; the old one stays as history, linked both ways.
+        for (const member of BLOCK_SERVER_MEMBERS) delete stored[member];
+        const moved = upsert(state.blocks, { ...stored, id: undefined, conflictReviewed: false, rescheduledFromId: old.id }, now);
+        old.status = 'cancelled'; old.supersededById = moved.id; old.changeReason = 'moved'; bump(old, now);
+      } else upsert(state.blocks, stored, now);
       break;
     }
     case 'block.start': {
       const block = live(state.blocks, command.id);
       if (block.kind === 'appointment') fail('Appointments are marked attended, missed or cancelled.');
       if (block.status !== 'pending') fail('This block has already been resolved.', 'ALREADY_RESOLVED', 409);
-      const other = state.blocks.find(b => b.id !== block.id && !b.archived && b.actualStart && !b.actualEnd && b.status === 'pending');
-      if (other) fail('Finish, partially complete or return your current task to the list before starting another.', 'ACTIVE_TASK', 409);
-      block.actualStart ||= now; delete block.snoozedUntil; bump(block, now); break;
+      if (block.kind === 'task' && !block.taskId) fail('This block has no task to record.', 'INVALID_STATE', 409);
+      startSession(context, block.kind === 'task' ? { kind: 'task', taskId: block.taskId! } : { kind: 'routine', blockId: block.id }, block.id, 'ACTIVE_TASK');
+      break;
     }
     case 'block.resolve': {
       const block = live(state.blocks, command.id);
@@ -168,22 +171,26 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       }
       if (block.kind === 'appointment' && !['attended', 'missed', 'cancelled'].includes(command.outcome)) fail('Choose attended, missed or cancelled for an appointment.');
       if (block.kind !== 'appointment' && command.outcome === 'attended') fail('Only appointments can be marked attended.');
-      if (command.outcome === 'partial') {
-        if (!command.remainingDuration) fail('Enter the time needed for the remaining work.');
-        if (!block.taskId) {
+      if (command.outcome === 'partial' && !command.remainingDuration) fail('Enter the time needed for the remaining work.');
+      if (command.outcome !== 'partial' && (command.remainingDuration || command.remainingStart)) fail('Remaining work is only used with Partial.');
+      const outcome = command.outcome;
+      if (outcome === 'complete' || outcome === 'partial') {
+        if (block.kind === 'routine') endSessionForTarget(context, { kind: 'routine', blockId: block.id }, outcome === 'complete' ? 'completed' : 'partial');
+        if (outcome === 'partial' && !block.taskId) {
           const task = upsert(state.tasks, { title: block.title, duration: (Date.parse(block.end) - Date.parse(block.start)) / 60000, tag: block.tag, notes: block.notes, labels: [], status: 'open' }, now);
           block.taskId = task.id;
         }
-        const original = find(state.tasks, block.taskId);
-        const remaining = upsert(state.tasks, { title: original.title, duration: command.remainingDuration, tag: original.tag, notes: original.notes, labels: [...original.labels], goalId: original.goalId, status: 'open' }, now);
-        original.remainingTaskId = remaining.id;
-        if (command.remainingStart) {
-          const end = new Date(Date.parse(command.remainingStart) + command.remainingDuration * 60000).toISOString();
-          validateSchedule(command.remainingStart, end, state);
-          upsert(state.blocks, { title: remaining.title, kind: 'task', taskId: remaining.id, tag: remaining.tag, notes: remaining.notes, start: command.remainingStart, end, status: 'pending' }, now);
-        }
-      } else if (command.remainingDuration || command.remainingStart) fail('Remaining work is only used with Partial.');
-      finishBlock(state, block, command.outcome, now); break;
+        if (!block.taskId) { settleBlock(context, block, outcome); break; }
+        const task = find(state.tasks, block.taskId);
+        if (outcome === 'complete') applyTaskOutcome(context, task, { kind: 'complete', source: 'block.resolve', blockId: block.id });
+        else applyTaskOutcome(context, task, { kind: 'partial', source: 'block.resolve', blockId: block.id, remaining: { duration: command.remainingDuration!, ...(command.remainingStart ? { placement: { start: command.remainingStart } } : {}) } });
+        break;
+      }
+      // Not completed, cancelled or an appointment outcome: recording ends only when it was last made under this block.
+      if (block.kind !== 'appointment') endSessionUnderBooking(context, block.id, 'stopped');
+      settleBlock(context, block, outcome);
+      if (block.taskId) bump(find(state.tasks, block.taskId), now);
+      break;
     }
     case 'block.snooze': {
       const block = live(state.blocks, command.id);
@@ -194,26 +201,18 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     case 'block.conflictReviewed': {
       const block = live(state.blocks, command.id); block.conflictReviewed = true; bump(block, now); break;
     }
-    case 'day.start': {
-      const existing = state.days.find(day => day.date === command.date && !day.archived);
-      const other = state.days.find(day => !day.archived && !day.endedAt && day.id !== existing?.id);
-      if (other) fail('Review or close your previous open day before starting this day.', 'DAY_OPEN', 409);
-      // A repeated Start request cannot revise a genuine prior check-in or reopen
-      // a closed day. Corrections and reopening each have their own explicit action.
-      if (existing?.startedAt) break;
-      const wakeAt = command.wakeAt || existing?.startedAt || now;
-      if (dateKey(wakeAt, state.settings.timezone) !== command.date) fail('Wake time must be on the selected date.');
-      if (Date.parse(wakeAt) > Date.parse(now)) fail('Wake time cannot be in the future.');
-      if (existing) {
-        const journalOnly = !existing.startedAt;
-        if (!journalOnly && existing.endedAt && Date.parse(wakeAt) > Date.parse(existing.endedAt)) fail('Wake time must precede the end of the day.');
-        existing.startedAt = wakeAt;
-        if (journalOnly && command.date === dateKey(now, state.settings.timezone)) delete existing.endedAt;
-        if (command.mood !== undefined) existing.mood = command.mood;
-        if (command.energy !== undefined) existing.energy = command.energy;
-        if (command.note !== undefined) existing.note = command.note;
-        bump(existing, now);
-      } else state.days.push({ ...createBase(now), date: command.date, startedAt: wakeAt, mood: command.mood, energy: command.energy, note: command.note || '', summary: '', journal: '' });
+    case 'day.start': startDay(context, command); break;
+    case 'day.startWithCheckin': {
+      // Everything or nothing: a failure below leaves the input state untouched.
+      if (!startDay(context, command)) break;
+      for (const entry of command.logs) {
+        const log: HealthLog = entry.kind === 'sleep'
+          ? { ...createBase(now), kind: 'sleep', at: entry.end, start: entry.start, end: entry.end, duration: Math.round((Date.parse(entry.end) - Date.parse(entry.start)) / 60000), category: '', description: '', notes: entry.notes ?? '' }
+          : { ...createBase(now), kind: 'weight', at: entry.at, value: entry.value, category: '', description: '', notes: entry.notes ?? '' };
+        if (log.kind === 'sleep' && log.duration! < 1) fail('Sleep must last at least one minute.');
+        if (entry.kind === 'sleep' && entry.quality !== undefined) log.quality = entry.quality;
+        state.logs.push(log);
+      }
       break;
     }
     case 'day.reopen': {
@@ -221,21 +220,39 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       if (day.date !== dateKey(now, state.settings.timezone)) fail('Only today can be reopened. Edit older entries through History.', 'INVALID_STATE', 409);
       if (!day.startedAt) fail('Record your wake time with Start Day first.', 'INVALID_STATE', 409);
       if (state.days.some(d => d.id !== day.id && !d.archived && !d.endedAt)) fail('Close your previous open day before reopening today.', 'DAY_OPEN', 409);
-      delete day.endedAt; bump(day, now); break;
+      delete day.endedAt; bump(day, now);
+      splitRunningIntervalForDay(context, day); break;
     }
     case 'day.end': {
       const day = live(state.days, command.id);
       if (!day.endedAt) {
-        if (day.startedAt && Date.parse(now) < Date.parse(day.startedAt)) fail('A day cannot end before it starts.');
-        day.endedAt = now;
-        for (const block of state.blocks.filter(b => !b.archived && b.status === 'pending' && isInDay(state, day, b.start, now))) {
-          // Appointments remain unreviewed: do not invent attendance or absence.
-          if (block.kind !== 'appointment') finishBlock(state, block, 'missed', now);
-        }
+        const associated = sessionsAssociatedWithDay(state, day.id);
+        if (associated.length) fail('Closing this day ends recorded work. Review it and confirm the close.', 'SESSION_CLOSE_CONFIRMATION_REQUIRED', 409, { sessions: associated.map(sessionRef) });
+        closeDay(context, day, 'legacy');
       }
       if (command.summary !== undefined) { day.summary = command.summary; day.summaryEdited = true; }
-      else if (!day.summary) { day.summary = summaryForDay(state, day.id); day.summaryEdited = false; }
+      else if (!day.summary) { day.summary = summaryForDay(state, day.id, now); day.summaryEdited = false; }
       if (command.journal !== undefined) day.journal = command.journal;
+      bump(day, now); break;
+    }
+    case 'day.close': {
+      const day = live(state.days, command.id);
+      const closing = !day.endedAt;
+      if (closing) {
+        const associated = sessionsAssociatedWithDay(state, day.id);
+        const expected = new Map(command.expectedSessions.map(session => [session.id, session.state]));
+        if (associated.length !== expected.size || associated.some(session => expected.get(session.id) !== sessionState(session))) {
+          fail('Recorded work changed since you reviewed this close. Review it again.', 'SESSION_CLOSE_STALE', 409, { sessions: associated.map(sessionRef) });
+        }
+        closeDay(context, day, 'ended');
+      }
+      if (command.summary !== undefined) { day.summary = command.summary; day.summaryEdited = true; }
+      else if (closing && !day.summary) { day.summary = summaryForDay(state, day.id, now); day.summaryEdited = false; }
+      if (command.journal !== undefined) day.journal = command.journal;
+      if (command.reflection !== undefined) {
+        const reflection = Object.fromEntries(Object.entries(command.reflection).filter(([, value]) => value?.trim()));
+        if (Object.keys(reflection).length) day.reflection = reflection; else delete day.reflection;
+      }
       bump(day, now); break;
     }
     case 'day.save': {
@@ -263,7 +280,7 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       bump(day, now); break;
     }
     case 'day.regenerate': {
-      const day = live(state.days, command.id); day.summary = summaryForDay(state, day.id); day.summaryEdited = false; bump(day, now); break;
+      const day = live(state.days, command.id); day.summary = summaryForDay(state, day.id, now); day.summaryEdited = false; bump(day, now); break;
     }
     case 'goal.save': {
       const draft = command.goal;
@@ -360,28 +377,7 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       bump(envelope, now); audit(state, before, ledger, `Envelope ${outcome}: ${envelope.title}`, now); break;
     }
     case 'template.save': upsert(state.templates, command.template, now); break;
-    case 'template.apply': {
-      // Transitional: reviewed mode lands with the reviewed-operations phase.
-      if (command.acknowledgedConflictIds !== undefined) notImplemented('template.apply in reviewed mode');
-      const template = live(state.templates, command.id);
-      // Stable IDs make retries and reapplying a day's template nonduplicating.
-      for (const [index, item] of template.blocks.entries()) {
-        const id = `tpl:${template.id}:${command.date}:${index}`;
-        if (state.blocks.some(b => b.id === id)) continue;
-        const hour = Math.floor(item.startMinute / 60), minute = item.startMinute % 60;
-        let start: string;
-        try { start = localInstant(command.date, `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`, state.settings.timezone); }
-        catch (error) { fail(error instanceof Error ? error.message : 'Invalid template time.', 'INVALID_TIME', 400); }
-        const end = new Date(Date.parse(start) + item.duration * 60000).toISOString();
-        let taskId: string | undefined;
-        if (item.kind === 'task') {
-          taskId = `${id}:task`;
-          upsert(state.tasks, { id: taskId, title: item.title, duration: item.duration, tag: item.tag, notes: item.notes, labels: [], status: 'open' }, now);
-        }
-        upsert(state.blocks, { id, title: item.title, kind: item.kind, tag: item.tag, start, end, taskId, notes: item.notes, status: 'pending' }, now);
-      }
-      break;
-    }
+    case 'template.apply': applyTemplate(context, command); break;
     case 'location.save': {
       const location = upsert(state.locations, command.location, now);
       if (location.archived) fail('Use Archive to remove a weather location.');
@@ -392,11 +388,16 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
     case 'record.archive': {
       const records: Base[] = state[command.collection]; const record = find(records, command.id);
       if (command.collection === 'tasks' && command.archived) {
-        for (const block of state.blocks.filter(b => b.taskId === record.id && b.status === 'pending' && !b.archived)) finishBlock(state, block, 'cancelled', now);
+        endSessionForTarget(context, { kind: 'task', taskId: record.id }, 'archived');
+        for (const block of state.blocks.filter(b => b.taskId === record.id && b.status === 'pending' && !b.archived)) settleBlock(context, block, 'cancelled');
       }
       if (command.collection === 'blocks' && command.archived) {
         const block = find(state.blocks, record.id);
-        if (block.status === 'pending') finishBlock(state, block, 'cancelled', now);
+        if (block.status === 'pending') {
+          endSessionUnderBooking(context, block.id, 'archived');
+          settleBlock(context, block, 'cancelled');
+          if (block.taskId) bump(find(state.tasks, block.taskId), now);
+        }
       }
       if (command.collection === 'goals') {
         const goal = find(state.goals, record.id);
@@ -426,22 +427,23 @@ export function applyCommand(input: State, supplied: Command, now: string): Stat
       break;
     }
     case 'task.capture': case 'task.update': case 'task.resolve': case 'task.reopen':
-      applyTaskCommand({ state, now }, command); break;
+      applyTaskCommand(context, command); break;
     case 'session.start': case 'session.pause': case 'session.resume': case 'session.switch': case 'session.stop':
-      applySessionCommand({ state, now }, command); break;
+      applySessionCommand(context, command); break;
     case 'dayPlan.save': case 'task.defer': case 'task.plan': case 'plan.apply':
-      applyPlanningCommand({ state, now }, command); break;
-    case 'day.startWithCheckin': case 'day.close':
-      notImplemented(command.type);
+      applyPlanningCommand(context, command); break;
   }
+  const broken = sessionViolations(state);
+  if (broken.length) fail('Recorded work would become inconsistent, so nothing was saved.', 'INVALID_STATE', 409, { recordIds: broken });
   state.revision = input.revision + 1;
   return state;
 }
 
-export function summaryForDay(state: State, dayId: string): string {
+/** A caller that knows the time passes `now`; the clock is read only when it is left out, for the legacy screen. */
+export function summaryForDay(state: State, dayId: string, now?: string): string {
   const day = find(state.days, dayId);
   const zone = state.settings.timezone;
-  const cutoff = day.endedAt || new Date().toISOString();
+  const cutoff = day.endedAt || now || new Date().toISOString();
   const logs = state.logs.filter(l => !l.archived && isInDay(state, day, l.kind === 'sleep' && l.end ? l.end : l.at, cutoff));
   const blocks = state.blocks.filter(b => !b.archived && isInDay(state, day, b.start, cutoff));
   const lines = [`${day.date} · Daily record`, day.startedAt ? `Woke at ${timeLabel(day.startedAt, zone)}.` : 'Wake time: not recorded.'];
@@ -465,10 +467,19 @@ export function summaryForDay(state: State, dayId: string): string {
   }
   for (const block of blocks.sort((a, b) => Date.parse(a.start) - Date.parse(b.start))) {
     const outcome = block.status === 'pending' ? 'outcome not recorded' : block.status === 'missed' && block.kind !== 'appointment' ? 'not completed' : block.status;
-    const actual = block.actualStart ? `; started ${timeLabel(block.actualStart, zone)}${block.actualEnd ? `, ${Math.max(0, Math.round((Date.parse(block.actualEnd) - Date.parse(block.actualStart)) / 60000))} actual minutes` : ''}` : '';
+    // A session-backed block reports what was recorded under it; pauses add nothing.
+    const minutes = isSessionBacked(state, block.id) ? recordedMinutesForBlock(state, block.id, cutoff)
+      : block.actualStart && block.actualEnd ? Math.max(0, Math.round((Date.parse(block.actualEnd) - Date.parse(block.actualStart)) / 60000)) : undefined;
+    const actual = block.actualStart ? `; started ${timeLabel(block.actualStart, zone)}${minutes === undefined ? '' : `, ${minutes} actual minutes`}` : '';
     lines.push(`${timeLabel(block.start, zone)}–${timeLabel(block.end, zone)} ${block.title}: ${outcome}${actual}${block.notes ? `; ${block.notes}` : ''}.`);
   }
-  for (const task of state.tasks.filter(t => !t.archived && t.status === 'complete' && dateKey(t.updatedAt, zone) === day.date && !blocks.some(b => b.taskId === t.id && b.status === 'complete'))) {
+  const completedOn = (task: Task) => {
+    // An explicit outcome dates the completion. Only a task without one falls back to the legacy inference.
+    const outcome = [...state.taskOutcomes].reverse().find(o => o.taskId === task.id && o.kind !== 'reopen');
+    if (!outcome) return dateKey(task.updatedAt, zone) === day.date;
+    return outcome.kind === 'complete' && (outcome.dayId ? outcome.dayId === day.id : outcome.contextDate === day.date);
+  };
+  for (const task of state.tasks.filter(t => !t.archived && t.status === 'complete' && completedOn(t) && !blocks.some(b => b.taskId === t.id && b.status === 'complete'))) {
     lines.push(`Completed task: ${task.title} (no completed schedule block recorded).`);
   }
   for (const goal of state.goals.filter(g => !g.archived && dateKey(g.updatedAt, zone) === day.date)) {

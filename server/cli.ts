@@ -3,8 +3,12 @@ import { randomUUID } from 'node:crypto';
 import { copyFileSync, constants, existsSync, mkdirSync, readFileSync, statSync, chmodSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import argon2 from 'argon2';
-import { Repository } from './repository.js';
+import Database from 'better-sqlite3';
+import { DuplicateRequest, Repository, RevisionConflict, StorageError, type RepositoryOptions } from './repository.js';
+import { applyMigration, parseMigrateArguments, preflightMigration } from './migrations.js';
 import { commandEnvelopeSchema } from '../shared/schema.js';
+import { DomainError } from '../shared/domain-core.js';
+import type { CliFailure } from '../shared/contracts.js';
 import { appEnvironment } from './environment.js';
 
 const args = process.argv.slice(2);
@@ -15,7 +19,11 @@ const option = (name:string):string|undefined => {
   if (!args[index+1] || args[index+1].startsWith('--')) throw new Error(`${name} requires a value.`);
   return args[index+1];
 };
-const dbPath = resolve(option('--db') ?? appEnvironment('DB') ?? '.data/hermes.sqlite');
+// The intent is decided from the action alone, before any repository exists.
+const INTENTS:Record<string,RepositoryOptions['intent']> = {
+  'owner-setup':'initialize-if-missing','setup-link':'initialize-if-missing',
+  command:'open-existing',snapshot:'open-existing',export:'read-only',backup:'read-only',
+};
 const output = (value:unknown) => process.stdout.write(`${JSON.stringify(value,null,2)}\n`);
 async function stdin(limit = 1024*1024):Promise<string> {
   let text = '';
@@ -58,7 +66,12 @@ async function main():Promise<void> {
       `  backup [--out NEW_FILE]                    Make and verify a private SQLite backup\n`+
       `  verify --file BACKUP                       Read-only backup integrity check\n`+
       `  restore-scratch --file BACKUP --out NEW_DB  Restore into a new isolated database\n`+
-      `  All database actions accept --db PATH or CAMINOS_DB. Never pass passwords as arguments.\n`);
+      `  migrate --db ABSOLUTE_PATH --to-schema 2   Read-only migration preflight\n`+
+      `          [--apply --backup NEW_FILE]        Apply it after a new verified backup\n`+
+      `  All database actions accept --db PATH or CAMINOS_DB; migrate needs a literal --db.\n`+
+      `  Only owner-setup and setup-link create a missing database. While the storage format\n`+
+      `  is a draft, creating or migrating needs --allow-draft-format.\n`+
+      `  Never pass passwords as arguments.\n`);
     return;
   }
   if (action === 'verify') {
@@ -71,19 +84,35 @@ async function main():Promise<void> {
     const file = option('--file'); const out = option('--out');
     if (!file || !out) throw new Error('--file and --out are required.');
     const source = resolve(file); const destination = resolve(out);
-    Repository.verifyBackup(source);
+    const verified = Repository.verifyBackup(source);
     if (source === destination || existsSync(destination)) throw new Error('Restore requires a new destination. Existing data is never overwritten.');
     mkdirSync(dirname(destination),{recursive:true,mode:0o700});
     copyFileSync(source,destination,constants.COPYFILE_EXCL);
     chmodSync(destination,0o600);
     // An offline restore cannot carry live browser sessions into a new installation.
-    const restored = new Repository(destination);
-    restored.db.prepare('DELETE FROM sessions').run();
-    restored.close();
-    output({ok:true,path:destination,...Repository.verifyBackup(destination)});
+    // This connection runs that one statement: no schema, version or state write.
+    const copy = new Database(destination,{fileMustExist:true});
+    try { copy.prepare('DELETE FROM sessions').run(); } finally { copy.close(); }
+    const restored = Repository.verifyBackup(destination);
+    if (restored.revision !== verified.revision || restored.sqlVersion !== verified.sqlVersion || restored.format.schemaVersion !== verified.format.schemaVersion || restored.format.draft !== verified.format.draft) throw new StorageError('STATE_INVALID','The restored copy does not match its source. Do not use it.');
+    output({ok:true,path:destination,...restored});
     return;
   }
-  const repository = new Repository(dbPath);
+  if (action === 'migrate') {
+    const request = parseMigrateArguments(args.slice(1));
+    if (!request.apply) {
+      const report = preflightMigration(request.db);
+      output({ok:report.status !== 'blocked',...report});
+      if (report.status === 'blocked') throw new StorageError('STATE_INVALID','The records cannot be migrated as they are. Nothing was changed.',report.diagnostics);
+      return;
+    }
+    output({ok:true,...await applyMigration({db:request.db,backup:request.backup!,allowDraftFormat:request.allowDraftFormat,now:new Date().toISOString()})});
+    return;
+  }
+  const intent = INTENTS[action];
+  if (!intent) throw new Error('Unknown action. Run caminosctl help.');
+  const dbPath = resolve(option('--db') ?? appEnvironment('DB') ?? '.data/hermes.sqlite');
+  const repository = new Repository(dbPath,{intent,allowDraftFormat:intent === 'initialize-if-missing' && args.includes('--allow-draft-format')});
   try {
     if (action === 'owner-setup') {
       if (repository.ownerHash() && !args.includes('--replace')) throw new Error('An owner already exists. Use --replace only for an intentional password reset; all sessions will be revoked.');
@@ -110,20 +139,29 @@ async function main():Promise<void> {
       const state = repository.execute(envelope);
       output({ok:true,requestId:envelope.requestId,revision:state.revision});
     } else if (action === 'export') {
-      const value = {format:'caminos-owner-export',version:1,exportedAt:new Date().toISOString(),state:repository.snapshot()};
+      const value = repository.exportEnvelope(new Date().toISOString());
       const out = option('--out');
       if (out) {writeFileSync(resolve(out),`${JSON.stringify(value,null,2)}\n`,{mode:0o600,flag:'wx'});output({ok:true,path:resolve(out)});}
       else output(value);
     } else if (action === 'backup') {
       const defaultPath = `/var/backups/hermes/caminos-${new Date().toISOString().replace(/[:.]/g,'-')}-${randomUUID().slice(0,8)}.sqlite`;
       output({ok:true,...await repository.backup(option('--out') ?? defaultPath)});
-    } else throw new Error('Unknown action. Run caminosctl help.');
+    }
   } finally { repository.close(); }
 }
 
+function failure(error:unknown):CliFailure|undefined {
+  if (error instanceof StorageError) return {ok:false,code:error.code,message:error.message,...(error.recordIds ? {recordIds:error.recordIds} : {})};
+  if (error instanceof DomainError) return {ok:false,code:error.code as CliFailure['code'],message:error.message,...(error.details?.recordIds ? {recordIds:error.details.recordIds} : {})};
+  if (error instanceof RevisionConflict) return {ok:false,code:'REVISION_CONFLICT',message:error.message};
+  if (error instanceof DuplicateRequest) return {ok:false,code:'REQUEST_ID_REUSED',message:error.message};
+  return undefined;
+}
+
 main().catch((error:unknown) => {
+  const typed = failure(error);
   const message = error instanceof Error ? error.message : 'The command failed.';
   // Validation errors can echo entered journal content. CLI returns a simple description.
-  process.stderr.write(`${error instanceof Error && ['ZodError','SyntaxError'].includes(error.name) ? 'Invalid command JSON. Check shared/schema.ts for accepted fields.' : message}\n`);
+  process.stderr.write(`${typed ? JSON.stringify(typed) : error instanceof Error && ['ZodError','SyntaxError'].includes(error.name) ? 'Invalid command JSON. Check shared/schema.ts for accepted fields.' : message}\n`);
   process.exitCode = 1;
 });

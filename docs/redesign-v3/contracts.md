@@ -606,11 +606,19 @@ Matrix rows this workstream answers: M01–M13, M15–M25 (M21, M22 with Phase 6
 
 ## 10. Implementation status
 
-| Item | Status | Evidence |
-|---|---|---|
-| Exported types in `shared/types.ts`, `shared/contracts.ts`, constants in `shared/state-format.ts` | Declared | This contract PR. Typecheck passes |
-| `initialState()` returns the format-2 draft shape | Implemented | This contract PR. Existing suites pass |
-| Legacy wire fingerprints | Tested | `tests/legacy-fingerprints.test.ts`, this contract PR |
-| Every new command, selector, preview, migration and storage rule above | **Not implemented** | — |
+"Coded" means the source exists and compiles. It does not mean verified: see `domain-handoff.md` for which suites have and have not been run.
 
-Known limits of this handoff: no browser check was run by this role. WebKit cannot launch on this workstation (`libevent-2.1.so.7` missing), as recorded in `review-handoff.md`. The production wrapper `deploy/hermesctl` rejects `--db`, so the migration command cannot run through it; a production migration needs its own separately authorized operations path. Until the Phase 2 behavioral PR, the repository still stamps `user_version = 1` and has no format gate.
+| Item | Status | Where |
+|---|---|---|
+| Exported types, result shapes, format constants | Declared | `shared/types.ts`, `shared/contracts.ts`, `shared/state-format.ts` |
+| Legacy wire fingerprints | Tested at the contract commit | `tests/legacy-fingerprints.test.ts` |
+| Strict schemas for every v3 command and plan operation | Coded | `shared/schema.ts` |
+| Capacity, task views, next fixed commitment | Coded, tested at their commits | `shared/capacity.ts`, `shared/planning.ts`, `tests/capacity.test.ts`, `tests/task-views.test.ts` |
+| `task.capture`, `task.update`, `task.resolve`, `task.reopen`, outcomes | Coded, not yet run | `shared/tasks.ts` |
+| `session.*`, projection, `previewDayClose`, legacy adapters, `day.close`, `day.startWithCheckin`, `day.end` bridge, interval split | Coded, not yet run | `shared/sessions.ts`, `shared/domain.ts` |
+| `dayPlan.save`, `task.defer`, `task.plan`, `plan.apply`, reviewed `template.apply`, all previews | Coded, not yet run | `shared/planning.ts` |
+| `factsForDay`, `factsForWeek` | Coded, not yet run | `shared/review.ts` |
+| Stored-state validation, open intent, read-only mode, migration, CLI `migrate`, typed CLI failures, MCP bridge safety | Coded, not yet run | `shared/state-schema.ts`, `server/**`, `deploy/caminos-mcp.mjs` |
+| Five-tab navigation (section 7.3) | **Not started** | Phase 6, together with AI 2 |
+
+Known limits: no browser check was run by this role. WebKit cannot launch on this workstation (`libevent-2.1.so.7` missing), as recorded in `review-handoff.md`. The production wrapper `deploy/hermesctl` rejects `--db`, so the migration command cannot run through it; a production migration needs its own separately authorized operations path. `src/TaskListPage.tsx:17` does not typecheck until AI 2's unknown-estimate patch lands.
