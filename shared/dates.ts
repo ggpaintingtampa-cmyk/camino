@@ -11,13 +11,23 @@ export function validDate(value: string): boolean {
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
+const formatters = new Map<string, Intl.DateTimeFormat>();
+function formatter(zone: string): Intl.DateTimeFormat {
+  let format = formatters.get(zone);
+  if (!format) {
+    format = new Intl.DateTimeFormat('en-CA', {
+      timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+    });
+    formatters.set(zone, format);
+  }
+  return format;
+}
+
 function parts(iso: string, zone = DEFAULT_ZONE) {
   const instant = new Date(iso);
   if (!Number.isFinite(instant.getTime())) throw new RangeError('Invalid date/time.');
-  const values = new Intl.DateTimeFormat('en-CA', {
-    timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
-  }).formatToParts(instant);
+  const values = formatter(zone).formatToParts(instant);
   const p = Object.fromEntries(values.map(v => [v.type, v.value]));
   return { date: `${p.year}-${p.month}-${p.day}`, hour: Number(p.hour), minute: Number(p.minute) };
 }
@@ -63,4 +73,21 @@ export function localInstant(date: string, time: string, zone = DEFAULT_ZONE): s
   }).sort((a, b) => a - b);
   if (!matches.length) throw new RangeError('This local time does not exist because the clocks move forward. Choose another time.');
   return new Date(matches[0]).toISOString();
+}
+
+function firstInstantOf(date: string, zone: string): number {
+  // Zone offsets lie within 14 hours of UTC, so the local date begins inside this span.
+  const guess = Date.parse(`${date}T00:00:00Z`);
+  let before = guess - 16 * 3600000, from = guess + 16 * 3600000;
+  while (from - before > 1) {
+    const middle = Math.floor((before + from) / 2);
+    if (dateKey(new Date(middle).toISOString(), zone) < date) before = middle; else from = middle;
+  }
+  return from;
+}
+
+/** The absolute span of one local calendar date: 23, 24 or 25 hours where clocks change. Half-open. */
+export function localDayRange(date: string, zone = DEFAULT_ZONE): { start: string; end: string } {
+  if (!validDate(date) || !validZone(zone)) throw new RangeError('Choose a valid date and time zone.');
+  return { start: new Date(firstInstantOf(date, zone)).toISOString(), end: new Date(firstInstantOf(addDays(date, 1), zone)).toISOString() };
 }

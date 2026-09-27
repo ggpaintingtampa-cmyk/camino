@@ -356,7 +356,6 @@ Minutes are `Math.floor(ms / 60000)` of the summed milliseconds, so clipping nev
 | `dayPlanForDate(state, date)` | `DayPlan \| undefined` |
 | `selectedTasksForDay(state, date)` | ordered live tasks in the selection |
 | `mainTaskForDay(state, date)` | `Task \| undefined` |
-| `blockFlexibility(block)` | `Flexibility` |
 | `nextFixedCommitment(state, now)` | `NextCommitment` |
 
 View membership, one task ID across all views:
@@ -371,7 +370,8 @@ View membership, one task ID across all views:
 
 | Function | Returns |
 |---|---|
-| `localDayRange(date, timezone)` | `InstantRange` of the local date, 23, 24 or 25 hours |
+| `localDayRange(date, timezone)` | `InstantRange` of the local date, 23, 24 or 25 hours. Defined in `shared/dates.ts` |
+| `blockFlexibility(block)`, `isPositionedLive(block)` | The two vocabulary rules as functions |
 | `clipInterval(interval, window)` | clipped interval or `undefined` |
 | `unionMinutes(intervals, window?)` | minutes of the merged, clipped intervals |
 | `entryConflicts(state, range)` | `EntryConflict[]` among positioned-live entries intersecting the range |
@@ -381,19 +381,21 @@ View membership, one task ID across all views:
 
 Measured range and credit range per scope:
 
+The **plan range** is the date range extended to cover the window, so an overnight window's hours after midnight belong to the plan that owns the window.
+
 | Scope | Measured range (occupation, balance) | Credit range |
 |---|---|---|
-| `full-day`, window present | The window | The date range |
+| `full-day`, window present | The window | The plan range |
 | `full-day`, no window | The date range, status `window-missing`, no balances, both outside-window lists empty | The date range |
-| `remaining-day` | `[max(now, window.start), window.end)`. When `now >= window.end`: status `window-elapsed`, `windowMinutes: 0` | `[now, end of the date range)` |
+| `remaining-day` | `[max(now, window.start), window.end)`. When `now >= window.end`: status `window-elapsed`, `windowMinutes: 0`, balances still returned | The plan range from `now` on |
 
 Arithmetic (R1):
 
 1. `occupiedMinutes` = union of positioned-live entries clipped to the measured range. `fixedMinutes` = union of the fixed ones. `flexibleMinutes` = the difference.
-2. Credit per selected open estimated task = minutes of its positioned-live task placements inside the credit range, capped at the estimate. Credit is not clipped to the window: a task booked outside the window is placed, not unplaced, and `outOfWindowCreditMinutes` says how much of its credit lies outside.
+2. Credit per selected open estimated task = minutes of its live pending placement inside the credit range, capped at the estimate. Resolved bookings are history and give no credit. Credit is not clipped to the window: a task booked outside the window is placed, not unplaced, and `outOfWindowCreditMinutes` says how much of its credit lies outside.
 3. `unplacedDemandMinutes` = sum of `max(0, estimate − credit)`. Selected open tasks without an estimate go to `unestimatedTaskIds` and add nothing.
 4. `knownBalanceMinutes = windowMinutes − occupiedMinutes − protectedSpareMinutes − unplacedDemandMinutes`. `unallocatedMinutes` and `overloadMinutes` are its positive and negative parts.
-5. Estimates are used as stored (`estimateBasis: 'unchanged-estimate'`). Recorded time is never subtracted.
+5. Estimates are used as stored (`estimateBasis: 'unchanged-estimate'`). Recorded time is never subtracted. Protected spare is the day's whole unplaced reserve in both scopes.
 6. Conflicts are reported separately and never change the union.
 7. A conflict is `acknowledged` when either block lists the other in `acknowledgedConflictIds`, or either carries legacy `conflictReviewed`.
 
