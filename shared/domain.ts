@@ -2,6 +2,7 @@ import type { Adjustment, Base, Block, Command, Day, Goal, Ledger, State, Task }
 import { addDays, dateKey, localInstant, minuteOfDay, timeLabel, validDate } from './dates';
 import { commandSchema } from './schema';
 import { dailySteps, goalProgress } from './selectors';
+import { CURRENT_SCHEMA_DRAFT, CURRENT_SCHEMA_VERSION } from './state-format';
 
 export class DomainError extends Error {
   readonly statusCode: number;
@@ -98,8 +99,10 @@ function finishBlock(state: State, block: Block, outcome: Block['status'], now: 
 export function initialState(): State {
   const origin = '2026-01-01T00:00:00.000Z';
   return {
+    schemaVersion: CURRENT_SCHEMA_VERSION, ...(CURRENT_SCHEMA_DRAFT === undefined ? {} : { schemaDraft: CURRENT_SCHEMA_DRAFT }),
     revision: 0, settings: { name: 'Morgan', timezone: 'America/New_York', currency: 'USD' },
     tasks: [], blocks: [], days: [], goals: [], logs: [], reminders: [], envelopes: [], adjustments: [], templates: [],
+    dayPlans: [], workSessions: [], taskOutcomes: [],
     ledgers: [
       { area: 'personal', account: 0, cash: 0, earned: 0, lost: 0 },
       { area: 'company', account: 0, cash: 0, earned: 0, lost: 0 },
