@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-27",
+  "frames": 47,
+  "connections": 320,
+  "texts": 1072,
+  "instances": 484,
+  "issues": [],
+  "startingPoints": [
+    {
+      "nodeId": "119:4",
+      "name": "Caminos v3 — Daily journey"
+    },
+    {
+      "nodeId": "119:38",
+      "name": "Caminos v3 — Active day"
+    },
+    {
+      "nodeId": "119:138",
+      "name": "Caminos v3 — Recover an overrun"
+    }
+  ],
+  "placeholderCount": 0,
+  "textContrast": {
+    "text/bg": 17.5,
+    "muted/bg": 8.37,
+    "text/surface": 15.57,
+    "muted/raised": 6.66,
+    "bg/gold": 10.38,
+    "gold/focus": 8.42,
+    "warning/focus": 9.07
+  },
+  "applicationCodeChanged": false
+}

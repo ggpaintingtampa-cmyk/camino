@@ -1,0 +1,320 @@
+{
+  "checkedAt": "2026-09-27",
+  "structuralAudit": {
+    "frames": [
+      {
+        "name": "S01",
+        "id": "119:4",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S02",
+        "id": "119:38",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S03",
+        "id": "119:88",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S04",
+        "id": "119:138",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S05",
+        "id": "119:185",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S06",
+        "id": "119:233",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S07",
+        "id": "119:278",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S08",
+        "id": "119:312",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S09",
+        "id": "120:118",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S10",
+        "id": "120:169",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S11",
+        "id": "120:211",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S12",
+        "id": "120:253",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S13",
+        "id": "120:298",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S14",
+        "id": "120:331",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S15",
+        "id": "120:374",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S16",
+        "id": "120:415",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S17",
+        "id": "121:231",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S18",
+        "id": "121:265",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S19",
+        "id": "121:302",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S20",
+        "id": "121:338",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S21",
+        "id": "121:377",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S22",
+        "id": "121:408",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S23",
+        "id": "121:438",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S24",
+        "id": "121:474",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "D02",
+        "id": "122:320",
+        "width": 1440,
+        "height": 833
+      },
+      {
+        "name": "D05",
+        "id": "122:387",
+        "width": 1440,
+        "height": 814
+      },
+      {
+        "name": "D11",
+        "id": "122:447",
+        "width": 1440,
+        "height": 789
+      },
+      {
+        "name": "D15",
+        "id": "122:509",
+        "width": 1440,
+        "height": 690
+      },
+      {
+        "name": "S08O",
+        "id": "123:377",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S02C",
+        "id": "123:414",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S02R",
+        "id": "123:453",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S13C",
+        "id": "123:491",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S09A",
+        "id": "123:531",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S15G",
+        "id": "123:573",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S15H",
+        "id": "123:603",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S20E",
+        "id": "123:637",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S09T",
+        "id": "124:475",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S02E",
+        "id": "124:599",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S05U",
+        "id": "124:633",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S11F",
+        "id": "124:669",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S11V",
+        "id": "124:701",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S00O",
+        "id": "124:729",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S00L",
+        "id": "124:759",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S00S",
+        "id": "124:785",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "S02P",
+        "id": "126:538",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "N02",
+        "id": "126:575",
+        "width": 320,
+        "height": 844
+      },
+      {
+        "name": "T02",
+        "id": "126:612",
+        "width": 768,
+        "height": 758
+      }
+    ],
+    "texts": 1071,
+    "instances": 484,
+    "connections": 324,
+    "wrongFonts": [],
+    "smallActions": [],
+    "horizontalOverflow": [],
+    "invalidLinks": [],
+    "startingPoints": [
+      {
+        "nodeId": "119:4",
+        "name": "Caminos v3 — Daily journey"
+      },
+      {
+        "nodeId": "119:38",
+        "name": "Caminos v3 — Active day"
+      },
+      {
+        "nodeId": "119:138",
+        "name": "Caminos v3 — Recover an overrun"
+      }
+    ]
+  },
+  "textContrast": {
+    "text/bg": 17.5,
+    "muted/bg": 8.37,
+    "text/surface": 15.57,
+    "muted/raised": 6.66,
+    "bg/gold": 10.38,
+    "gold/focus": 8.42,
+    "warning/focus": 9.07
+  },
+  "note": "Audit preceded a subsequent label/link correction and one explanatory line in Reset today; final audit is recorded separately if rerun."
+}

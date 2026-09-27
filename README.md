@@ -1,5 +1,19 @@
 # Caminos by Morgan
 
+## Redesign plan and implementation handoff
+
+The current source implements v2. The v3 redesign is documented and available in Figma, but its new behavior has not been implemented by these planning updates.
+
+Read [REDESIGN-SCHEMA.md](REDESIGN-SCHEMA.md) for product behavior, [skill.md](skill.md) for the detailed code plan, [the Figma handoff](artifacts/redesign-v3/README.md) for editable designs, and [AI-IMPLEMENTATION-PROMPTS.md](AI-IMPLEMENTATION-PROMPTS.md) for four coordinated AI assignments. The singular `skill.md` is separate from the existing [skills.md](skills.md) project guide.
+
+The independent AI review is resolved in [review-resolution.md](artifacts/redesign-v3/review-resolution.md). The corrected plan keeps four-tab navigation until the Phase 6 shell/Settings activation, preserves legacy settings commands for receipt replay, attributes work per interval, and defines the legacy block timing projection. Draft schemas remain provisional on disposable fixtures until the supported release/owner-data boundary.
+
+Delivery has two source milestones: **R1** establishes the dependable daily loop; **R2** adds advanced focus allocations, template variants, detailed change history, weekly learning, and remaining enhancements. All accepted work remains in scope. The four roles operate with **at most two active AI sessions**, using GitHub issues/PRs and parked-role handoffs.
+
+The planned migration operation requires explicit opt-in, a literal absolute database target, a target version, and a new verified backup. Normal API/CLI/MCP opening must not trigger migration. That safeguard and new CLI interface are requirements for later implementation, not features already present. Do not inspect or use `.data/hermes.sqlite` as a disposable fixture merely because it is in this workspace.
+
+The reviewer reported WebKit cannot launch here because `libevent-2.1.so.7` is missing. This documentation update did not rerun browser tests; implementation must record/reproduce that baseline or obtain compatible-host coverage. Other AI environments should translate Codex-specific editing/runtime paths while preserving the same project boundaries and test requirements.
+
 ## Caminos rename
 
 The app is now Caminos. Screens, install metadata, asset names, exports, command output and development tooling use the new name. Use `pnpm caminosctl` for local commands and `deploy/caminos-mcp.mjs` for new AI-tool connections.
@@ -33,7 +47,7 @@ CAMINOS_ALLOW_HTTP=1 CAMINOS_ORIGIN=http://127.0.0.1:5190 pnpm api
 pnpm dev
 ```
 
-The API listens on `127.0.0.1:3003`; Vite serves `http://127.0.0.1:5190` and proxies `/api`. The development database defaults to `.data/hermes.sqlite` and begins empty. Do not point local tests at production data.
+The API listens on `127.0.0.1:3003`; Vite serves `http://127.0.0.1:5190` and proxies `/api`. The development database defaults to `.data/hermes.sqlite`; only a newly initialized database begins empty. An existing file may contain owner records and must not be treated as disposable. Use explicitly isolated synthetic paths for tests and never point them at production data.
 
 Choose an independent owner password through a concealed terminal prompt:
 
@@ -90,3 +104,7 @@ The target is `https://hermes.andresinbox.tech`, with `/var/lib/hermes/hermes.sq
 For the deployed app, use `sudo -u hermes hermesctl ...` rather than the local-development `pnpm caminosctl` command. The installed wrapper enforces the private service identity, fixed production database/origin and correct working directory. For example: `sudo -u hermes hermesctl setup-link`, `sudo -u hermes hermesctl backup`, or `sudo -u hermes hermesctl command --stdin < /absolute/private/command.json`. File arguments must be absolute and accessible to the service account; stdin allows the caller to retain private file permissions.
 
 The previous release is deployed on Haven at https://hermes.andresinbox.tech; the Caminos source rename awaits deployment. See [DEPLOYMENT-STATUS.md](DEPLOYMENT-STATUS.md) for deployment status. [design-qa.md](design-qa.md) records visual verification. The integrations listed above remain outside this first version.
+
+The final review adds release markers to every acceptance row/item in `skill.md` sections 13 and 16.1. Phase 3 now bridges legacy `day.end` to explicit session-aware closure; booking references belong to individual intervals. AI 2 temporarily owns early planning compatibility and Phase 6 Settings so each slice uses at most two roles. Only deliberate server/owner initialization and the synthetic harness may create missing databases; ordinary read/command/MCP paths cannot.
+
+Prompt 4's first code batch is test infrastructure only; v3 application behavior remains pending. See [coordination and start order](docs/redesign-v3/coordination.md), [setup evidence](docs/redesign-v3/review-handoff.md), and the ready-to-use [Prompt 1](docs/redesign-v3/prompts/01-domain.md), [Prompt 2](docs/redesign-v3/prompts/02-daily-ui.md), and [Prompt 3](docs/redesign-v3/prompts/03-planning-ui.md).
